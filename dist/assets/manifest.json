@@ -1,9 +1,13 @@
 {
  "scene": {
   "frame2x": "scene-2880.d6ff1ca6.webp",
+  "frame2xA": "scene-2880.daaa8933.avif",
   "frame1x": "scene-1440.4ed0677d.webp",
+  "frame1xA": "scene-1440.6e1880be.avif",
   "kitchen": "kitchen-1400.e611c2cb.webp",
+  "kitchenA": "kitchen-1400.292609db.avif",
   "kitchenSmall": "kitchen-800.654b2a1f.webp",
+  "kitchenSmallA": "kitchen-800.70b8b57f.avif",
   "kitchenBox": {
    "x": 746,
    "y": 114,
@@ -111,31 +115,43 @@
   "miss-01": {
    "w1200": "modal-miss-01-1200.0d58ae99.webp",
    "w720": "modal-miss-01-720.2815aff0.webp",
+   "a1200": "modal-miss-01-1200.a5fa5ba1.avif",
+   "a720": "modal-miss-01-720.a343a672.avif",
    "ratio": 1.298
   },
   "miss-02": {
    "w1200": "modal-miss-02-1200.9a1a90c3.webp",
    "w720": "modal-miss-02-720.4f4f5f99.webp",
+   "a1200": "modal-miss-02-1200.5f9f1b78.avif",
+   "a720": "modal-miss-02-720.6bf6cfaa.avif",
    "ratio": 1.298
   },
   "miss-03": {
    "w1200": "modal-miss-03-1200.e7dad671.webp",
    "w720": "modal-miss-03-720.ebd6066f.webp",
+   "a1200": "modal-miss-03-1200.fa02e3f0.avif",
+   "a720": "modal-miss-03-720.0773c943.avif",
    "ratio": 1.298
   },
   "miss-04": {
    "w1200": "modal-miss-04-1200.29a5b5fe.webp",
    "w720": "modal-miss-04-720.7d4692a5.webp",
+   "a1200": "modal-miss-04-1200.427d0c00.avif",
+   "a720": "modal-miss-04-720.ced531c4.avif",
    "ratio": 1.298
   },
   "miss-05": {
    "w1200": "modal-miss-05-1200.ce193812.webp",
    "w720": "modal-miss-05-720.390a328d.webp",
+   "a1200": "modal-miss-05-1200.1b0c341f.avif",
+   "a720": "modal-miss-05-720.f2ff07cd.avif",
    "ratio": 1.298
   },
   "win": {
    "w1200": "modal-win-1200.777a0dca.webp",
    "w720": "modal-win-720.e848ea72.webp",
+   "a1200": "modal-win-1200.0791eab0.avif",
+   "a720": "modal-win-720.0377768a.avif",
    "ratio": 1.298
   }
  }

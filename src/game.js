@@ -146,6 +146,11 @@
       if (desk.addEventListener) desk.addEventListener('change', onMq); else if (desk.addListener) desk.addListener(onMq);
     }
     var snd = typeof HlwSound === 'object' && HlwSound ? HlwSound : null;
+    var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    function buzz(pattern) {
+      if (!touch || reduce || typeof navigator.vibrate !== 'function') return;
+      try { navigator.vibrate(pattern); } catch (e) {}
+    }
     function sfx(name) { if (snd) { try { snd.play(name); } catch (e) {} } }
     function setPill(html) { if (pillTxt) pillTxt.innerHTML = html; }
     function burstAt(el, kind) {
@@ -237,6 +242,7 @@
           markWin(el);
           burstAt(el, 'gold');
           sfx('win');
+          buzz([30, 60, 30, 60, 140]);
           setTimeout(function () { busy = false; openOv(winOv, el, '.hlw-btn'); }, reduce ? 0 : 750);
           return;
         }
@@ -251,6 +257,8 @@
         var pi = wrap.querySelector('#hlw-miss-img');
         if (pi.getAttribute('data-src') !== m.i.src) {
           pi.setAttribute('data-src', m.i.src);
+          var pa = wrap.querySelector('#hlw-miss-avif');
+          if (pa && m.i.avif) pa.srcset = m.i.avif;
           pi.srcset = m.i.srcset;
           pi.src = m.i.src;
         }
@@ -259,6 +267,7 @@
         track('miss', { item: el.getAttribute('data-id') });
         burstAt(el, 'smoke');
         sfx('miss');
+        buzz(22);
         if (reduce) { openOv(missOv, el, '.hlw-btn'); return; }
         busy = true;
         el.classList.remove('is-shake');
@@ -286,10 +295,20 @@
       box.querySelector('.hlw-copy').addEventListener('click', doCopy);
     });
 
+    var toast = wrap.querySelector('.hlw-toast');
+    function showToast(html) {
+      if (!toast) return;
+      toast.innerHTML = html;
+      toast.classList.add('is-on');
+      clearTimeout(toast._t);
+      toast._t = setTimeout(function () { toast.classList.remove('is-on'); }, 4200);
+    }
+
     /* --- заказ: плавный скролл с учётом фиксированной шапки --- */
     [].slice.call(wrap.querySelectorAll('[data-hlw-order]')).forEach(function (a) {
       a.addEventListener('click', function (e) {
         track('order_click');
+        copyText(RT.promo).then(function (ok) { if (ok) showToast(RT.orderToast); });
         var href = a.getAttribute('href') || '';
         if (href.charAt(0) !== '#' || href.length < 2) return;
         var t = doc.getElementById(href.slice(1));
@@ -348,11 +367,21 @@
       });
     });
 
-    /* --- кнопка звука (по умолчанию выключен, без автозапуска) --- */
+    /* --- звук: по умолчанию включён, но браузер разрешает его только после нажатия — стартуем на первом клике в игре --- */
     var sb = wrap.querySelector('.hlw-sound');
+    var wantSound = true;
     if (sb && !snd) sb.hidden = true;
+    function armSound() {
+      if (!snd || !wantSound || snd.isOn()) return;
+      try { snd.enable(true); } catch (e) {}
+    }
+    wrap.addEventListener('click', function (e) {
+      if (sb && sb.contains(e.target)) return;
+      armSound();
+    }, true);
     if (sb && snd) sb.addEventListener('click', function () {
-      var on = !snd.isOn();
+      var on = !wantSound;
+      wantSound = on;
       try { snd.enable(on); } catch (e) {}
       sb.setAttribute('aria-pressed', on ? 'true' : 'false');
       sb.setAttribute('aria-label', on ? RT.soundOff : RT.soundOn);
@@ -371,11 +400,13 @@
       if (preloaded) return;
       preloaded = true;
       var go = function () {
+        // через <picture> в памяти: браузер сам выберет AVIF или WebP и нужный размер
         (RT.preload || []).forEach(function (p) {
-          var im = new Image();
-          im.decoding = 'async';
-          im.sizes = '(max-width:560px) 100vw, 560px';
-          im.srcset = p.srcset;
+          var pic = doc.createElement('picture'), so = doc.createElement('source'), im = doc.createElement('img');
+          so.type = 'image/avif'; so.srcset = p.avif || ''; so.sizes = '(max-width:560px) 100vw, 560px';
+          im.decoding = 'async'; im.sizes = '(max-width:560px) 100vw, 560px'; im.srcset = p.srcset;
+          if (p.avif) pic.appendChild(so);
+          pic.appendChild(im);
           im.src = p.src;
         });
       };

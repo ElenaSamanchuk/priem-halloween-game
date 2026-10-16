@@ -41,6 +41,12 @@ def webp(img, name, q=82, lossless=False):
     return name
 
 
+def avif(img, name, q=55):
+    """AVIF: при том же SSIM на ~30 % легче WebP (проверено на сцене и иллюстрациях)"""
+    img.save(os.path.join(OUT, name), 'AVIF', quality=q, speed=4)
+    return name
+
+
 def hashed(name):
     """Имя с хешем содержимого — jsDelivr и браузеры не держат старую версию."""
     p = os.path.join(OUT, name)
@@ -52,7 +58,7 @@ def hashed(name):
 
 
 for f in os.listdir(OUT):  # чистим прошлую сборку
-    if f.endswith('.webp') or f == 'manifest.json':
+    if f.endswith('.webp') or f.endswith('.avif') or f == 'manifest.json':
         os.remove(os.path.join(OUT, f))
 
 man = {'scene': {}, 'items': {}, 'modals': {}}
@@ -63,15 +69,17 @@ frame3 = Image.open(big3).convert('RGB') if os.path.exists(big3) else frame.resi
 F3 = frame3.width / frame.width
 
 # Деск: весь кадр (пещера + кухня) — 2880 для ретины и 1440
-man['scene']['frame2x'] = hashed(webp(frame3.resize((2880, 1203), Image.LANCZOS), 'scene-2880.webp', 78))
-man['scene']['frame1x'] = hashed(webp(frame3.resize((1440, 602), Image.LANCZOS), 'scene-1440.webp', 80))
+f2 = frame3.resize((2880, 1203), Image.LANCZOS); f1 = frame3.resize((1440, 602), Image.LANCZOS)
+man['scene']['frame2x'] = hashed(webp(f2, 'scene-2880.webp', 78)); man['scene']['frame2xA'] = hashed(avif(f2, 'scene-2880.avif'))
+man['scene']['frame1x'] = hashed(webp(f1, 'scene-1440.webp', 80)); man['scene']['frame1xA'] = hashed(avif(f1, 'scene-1440.avif', 60))
 # Мобайл: окно кухни с полем пещеры 3 % — рваный край остаётся
 pad_x, pad_y = KW * 0.03, KH * 0.03
 box = (round(KX - pad_x), round(KY - pad_y), round(KX + KW + pad_x), round(KY + KH + pad_y))
 kit = frame3.crop(tuple(round(v * F3) for v in box))
 kit = kit.resize((1400, round(1400 * kit.height / kit.width)), Image.LANCZOS)
-man['scene']['kitchen'] = hashed(webp(kit, 'kitchen-1400.webp', 80))
-man['scene']['kitchenSmall'] = hashed(webp(kit.resize((800, round(800 * kit.height / kit.width)), Image.LANCZOS), 'kitchen-800.webp', 80))
+man['scene']['kitchen'] = hashed(webp(kit, 'kitchen-1400.webp', 80)); man['scene']['kitchenA'] = hashed(avif(kit, 'kitchen-1400.avif'))
+ks = kit.resize((800, round(800 * kit.height / kit.width)), Image.LANCZOS)
+man['scene']['kitchenSmall'] = hashed(webp(ks, 'kitchen-800.webp', 80)); man['scene']['kitchenSmallA'] = hashed(avif(ks, 'kitchen-800.avif', 60))
 man['scene']['kitchenBox'] = {'x': box[0], 'y': box[1], 'w': box[2] - box[0], 'h': box[3] - box[1]}
 man['scene']['frame'] = {'w': frame.width, 'h': frame.height}
 
@@ -106,7 +114,8 @@ for f in sorted(os.listdir(os.path.join(SRC, 'modals'))):
     im = Image.open(orig).convert('RGB') if os.path.exists(orig) else Image.open(os.path.join(SRC, 'modals', f)).convert('RGB').crop((0, 0, 1298, 1000))
     big = im.resize((1200, round(1200 * im.height / im.width)), Image.LANCZOS)
     small = im.resize((720, round(720 * im.height / im.width)), Image.LANCZOS)
-    man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 78)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 78)), 'ratio': round(im.width / im.height, 4)}
+    man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 78)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 78)),
+                          'a1200': hashed(avif(big, f'modal-{key}-1200.avif')), 'a720': hashed(avif(small, f'modal-{key}-720.avif', 60)), 'ratio': round(im.width / im.height, 4)}
 
 json.dump(man, open(os.path.join(OUT, 'manifest.json'), 'w'), ensure_ascii=False, indent=1)
 tot = 0

@@ -32,18 +32,23 @@ var HlwSound = (function () {
       ambGain = ctx.createGain(); ambGain.gain.value = 0.5;
       var ambLP = ctx.createBiquadFilter(); ambLP.type = 'lowpass'; ambLP.frequency.value = 5000; ambLP.Q.value = 0.5;
       ambGain.connect(ambLP); ambLP.connect(master);
-      // «пещерная» реверберация из затухающего шума
+      // «пещерная» реверберация: шина создаётся сразу, тяжёлый импульс — на следующем кадре, чтобы клик не тормозил
       try {
-        var len = Math.floor(ctx.sampleRate * 1.6);
-        var ir = ctx.createBuffer(2, len, ctx.sampleRate);
-        for (var c = 0; c < 2; c++) {
-          var d = ir.getChannelData(c);
-          for (var i = 0; i < len; i++) { d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
-        }
-        reverb = ctx.createConvolver(); reverb.buffer = ir;
         reverbSend = ctx.createGain(); reverbSend.gain.value = 0.28;
-        reverbSend.connect(reverb); reverb.connect(master);
         ambRev = ctx.createGain(); ambRev.gain.value = 0.9; ambLP.connect(ambRev); ambRev.connect(reverbSend);
+        var rctx = ctx;
+        setTimeout(function () {
+          try {
+            var len = Math.floor(rctx.sampleRate * 1.6);
+            var ir = rctx.createBuffer(2, len, rctx.sampleRate);
+            for (var c = 0; c < 2; c++) {
+              var d = ir.getChannelData(c);
+              for (var i = 0; i < len; i++) { d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+            }
+            reverb = rctx.createConvolver(); reverb.buffer = ir;
+            reverbSend.connect(reverb); reverb.connect(master);
+          } catch (e2) { reverb = null; }
+        }, 700);
       } catch (e1) { reverb = null; reverbSend = null; }
       // разблокировка iOS тихим буфером
       var ub = ctx.createBuffer(1, 1, 22050), us = ctx.createBufferSource();

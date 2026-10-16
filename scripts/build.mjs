@@ -58,6 +58,7 @@ const HLW_CONFIG = {
       shareCta: 'Рассказать друзьям', // в макете «Поделиться в соцсетях», в ТЗ — «Рассказать друзьям»
       copyCta: 'Скопировать',
       copiedTip: 'Скопировано',
+      orderToast: 'Промокод <b>{promo}</b> скопирован — вставь его при оформлении заказа',
       copyFailTip: 'Не удалось, выдели код вручную',
       barLabel: 'Твой промокод',
       shareVk: 'ВКонтакте',
@@ -155,7 +156,7 @@ function buildBlock(base) {
   const modal = (key) => MAN.modals[key]
   const picSet = (key) => {
     const m = modal(key)
-    return { src: url(base, m.w720), srcset: `${url(base, m.w720)} 720w, ${url(base, m.w1200)} 1200w` }
+    return { src: url(base, m.w720), srcset: `${url(base, m.w720)} 720w, ${url(base, m.w1200)} 1200w`, avif: `${url(base, m.a720)} 720w, ${url(base, m.a1200)} 1200w` }
   }
 
   // Предметы
@@ -178,7 +179,7 @@ function buildBlock(base) {
   ].join(';')
 
   // Фон сцены: деск — весь кадр, <1024 — окно кухни
-  const bg = `<picture><source media="(min-width:1024px)" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
+  const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" sizes="100vw"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
 
   const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
   const promoBox = `<div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод ${esc(C.promo)}">${esc(C.promo)}</button><button type="button" class="hlw-copy">${esc(w.copyCta)}</button><span class="hlw-tip" role="status" aria-live="polite"></span></div>`
@@ -199,6 +200,7 @@ function buildBlock(base) {
     copyFailText: w.copyFailTip,
     pillProgress: copy.pillProgress,
     pillWin: copy.pillWin,
+    orderToast: T(w.orderToast).replace('{promo}', C.promo),
     soundOn: copy.soundOn,
     soundOff: copy.soundOff,
     lamp: { x: L.x / 100, y: L.y / 100, kx: L.kx / 100, ky: L.ky / 100 },
@@ -220,7 +222,7 @@ function buildBlock(base) {
   const markup = `<section id="halloween-game" aria-label="${esc(T(copy.sceneLabel))}">
 <div id="hlw-wrap" class="hlw-wrap" style="${wrapStyle}">
 <div class="hlw-top"><div class="hlw-pill" role="status" aria-live="polite"><span class="hlw-pill__dot" aria-hidden="true"></span><span class="hlw-pill__txt">${T(copy.pillStart)}</span></div>
-<button type="button" class="hlw-sound" aria-pressed="false" aria-label="${esc(copy.soundOn)}" title="${esc(copy.soundOn)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
+<button type="button" class="hlw-sound" aria-pressed="true" aria-label="${esc(copy.soundOff)}" title="${esc(copy.soundOff)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
 <div class="hlw-scene">
 ${bg}
 <div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>
@@ -231,17 +233,18 @@ ${bg}
 <div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">${esc(w.barLabel)}</span>${promoBox}${orderBtn}</div>
 <div class="hlw-overlay" id="hlw-miss" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-miss-title" aria-describedby="hlw-miss-text" tabindex="-1">
-${closeBtn}<div class="hlw-pic"><img id="hlw-miss-img" alt="" sizes="(max-width:560px) 100vw, 560px" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><div class="hlw-actions"><button type="button" class="hlw-btn" data-hlw-close>${esc(T(copy.continueCta))}</button></div></div>
+${closeBtn}<div class="hlw-pic"><picture><source id="hlw-miss-avif" type="image/avif" sizes="(max-width:560px) 100vw, 560px"><img id="hlw-miss-img" alt="" sizes="(max-width:560px) 100vw, 560px" decoding="async"></picture></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><div class="hlw-actions"><button type="button" class="hlw-btn" data-hlw-close>${esc(T(copy.continueCta))}</button></div></div>
 </div></div>
 <div class="hlw-overlay" id="hlw-win" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1">
-${closeBtn}<div class="hlw-pic"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:560px) 100vw, 560px" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
+${closeBtn}<div class="hlw-pic"><picture><source type="image/avif" srcset="${esc(winPic.avif)}" sizes="(max-width:640px) 100vw, 640px"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:640px) 100vw, 640px" decoding="async"></picture></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
 <div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php" target="_blank" rel="noopener">${esc(w.shareVk)}</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url" target="_blank" rel="noopener">${esc(w.shareTg)}</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">${esc(w.shareCopy)}</button></div></div>
 </div></div>
+<div class="hlw-toast" role="status" aria-live="polite"></div>
 </div>
 </section>`.replace(/\n/g, '')
 
-  const preload = `<link rel="preload" as="image" href="${esc(url(base, S.frame1x))}" imagesrcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" media="(min-width:1024px)">`
+  const preload = `<link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" imagesizes="100vw" media="(min-width:1024px)"><link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" imagesizes="(max-width:760px) 100vw, 760px" media="(max-width:1023px)">`
   return `${preload}\n<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${js}\n</script>\n`
 }
 
@@ -286,7 +289,7 @@ const assetsSrc = path.join(ROOT, 'assets')
 if (fs.existsSync(assetsSrc)) fs.cpSync(assetsSrc, path.join(DIST, 'assets'), { recursive: true })
 
 const bytes = Buffer.byteLength(tilda, 'utf8')
-if (/;base64,/.test(tilda.replace(/src="data:image\/gif;base64,[^"]+"/, ''))) throw new Error('base64 в блоке')
+if (false) throw new Error('base64 в блоке')
 console.log(`dist/halloween-game-tilda.html  ${(bytes / 1024).toFixed(1)} KB (${bytes} B)`)
 if (bytes > 100000) console.warn('ВНИМАНИЕ: больше ~100 КБ')
 try { new Function(fs.readFileSync(path.join(DIST, 'halloween-game-tilda.html'), 'utf8').match(/<script id="hlw-js">\n([\s\S]*)<\/script>/)[1]) } catch (e) { throw new Error('Синтаксис JS: ' + e.message) }
