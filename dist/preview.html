@@ -1,20 +1,8 @@
 <!doctype html>
-<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Превью: найди ПриЕм</title>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Найди ПриЕм — игровой блок</title>
+<style>html,body{margin:0;background:#130c0e}</style></head><body>
+<div class="t-records"><div class="t-rec"><link rel="preload" as="image" href="./assets/scene-1440.4ed0677d.webp" imagesrcset="./assets/scene-1440.4ed0677d.webp 1440w, ./assets/scene-2880.d6ff1ca6.webp 2880w" media="(min-width:1024px)">
 <style>
-body{margin:0;font-family:system-ui,sans-serif;background:#fff;color:#222}
-#navbar{position:fixed;left:0;right:0;top:0;height:57px;z-index:1000;background:#2b1b3f;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-#navbar.navbar{display:flex}
-main,#tilda{padding-top:57px}
-.stub{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;border-bottom:1px solid #ddd;background:#f6f3fa}
-.stub:nth-child(even){background:#eef6f1}
-.stub a.cta{display:inline-block;padding:14px 22px;background:#7a3cff;color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
-/* имитация стилей Тильды, которые мешают */
-.t-records a{color:#ff8562}.t-records ul{padding-left:40px}
-</style></head><body>
-<div id="navbar" class="navbar">PriEm · шапка (fixed)</div>
-<main class="t-records">
-<section id="screen1" class="stub"><h2>Экран 1 (заглушка)</h2><p>Заглушка экрана — его генерирует админка сайта.</p><a class="cta" id="to-game" href="#halloween-game">Найти ПриЕм</a></section>
-<div class="t-rec"><style>
 @font-face{font-family:"HlwMontserrat";font-style:normal;font-weight:400 900;font-display:swap;src:url("https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2") format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
 @font-face{font-family:"HlwMontserrat";font-style:normal;font-weight:400 900;font-display:swap;src:url("https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 html.hlw-lock{overflow:hidden !important}
@@ -23,123 +11,812 @@ html body .t-rec:has(#hlw-wrap) .t-container,
 html body .t-rec:has(#hlw-wrap) .t-col,
 html body .t-rec:has(#hlw-wrap) .t-text,
 html body .t-rec:has(#hlw-wrap) .t396,
-html body .t-rec:has(#hlw-wrap) .t396__artboard{width:100% !important;max-width:none !important;padding-left:0 !important;padding-right:0 !important}
+html body .t-rec:has(#hlw-wrap) .t396__artboard{width:100% !important;max-width:none !important;padding-left:0 !important;padding-right:0 !important;margin-left:0 !important;margin-right:0 !important}
 html body .t-rec:has(#hlw-wrap),
 html body .t-rec:has(#hlw-wrap) .t396__artboard,
 html body .t-rec:has(#hlw-wrap) .t-container{overflow:visible !important;pointer-events:auto !important;height:auto !important;min-height:0 !important;max-height:none !important}
+html body .t-rec:has(#hlw-wrap){padding-top:0 !important;padding-bottom:0 !important}
 html body .t-rec:has(#hlw-wrap) .t-cover__filter,
 html body .t-rec:has(#hlw-wrap) .t396__filter,
 html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
-#halloween-game{display:block;width:100%;scroll-margin-top:72px}
+#halloween-game{display:block;width:100%;scroll-margin-top:64px}
 #hlw-wrap{
---hlw-bg:#362050;--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#7b4fd1;--hlw-glow:255,200,40;--hlw-cream:#fff6ef;
-position:relative;display:block;width:100%;margin:0;padding:clamp(20px,4vw,48px) 0 clamp(16px,3vw,36px);
+--hlw-bg:#130c0e;--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#8c41e3;--hlw-glow:255,200,40;--hlw-cream:#fff6ef;
+position:relative;display:block;width:100%;margin:0;padding:0;overflow:hidden;
 background:var(--hlw-bg);
 color:var(--hlw-cream);font-family:"HlwMontserrat",Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;
 font-size:16px;line-height:1.4;text-align:left;box-sizing:border-box;-webkit-text-size-adjust:100%
 }
 #hlw-wrap *,#hlw-wrap *::before,#hlw-wrap *::after{box-sizing:border-box}
-#hlw-wrap h2,#hlw-wrap p{margin:0;padding:0;font-family:inherit}
+#hlw-wrap h2,#hlw-wrap p{margin:0;padding:0;font-family:inherit;letter-spacing:0}
 #hlw-wrap a{color:inherit;text-decoration:none}
 #hlw-wrap button{font-family:inherit;margin:0;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 #hlw-wrap img{max-width:none;border:0;background:none;box-shadow:none}
 #hlw-wrap [hidden]{display:none !important}
-#hlw-wrap .hlw-head{max-width:760px;margin:0 auto;padding:0 16px 18px;text-align:center}
-#hlw-wrap .hlw-title{font-size:clamp(24px,4.4vw,44px);font-weight:900;line-height:1.1;color:#fff}
-#hlw-wrap .hlw-lead{margin-top:10px;font-size:clamp(14px,2vw,18px);font-weight:500;color:rgba(255,244,227,.82)}
-#hlw-wrap .hlw-bar{max-width:880px;margin:0 auto 16px;padding:14px 16px;border-radius:16px;background:rgba(255,26,108,.14);border:1.5px solid rgba(255,26,108,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;animation:hlw-fade .4s ease both}
-#hlw-wrap .hlw-bar__label{font-weight:600;font-size:14px}
-#hlw-wrap .hlw-bar .hlw-promo{margin:0}
-#hlw-wrap .hlw-bar .hlw-btn{width:auto;min-width:0;margin-top:0;padding:12px 22px}
-#hlw-wrap .hlw-stagewrap{position:relative;width:100%;aspect-ratio:2880/1203;overflow:hidden;background:radial-gradient(70% 90% at 50% 50%,#4a2a70 0%,#2a1740 60%,#1b0f2c 100%)}
-#hlw-wrap .hlw-cave{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
-#hlw-wrap .hlw-stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:var(--hlw-kw,43.8%);max-height:85%}
-#hlw-wrap .hlw-scene{position:relative;width:100%;aspect-ratio:var(--hlw-kar,1261/985);container-type:inline-size;
-background:radial-gradient(60% 50% at 50% 30%,rgba(255,150,60,.2),transparent 70%),linear-gradient(180deg,#3a2352 0%,#241438 55%,#150b24 100%)}
-#hlw-wrap .hlw-scene--ph{clip-path:polygon(2% 3%,12% 0,24% 2.5%,38% 0.5%,52% 3%,66% 0,80% 2%,92% 0.5%,98% 4%,99.5% 20%,98% 36%,100% 52%,98.5% 70%,99.5% 88%,96% 99%,84% 97.5%,70% 100%,56% 98%,42% 100%,28% 97.5%,14% 99.5%,3% 97%,0.5% 82%,2% 66%,0% 48%,1.5% 30%,0% 14%)}
-#hlw-wrap .hlw-bg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
+#hlw-wrap .hlw-scene{position:relative;width:100%;aspect-ratio:2880/1203;max-height:calc(100vh - 64px);max-height:calc(100svh - 64px);margin:0 auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#hlw-wrap .hlw-scene__bg{position:absolute;left:0;top:0;width:100%;height:100%;display:block;object-fit:cover;pointer-events:none}
+#hlw-wrap .hlw-fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:3}
+#hlw-wrap .hlw-lamp{position:absolute;z-index:1;pointer-events:none;left:var(--lx);top:var(--ly);width:var(--lw);aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+background:radial-gradient(closest-side,rgba(255,170,70,.36),rgba(255,140,40,.14) 55%,transparent);mix-blend-mode:screen;animation:hlw-flicker 3.2s infinite}
+@keyframes hlw-flicker{0%,100%{opacity:.85}8%{opacity:.6}10%{opacity:.95}34%{opacity:.78}36%{opacity:1}61%{opacity:.7}63%{opacity:.92}82%{opacity:.8}}
+#hlw-wrap .hlw-fog{position:absolute;z-index:1;pointer-events:none;left:var(--gx);top:var(--gy);width:var(--gw);height:var(--gh);overflow:hidden;opacity:.55;
+-webkit-mask-image:linear-gradient(180deg,transparent,#000 40%,#000 80%,transparent);mask-image:linear-gradient(180deg,transparent,#000 40%,#000 80%,transparent)}
+#hlw-wrap .hlw-fog::before,#hlw-wrap .hlw-fog::after{content:"";position:absolute;left:-50%;top:0;width:200%;height:100%;
+background:radial-gradient(30% 60% at 20% 60%,rgba(214,206,230,.32),transparent 70%),radial-gradient(26% 50% at 55% 70%,rgba(214,206,230,.26),transparent 70%),radial-gradient(30% 55% at 85% 55%,rgba(214,206,230,.3),transparent 70%);
+animation:hlw-fog 26s linear infinite}
+#hlw-wrap .hlw-fog::after{animation-duration:38s;animation-direction:reverse;opacity:.7;top:12%}
+@keyframes hlw-fog{from{transform:translateX(0)}to{transform:translateX(25%)}}
 #hlw-wrap .hlw-item{
 position:absolute;z-index:2;display:block;padding:0;margin:0;border:0;background:transparent;color:inherit;cursor:pointer;
-border-radius:14%;transition:transform .25s ease,opacity .3s ease,filter .3s ease;
-animation:hlw-glow 2.6s ease-in-out infinite;animation-delay:var(--hlw-d,0s)
+left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);transform-origin:var(--o,50% 100%);
+transition:transform .35s cubic-bezier(.3,1.5,.5,1),filter .35s ease
 }
-#hlw-wrap .hlw-item::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
-#hlw-wrap .hlw-item__img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
-#hlw-wrap .hlw-art{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:4%;text-align:center;
-font-size:14px;font-size:clamp(11px,2.2cqw,30px);font-weight:700;line-height:1.1;color:#ffe9c7;
-background:rgba(255,196,120,.22);border:2px solid rgba(255,214,150,.6);border-radius:16%;pointer-events:none}
-#hlw-wrap .hlw-item[data-shape="round"] .hlw-art{border-radius:50%}
-#hlw-wrap .hlw-item[data-shape="tall"] .hlw-art{border-radius:10%}
-#hlw-wrap .hlw-item[data-shape="pumpkin"] .hlw-art{border-radius:50% 50% 44% 44%}
-@keyframes hlw-glow{
-0%,100%{filter:drop-shadow(0 0 4px rgba(var(--hlw-glow),.45)) drop-shadow(0 0 1px rgba(var(--hlw-glow),.6))}
-50%{filter:drop-shadow(0 0 16px rgba(var(--hlw-glow),.85)) drop-shadow(0 0 4px rgba(var(--hlw-glow),.85))}
-}
+#hlw-wrap .hlw-item::before{content:"";position:absolute;left:50%;top:50%;width:max(76%,48px);height:max(76%,48px);transform:translate(-50%,-50%)}
+#hlw-wrap .hlw-item__img{position:absolute;left:0;top:0;display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none;
+animation:hlw-breathe 2.8s ease-in-out infinite;animation-delay:var(--hlw-d,0s);transition:opacity .45s ease}
+@keyframes hlw-breathe{0%,100%{opacity:.5;filter:brightness(1)}50%{opacity:1;filter:brightness(1.12) drop-shadow(0 0 6px rgba(var(--hlw-glow),.55))}}
+#hlw-wrap .hlw-item[data-id="pumpkin-lamp"] .hlw-item__img{animation:hlw-breathe 2.8s ease-in-out infinite,hlw-flicker 3.2s infinite}
 @media (hover:hover){
-#hlw-wrap .hlw-item:not(.is-open):not(:disabled):hover{transform:scale(1.06);animation:none;filter:drop-shadow(0 0 22px rgba(var(--hlw-glow),1)) drop-shadow(0 0 4px rgba(var(--hlw-glow),.9))}
+#hlw-wrap .hlw-item:not(:disabled):hover{transform:scale(1.05)}
+#hlw-wrap .hlw-item:not(:disabled):hover .hlw-item__img{animation:none;opacity:1;filter:brightness(1.22) drop-shadow(0 0 14px rgba(var(--hlw-glow),.9))}
+#hlw-wrap .hlw-item.is-open:not(:disabled):hover .hlw-item__img{opacity:.45;filter:brightness(1.05)}
+#hlw-wrap .hlw-item[data-anim="swing"]:not(:disabled):hover{animation:hlw-swing 1.4s ease-in-out infinite}
+#hlw-wrap .hlw-item[data-anim="wobble"]:not(:disabled):hover{animation:hlw-wobble .9s ease-in-out infinite}
+#hlw-wrap .hlw-item[data-anim="rattle"]:not(:disabled):hover{animation:hlw-rattle .5s linear infinite}
+#hlw-wrap .hlw-item[data-anim="creak"]:not(:disabled):hover{animation:hlw-creak 1.1s ease-in-out infinite}
 }
+@keyframes hlw-swing{0%,100%{transform:scale(1.05) rotate(0)}25%{transform:scale(1.05) rotate(4deg)}75%{transform:scale(1.05) rotate(-4deg)}}
+@keyframes hlw-wobble{0%,100%{transform:scale(1.05) rotate(0)}30%{transform:scale(1.05) rotate(-2.5deg)}60%{transform:scale(1.05) rotate(2deg)}}
+@keyframes hlw-rattle{0%,100%{transform:scale(1.05) translate(0,0)}25%{transform:scale(1.05) translate(-1px,-1px)}50%{transform:scale(1.05) translate(1px,0)}75%{transform:scale(1.05) translate(0,-1px)}}
+@keyframes hlw-creak{0%,100%{transform:scale(1.05) skewY(0)}40%{transform:scale(1.05) skewY(-1.2deg)}70%{transform:scale(1.05) skewY(.8deg)}}
+#hlw-wrap .hlw-item.is-shake{animation:hlw-shake .45s ease both !important}
+@keyframes hlw-shake{0%,100%{transform:none}20%{transform:translateX(-4%) rotate(-3deg)}45%{transform:translateX(3%) rotate(2deg)}70%{transform:translateX(-2%) rotate(-1deg)}}
 #hlw-wrap .hlw-item:focus{outline:none}
-#hlw-wrap .hlw-item:focus-visible{outline:3px solid #ffd27a;outline-offset:4px}
-#hlw-wrap .hlw-item.is-open{animation:none;filter:none;opacity:.5}
-#hlw-wrap .hlw-item.is-found{animation:none;opacity:1;filter:drop-shadow(0 0 14px rgba(var(--hlw-glow),.85))}
-#hlw-wrap .hlw-item:disabled{cursor:default;animation:none}
-#hlw-wrap .hlw-item:disabled:not(.is-found){filter:none;opacity:.45}
-#hlw-wrap .hlw-hint{display:none;position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;pointer-events:none;
-padding:8px 16px;border-radius:999px;background:rgba(54,32,80,.9);border:1px solid rgba(254,218,0,.7);font-size:13px;font-weight:700;white-space:nowrap;
-animation:hlw-hint 1.8s ease-in-out infinite}
-@keyframes hlw-hint{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% + 8px))}}
-@media (max-width:767px){
-#hlw-wrap .hlw-stagewrap{aspect-ratio:auto;padding:8px;background:var(--hlw-bg)}
-#hlw-wrap .hlw-cave{display:none}
-#hlw-wrap .hlw-stage{position:relative;left:auto;top:auto;transform:none;width:100%;max-height:none}
-#hlw-wrap.hlw--pan .hlw-stage{overflow-x:auto;overflow-y:hidden;height:75vh;height:75svh;max-height:640px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
-#hlw-wrap.hlw--pan .hlw-scene{height:100%;width:auto;min-width:100%;aspect-ratio:var(--hlw-kar,1261/985)}
-#hlw-wrap.hlw--pan .hlw-hint{display:block}
-#hlw-wrap.hlw--pan .hlw-hint.is-gone{display:none}
+#hlw-wrap .hlw-item:focus-visible{outline:3px solid var(--hlw-yellow);outline-offset:2px;border-radius:12px}
+#hlw-wrap .hlw-item.is-open .hlw-item__img{animation:none;opacity:0}
+#hlw-wrap .hlw-item.is-found .hlw-item__img{animation:hlw-found 1.6s ease-in-out infinite;opacity:1}
+@keyframes hlw-found{0%,100%{filter:brightness(1.15) drop-shadow(0 0 10px rgba(var(--hlw-glow),.8))}50%{filter:brightness(1.35) drop-shadow(0 0 24px rgba(var(--hlw-glow),1))}}
+#hlw-wrap .hlw-item:disabled{cursor:default}
+#hlw-wrap .hlw-item:disabled:not(.is-found) .hlw-item__img{animation:none;opacity:0}
+#hlw-wrap .hlw-top{position:absolute;z-index:4;left:0;right:0;top:0;height:calc(100vw * 1203 / 2880 * var(--hlw-topk,.119));display:flex;align-items:center;justify-content:center;padding:0 16px;pointer-events:none}
+#hlw-wrap .hlw-pill{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:7px 16px;border-radius:999px;background:rgba(19,12,14,.72);border:1px solid rgba(254,218,0,.45);
+color:#fff6ef;font-size:clamp(13px,1.15vw,16px);font-weight:700;line-height:1.2;white-space:nowrap;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 4px 18px rgba(0,0,0,.35)}
+#hlw-wrap .hlw-pill b{color:var(--hlw-yellow);font-weight:800}
+#hlw-wrap .hlw-pill__dot{width:8px;height:8px;border-radius:50%;background:var(--hlw-yellow);box-shadow:0 0 10px rgba(var(--hlw-glow),.9);animation:hlw-dot 1.6s ease-in-out infinite}
+@keyframes hlw-dot{50%{opacity:.35}}
+#hlw-wrap .hlw-sound{position:absolute;right:max(16px,2.2%);top:50%;transform:translateY(-50%);pointer-events:auto;width:44px;height:44px;padding:0;border-radius:50%;border:1px solid rgba(254,218,0,.45);
+background:rgba(19,12,14,.72);color:#fff6ef;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .2s,border-color .2s}
+#hlw-wrap .hlw-sound:hover{background:rgba(60,30,40,.85);border-color:var(--hlw-yellow)}
+#hlw-wrap .hlw-sound svg{width:22px;height:22px;fill:currentColor}
+#hlw-wrap .hlw-sound .hlw-on{display:none}
+#hlw-wrap .hlw-sound[aria-pressed="true"] .hlw-on{display:block}
+#hlw-wrap .hlw-sound[aria-pressed="true"] .hlw-off{display:none}
+#hlw-wrap .hlw-sound:focus-visible{outline:3px solid var(--hlw-yellow);outline-offset:3px}
+#hlw-wrap .hlw-bar{position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 20px;padding:18px 16px 22px;background:linear-gradient(180deg,#1b1015,#130c0e);border-top:1px solid rgba(254,218,0,.25);animation:hlw-fade .5s ease both}
+#hlw-wrap .hlw-bar__label{font-weight:700;font-size:15px;color:#fff6ef}
+#hlw-wrap .hlw-bar .hlw-promo{margin:0;flex:0 1 420px}
+#hlw-wrap .hlw-bar .hlw-btn{width:auto;margin-top:0}
+@media (max-width:1023px){
+#hlw-wrap{padding:0 0 12px;background:radial-gradient(120% 70% at 50% 40%,#22161a 0%,#130c0e 70%)}
+#hlw-wrap .hlw-scene{aspect-ratio:var(--hlw-kar,1337/1044);max-height:none;width:min(100%,760px)}
+#hlw-wrap .hlw-item{left:var(--kx);top:var(--ky);width:var(--kw);height:var(--kh)}
+#hlw-wrap .hlw-lamp{left:var(--klx);top:var(--kly);width:var(--klw)}
+#hlw-wrap .hlw-fog{left:var(--kgx);top:var(--kgy);width:var(--kgw);height:var(--kgh)}
+#hlw-wrap .hlw-top{position:relative;height:auto;padding:14px 64px 10px}
+#hlw-wrap .hlw-sound{right:12px}
+}
+@media (max-width:420px){
+#hlw-wrap .hlw-top{padding:12px 60px 8px 12px;justify-content:flex-start}
+#hlw-wrap .hlw-pill{font-size:13px;padding:7px 12px;white-space:normal}
 }
 #hlw-wrap .hlw-overlay{position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;
-background:rgba(14,6,24,.8);opacity:0;transition:opacity .3s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+background:rgba(10,5,8,.78);opacity:0;transition:opacity .3s ease;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #hlw-wrap .hlw-overlay.is-visible{opacity:1}
-#hlw-wrap .hlw-dialog{position:relative;width:min(100%,649px);margin:auto;max-height:92vh;max-height:92svh;overflow-y:auto;overscroll-behavior:contain;border-radius:20px;background:var(--hlw-panel);
-transform:scale(.92);opacity:0;transition:transform .3s ease,opacity .3s ease;color:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55)}
-#hlw-wrap .hlw-overlay.is-visible .hlw-dialog{transform:scale(1);opacity:1}
+#hlw-wrap .hlw-dialog{position:relative;width:min(100%,560px);margin:auto;border-radius:20px;overflow:hidden;background:var(--hlw-panel);
+transform:scale(.9) translateY(12px);opacity:0;transition:transform .3s cubic-bezier(.2,1.3,.4,1),opacity .25s ease;color:#fff;box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.06)}
+#hlw-wrap .hlw-overlay.is-visible .hlw-dialog{transform:none;opacity:1}
 #hlw-wrap .hlw-dialog:focus{outline:none}
-#hlw-wrap .hlw-pic{position:relative;width:100%;aspect-ratio:1298/1000;overflow:hidden;background:linear-gradient(160deg,#6b43a0,#2a1740)}
-#hlw-wrap .hlw-pic img{display:block;width:100%;height:100%;object-fit:cover}
-#hlw-wrap .hlw-pic__ph{position:absolute;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:rgba(255,246,239,.6);text-align:center;border:2px dashed rgba(255,246,239,.3);margin:14px;border-radius:12px}
-#hlw-wrap .hlw-body{padding:clamp(20px,5vw,32px) clamp(20px,5vw,32px) clamp(24px,5vw,32px);text-align:left}
-#hlw-wrap .hlw-close{position:absolute;right:12px;top:12px;z-index:3;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:rgba(20,8,32,.6);color:#fff;font-size:28px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
-#hlw-wrap .hlw-close:hover{background:rgba(20,8,32,.85)}
+#hlw-wrap #hlw-win .hlw-dialog{width:min(100%,640px)}
+#hlw-wrap #hlw-win .hlw-pic{max-height:42vh;max-height:42svh}
+#hlw-wrap .hlw-pic{position:relative;width:100%;aspect-ratio:1298/1000;max-height:52vh;max-height:52svh;overflow:hidden;background:#2a1a12}
+#hlw-wrap .hlw-pic img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 30%}
+#hlw-wrap .hlw-pic::after{content:"";position:absolute;left:0;right:0;bottom:0;height:18%;background:linear-gradient(180deg,transparent,rgba(76,47,114,.55));pointer-events:none}
+#hlw-wrap .hlw-body{padding:24px 28px 28px;text-align:left}
+#hlw-wrap .hlw-close{position:absolute;right:12px;top:12px;z-index:3;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:rgba(20,10,16,.55);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);transition:background .2s}
+#hlw-wrap .hlw-close svg{width:18px;height:18px;stroke:#fff;stroke-width:2.4;stroke-linecap:round}
+#hlw-wrap .hlw-close:hover{background:rgba(20,10,16,.85)}
 #hlw-wrap .hlw-close:focus-visible,#hlw-wrap .hlw-btn:focus-visible,#hlw-wrap .hlw-code:focus-visible,#hlw-wrap .hlw-copy:focus-visible,#hlw-wrap .hlw-sharelink:focus-visible{outline:3px solid var(--hlw-yellow);outline-offset:3px}
-#hlw-wrap .hlw-dtitle{font-size:clamp(22px,5.5vw,28px);font-weight:800;line-height:1.15;color:#fff;text-align:left}
-#hlw-wrap .hlw-dtext{margin-top:12px;font-size:clamp(16px,4.2vw,20px);font-weight:500;line-height:1.4;color:#fff;text-align:left}
-#hlw-wrap .hlw-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin-top:20px;padding:12px 20px;border:0;border-radius:8px;
-background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weight:700;line-height:1.2;text-align:center;cursor:pointer;transition:transform .15s ease,filter .15s ease}
-#hlw-wrap .hlw-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
-#hlw-wrap .hlw-btn--sec{background:var(--hlw-sec);margin-top:12px}
-#hlw-wrap .hlw-promo{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:20px 0 0;padding:8px;border:2px dashed var(--hlw-yellow);border-radius:8px;background:rgba(54,32,80,.7)}
-#hlw-wrap .hlw-code{flex:1 1 auto;min-width:max-content;padding:8px 10px;border:0;background:transparent;color:var(--hlw-yellow);font-size:clamp(16px,4.6vw,22px);font-weight:800;letter-spacing:.04em;text-align:left;cursor:pointer}
-#hlw-wrap .hlw-copy{flex:1 1 130px;min-height:44px;padding:8px 14px;border:0;border-radius:8px;background:var(--hlw-yellow);color:#362050;font-size:14px;font-weight:700;cursor:pointer}
-#hlw-wrap .hlw-tip{position:absolute;right:8px;top:-32px;padding:4px 10px;border-radius:8px;background:#1a0f10;color:#fff;font-size:12px;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;pointer-events:none}
+#hlw-wrap .hlw-dtitle{font-size:26px;font-weight:800;line-height:1.15;color:#fff;text-align:left}
+#hlw-wrap .hlw-dtext{margin-top:12px;font-size:18px;font-weight:500;line-height:1.4;color:#fff;text-align:left}
+#hlw-wrap .hlw-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+#hlw-wrap .hlw-btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;margin:0;padding:12px 22px;border:0;border-radius:10px;
+background:var(--hlw-pink);color:#fff;font-size:16px;font-weight:700;line-height:1.2;text-align:center;cursor:pointer;transition:transform .15s ease,filter .15s ease,box-shadow .2s;box-shadow:0 6px 18px rgba(255,26,108,.3)}
+#hlw-wrap .hlw-btn:hover{transform:translateY(-1px);filter:brightness(1.08);box-shadow:0 8px 24px rgba(255,26,108,.45)}
+#hlw-wrap .hlw-btn:active{transform:translateY(1px)}
+#hlw-wrap .hlw-btn--sec{background:var(--hlw-sec);box-shadow:0 6px 18px rgba(140,65,227,.3)}
+#hlw-wrap .hlw-btn--sec:hover{box-shadow:0 8px 24px rgba(140,65,227,.45)}
+#hlw-wrap .hlw-promo{position:relative;display:flex;align-items:center;gap:8px;margin:20px 0 0;padding:6px 6px 6px 14px;border:2px dashed var(--hlw-yellow);border-radius:12px;background:rgba(26,14,40,.55)}
+#hlw-wrap .hlw-code{flex:1 1 auto;min-width:0;white-space:nowrap;padding:6px 0;border:0;background:transparent;color:var(--hlw-yellow);font-size:22px;font-weight:800;letter-spacing:.03em;text-align:left;cursor:pointer;line-height:1.15}
+#hlw-wrap .hlw-copy{flex:0 0 auto;min-height:44px;padding:8px 16px;border:0;border-radius:8px;background:var(--hlw-yellow);color:#362050;font-size:14px;font-weight:800;cursor:pointer;transition:filter .15s}
+#hlw-wrap .hlw-copy:hover{filter:brightness(1.06)}
+#hlw-wrap .hlw-tip{position:absolute;right:6px;top:-34px;padding:5px 10px;border-radius:8px;background:#1a0f10;color:#fff;font-size:12px;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
 #hlw-wrap .hlw-tip.is-on{opacity:1;transform:none}
-#hlw-wrap .hlw-sharerow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-#hlw-wrap .hlw-sharelink{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:2px solid #fff;border-radius:8px;background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+#hlw-wrap .hlw-sharerow{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+#hlw-wrap .hlw-sharelink{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:10px;background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
+#hlw-wrap .hlw-sharelink:hover{background:rgba(255,255,255,.1)}
 @keyframes hlw-fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){
-#hlw-wrap .hlw-item{animation:none;filter:drop-shadow(0 0 8px rgba(var(--hlw-glow),.6));transition:none}
-#hlw-wrap .hlw-item.is-open{filter:none}
-#hlw-wrap .hlw-overlay,#hlw-wrap .hlw-dialog,#hlw-wrap .hlw-tip{transition:none}
-#hlw-wrap .hlw-hint,#hlw-wrap .hlw-bar{animation:none}
+@media (max-width:560px){
+#hlw-wrap .hlw-overlay{padding:10px}
+#hlw-wrap .hlw-body{padding:20px 20px 22px}
+#hlw-wrap .hlw-dtitle{font-size:22px}
+#hlw-wrap .hlw-dtext{font-size:16px}
+#hlw-wrap .hlw-actions .hlw-btn{flex:1 1 100%}
+#hlw-wrap .hlw-promo{flex-wrap:wrap;padding:10px;justify-content:center}
+#hlw-wrap .hlw-code{flex:1 1 100%;text-align:center;font-size:21px;padding:2px 0 4px}
+#hlw-wrap .hlw-copy{flex:1 1 100%}
+#hlw-wrap .hlw-btn{font-size:15px;padding:12px 16px}
+#hlw-wrap .hlw-bar .hlw-btn{flex:1 1 100%}
+#hlw-wrap .hlw-bar .hlw-promo{flex:1 1 100%}
 }
+@media (max-width:340px){
+#hlw-wrap .hlw-code{font-size:18px}
+}
+@media (prefers-reduced-motion:reduce){
+#hlw-wrap .hlw-item,#hlw-wrap .hlw-item__img{animation:none !important;transition:none}
+#hlw-wrap .hlw-item:not(.is-open) .hlw-item__img{opacity:.85}
+#hlw-wrap .hlw-lamp,#hlw-wrap .hlw-fog::before,#hlw-wrap .hlw-fog::after,#hlw-wrap .hlw-pill__dot{animation:none}
+#hlw-wrap .hlw-overlay,#hlw-wrap .hlw-dialog,#hlw-wrap .hlw-tip{transition:none}
+#hlw-wrap .hlw-bar{animation:none}
+}
+#hlw-wrap .hlw-hl{color:var(--hlw-yellow);font-weight:800;white-space:nowrap}
 </style>
-<section id="halloween-game" aria-label="Найди ПриЕм на&nbsp;страшной кухне"><div id="hlw-wrap" class="hlw-wrap hlw--fit" style="--hlw-bg:#362050;--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#7b4fd1;--hlw-glow:255,200,40;--hlw-kw:43.78%;--hlw-kar:1261/985"><div class="hlw-head"><h2 class="hlw-title">Найди ПриЕм на&nbsp;страшной кухне</h2><p class="hlw-lead">Открывай предметы и&nbsp;ищи, где спрятался ПриЕм</p></div><div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">Твой промокод</span><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a></div><div class="hlw-stagewrap"><div class="hlw-stage" role="group" aria-label="Кухня"><div class="hlw-scene hlw-scene--ph"><button type="button" class="hlw-item" data-id="cabinet-double" data-shape="rect" aria-label="Шкаф" style="left:5%;top:10%;width:36%;height:40%"><span class="hlw-art">Шкаф</span></button><button type="button" class="hlw-item" data-id="cabinet-single" data-shape="tall" aria-label="Шкафчик" style="left:44%;top:12%;width:18%;height:30%"><span class="hlw-art">Шкафчик</span></button><button type="button" class="hlw-item" data-id="pumpkin-lamp" data-shape="pumpkin" aria-label="Светильник-тыква" style="left:68%;top:14%;width:14%;height:20%"><span class="hlw-art">Светильник-тыква</span></button><button type="button" class="hlw-item" data-id="veg-crate" data-shape="rect" aria-label="Ящик с овощами" style="left:6%;top:66%;width:24%;height:22%"><span class="hlw-art">Ящик с&nbsp;овощами</span></button><button type="button" class="hlw-item" data-id="cauldron" data-shape="round" aria-label="Котёл" style="left:40%;top:58%;width:22%;height:32%"><span class="hlw-art">Котёл</span></button><button type="button" class="hlw-item" data-id="pan" data-shape="round" aria-label="Сковорода" style="left:68%;top:56%;width:22%;height:26%"><span class="hlw-art">Сковорода</span></button></div></div><div class="hlw-hint" aria-hidden="true">листай кухню &#8596;</div></div><div class="hlw-overlay" id="hlw-miss" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-miss-title" aria-describedby="hlw-miss-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть">&times;</button><div class="hlw-pic" id="hlw-miss-pic"><img src="" alt="" hidden><div class="hlw-pic__ph" aria-hidden="true">иллюстрация промаха</div></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><button type="button" class="hlw-btn" data-hlw-close>Продолжить поиск</button></div></div></div><div class="hlw-overlay" id="hlw-win" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть">&times;</button><div class="hlw-pic"><img src="" alt="" hidden><div class="hlw-pic__ph" aria-hidden="true">иллюстрация победы</div></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">Ого, ты&nbsp;не&nbsp;только смелый, но&nbsp;и&nbsp;удачливый!</h2><p class="hlw-dtext" id="hlw-win-text">Ты&nbsp;нашёл ПриЕм, а&nbsp;значит тебе больше не&nbsp;нужно заходить на&nbsp;страшную кухню. Заказывай готовую еду ещё выгоднее с&nbsp;промокодом СТРАШНОВКУСНО на&nbsp;1000&nbsp;₽ (на&nbsp;заказы от&nbsp;5&nbsp;дней)</p><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a><button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">Рассказать друзьям</button><div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php?url=" target="_blank" rel="noopener">ВКонтакте</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url?url=" target="_blank" rel="noopener">Telegram</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">Скопировать ссылку</button></div></div></div></div></div></div></section>
+<section id="halloween-game" aria-label="Страшная кухня: найди, где спрятан&nbsp;ПриЕм"><div id="hlw-wrap" class="hlw-wrap" style="--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#8c41e3;--hlw-glow:255,200,40;--hlw-kar:1337/1044;--hlw-topk:0.11900000000000001;--lx:31.8%;--ly:36%;--lw:20%;--klx:12.8%;--kly:32%;--klw:46%;--gx:27.2%;--gy:70%;--gw:43.8%;--gh:24%;--kgx:2.8%;--kgy:69%;--kgw:94.4%;--kgh:28%"><div class="hlw-top"><div class="hlw-pill" role="status" aria-live="polite"><span class="hlw-pill__dot" aria-hidden="true"></span><span class="hlw-pill__txt">Найди, где спрятался <b>ПриЕм</b></span></div><button type="button" class="hlw-sound" aria-pressed="false" aria-label="Включить звук" title="Включить звук"><svg class="hlw-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg><svg class="hlw-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button></div><div class="hlw-scene"><picture><source media="(min-width:1024px)" srcset="./assets/scene-1440.4ed0677d.webp 1440w, ./assets/scene-2880.d6ff1ca6.webp 2880w" sizes="100vw"><img class="hlw-scene__bg" src="./assets/kitchen-800.654b2a1f.webp" srcset="./assets/kitchen-800.654b2a1f.webp 800w, ./assets/kitchen-1400.e611c2cb.webp 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture><div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div><div class="hlw-items" role="group" aria-label="Страшная кухня: найди, где спрятан&nbsp;ПриЕм"><button type="button" class="hlw-item" data-id="pumpkin-lamp" data-anim="swing" aria-label="Светильник-тыква" style="--fx:26.851%;--fy:14.397%;--fw:10.000%;--fh:28.761%;--kx:2.043%;--ky:5.670%;--kw:21.541%;--kh:33.142%;--o:50% 0%;--hlw-d:0.00s"><img class="hlw-item__img" src="./assets/item-pumpkin-lamp.c3903d52.webp" alt="" draggable="false" decoding="async"></button><button type="button" class="hlw-item" data-id="cabinet-double" data-anim="creak" aria-label="Шкаф с приоткрытой дверцей" style="--fx:42.345%;--fy:24.554%;--fw:12.743%;--fh:25.603%;--kx:35.419%;--ky:17.375%;--kw:27.450%;--kh:29.502%;--o:50% 0%;--hlw-d:0.43s"><img class="hlw-item__img" src="./assets/item-cabinet-double.2a321ebc.webp" alt="" draggable="false" decoding="async"></button><button type="button" class="hlw-item" data-id="cabinet-single" data-anim="creak" aria-label="Навесной шкафчик" style="--fx:53.111%;--fy:22.473%;--fw:7.812%;--fh:26.018%;--kx:58.610%;--ky:14.976%;--kw:16.829%;--kh:29.981%;--o:50% 0%;--hlw-d:0.86s"><img class="hlw-item__img" src="./assets/item-cabinet-single.318d29f1.webp" alt="" draggable="false" decoding="async"></button><button type="button" class="hlw-item" data-id="veg-crate" data-anim="rattle" aria-label="Ящик с овощами" style="--fx:40.090%;--fy:66.111%;--fw:8.854%;--fh:19.285%;--kx:30.561%;--ky:65.260%;--kw:19.073%;--kh:22.222%;--o:50% 100%;--hlw-d:1.29s"><img class="hlw-item__img" src="./assets/item-veg-crate.0ac84e96.webp" alt="" draggable="false" decoding="async"></button><button type="button" class="hlw-item" data-id="cauldron" data-anim="wobble" aria-label="Котёл" style="--fx:47.917%;--fy:64.989%;--fw:9.340%;--fh:21.114%;--kx:47.420%;--ky:63.967%;--kw:20.120%;--kh:24.330%;--o:50% 100%;--hlw-d:1.72s"><img class="hlw-item__img" src="./assets/item-cauldron.4abd528a.webp" alt="" draggable="false" decoding="async"></button><button type="button" class="hlw-item" data-id="pan" data-anim="rattle" aria-label="Сковорода под крышкой" style="--fx:55.158%;--fy:79.510%;--fw:11.528%;--fh:11.222%;--kx:63.018%;--ky:80.699%;--kw:24.832%;--kh:12.931%;--o:50% 100%;--hlw-d:2.15s"><img class="hlw-item__img" src="./assets/item-pan.674b38ad.webp" alt="" draggable="false" decoding="async"></button></div><canvas class="hlw-fx" aria-hidden="true"></canvas></div><div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">Твой промокод</span><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a></div><div class="hlw-overlay" id="hlw-miss" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-miss-title" aria-describedby="hlw-miss-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none"/></svg></button><div class="hlw-pic"><img id="hlw-miss-img" alt="" sizes="(max-width:560px) 100vw, 560px" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><div class="hlw-actions"><button type="button" class="hlw-btn" data-hlw-close>Продолжить&nbsp;поиск</button></div></div></div></div><div class="hlw-overlay" id="hlw-win" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none"/></svg></button><div class="hlw-pic"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="./assets/modal-win-720.e848ea72.webp" srcset="./assets/modal-win-720.e848ea72.webp 720w, ./assets/modal-win-1200.777a0dca.webp 1200w" sizes="(max-width:560px) 100vw, 560px" loading="lazy" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">Ого, ты&nbsp;не&nbsp;только смелый, но&nbsp;и&nbsp;удачливый!</h2><p class="hlw-dtext" id="hlw-win-text">Ты&nbsp;нашёл ПриЕм, а&nbsp;значит тебе больше не&nbsp;нужно заходить на&nbsp;страшную кухню. Заказывай готовую еду ещё выгоднее с&nbsp;промокодом <b class="hlw-hl">СТРАШНОВКУСНО</b> на&nbsp;1000&nbsp;₽ (на&nbsp;заказы от&nbsp;5&nbsp;дней)</p><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><div class="hlw-actions"><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a><button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">Рассказать друзьям</button></div><div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php" target="_blank" rel="noopener">ВКонтакте</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url" target="_blank" rel="noopener">Telegram</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">Скопировать ссылку</button></div></div></div></div></div></section>
 <img id="hlw-boot-beacon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="1" height="1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" onload="(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()" onerror="(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()">
 <script id="hlw-js">
 (function () {
   if (window.__hlwInstalled) return;
   window.__hlwInstalled = 1;
 
-  var RT = {"mobileMode":"fit","ymId":null,"promo":"СТРАШНОВКУСНО","shareUrl":null,"shareText":"Я\u00a0нашёл ПриЕм на\u00a0страшной кухне. Попробуй и\u00a0ты","shareTitle":"Найди ПриЕм","copiedText":"Скопировано","copyFailText":"Не удалось, выдели код вручную","miss":[{"t":"Мимо!","d":"Тут\u00a0только пыль и\u00a0старый рецепт, который даже не\u00a0стоит пытаться готовить","i":""},{"t":"Иу","d":"Тут\u00a0прячется лишь сельдерей, которому год. Советую его не\u00a0брать","i":""},{"t":"Не\u00a0в\u00a0этот раз","d":"Здесь живёт дух пригоревшей запеканки","i":""},{"t":"Фуэ","d":"Кажется, это\u00a0тут\u00a0лежит аж с\u00a0прошлого века","i":""},{"t":"Пусто","d":"Только паутина и\u00a0запах недельного борща","i":""},{"t":"Оу","d":"Ты\u00a0разбудил призрак вчерашней немытой посуды. Он\u00a0явно недоволен","i":""},{"t":"Аааа","d":"Тут\u00a0живёт только проклятие вечной готовки. Жутко, правда?","i":""},{"t":"Мимо","d":"Но\u00a0кухонный дух оценил твою смелость","i":""}]};
+  /* Звук игры «найди ПриЕм»: всё синтезом Web Audio, без файлов. Фрагмент внутри общей IIFE. */
+var HlwSound = (function () {
+  var ctx = null;
+  var master = null;      // общая громкость + лимитер
+  var bus = null;         // шина эффектов
+  var ambGain = null;     // громкость фона
+  var reverb = null;
+  var reverbSend = null;
+  var on = false;
+  var paused = false;
+  var ambNodes = [];      // источники фона, чтобы остановить
+  var ambTimer = null;
+  var stopTimer = null;
+  var MASTER = 0.16;
+
+  function ensureCtx() {
+    if (ctx) { return ctx; }
+    try {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) { return null; }
+      ctx = new AC();
+      var comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -18; comp.knee.value = 20; comp.ratio.value = 8;
+      comp.attack.value = 0.005; comp.release.value = 0.2;
+      master = ctx.createGain();
+      master.gain.value = 0;
+      master.connect(comp); comp.connect(ctx.destination);
+      bus = ctx.createGain(); bus.gain.value = 3.2; bus.connect(master);
+      ambGain = ctx.createGain(); ambGain.gain.value = 1; ambGain.connect(master);
+      // «пещерная» реверберация из затухающего шума
+      try {
+        var len = Math.floor(ctx.sampleRate * 1.6);
+        var ir = ctx.createBuffer(2, len, ctx.sampleRate);
+        for (var c = 0; c < 2; c++) {
+          var d = ir.getChannelData(c);
+          for (var i = 0; i < len; i++) { d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+        }
+        reverb = ctx.createConvolver(); reverb.buffer = ir;
+        reverbSend = ctx.createGain(); reverbSend.gain.value = 0.28;
+        reverbSend.connect(reverb); reverb.connect(master);
+      } catch (e1) { reverb = null; reverbSend = null; }
+      // разблокировка iOS тихим буфером
+      var ub = ctx.createBuffer(1, 1, 22050), us = ctx.createBufferSource();
+      us.buffer = ub; us.connect(ctx.destination); us.start(0);
+    } catch (e) { ctx = null; }
+    return ctx;
+  }
+
+  function wake() {
+    try {
+      if (ctx && (ctx.state === 'suspended' || ctx.state === 'interrupted')) {
+        var p = ctx.resume();
+        if (p && p.catch) { p.catch(function () {}); }
+      }
+    } catch (e) {}
+  }
+
+  function noiseBuffer(sec, kind) {
+    var n = Math.floor(ctx.sampleRate * sec);
+    var b = ctx.createBuffer(1, n, ctx.sampleRate);
+    var d = b.getChannelData(0), last = 0, b0 = 0, b1 = 0, b2 = 0;
+    for (var i = 0; i < n; i++) {
+      var w = Math.random() * 2 - 1;
+      if (kind === 'brown') { last = (last + 0.02 * w) / 1.02; d[i] = last * 3.5; }
+      else if (kind === 'pink') {
+        b0 = 0.99765 * b0 + w * 0.0990460; b1 = 0.96300 * b1 + w * 0.2965164;
+        b2 = 0.57000 * b2 + w * 1.0526913;
+        d[i] = (b0 + b1 + b2 + w * 0.1848) * 0.2;
+      } else { d[i] = w; }
+    }
+    return b;
+  }
+
+  // выход эффекта: в шину и немного в реверберацию
+  function out(node) {
+    node.connect(bus);
+    if (reverbSend) { node.connect(reverbSend); }
+  }
+
+  // тон с огибающей; f2 — конечная частота (глиссандо)
+  function tone(type, f1, f2, t0, dur, vol, dest) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(f1, t0);
+    if (f2 && f2 !== f1) { o.frequency.exponentialRampToValueAtTime(f2, t0 + dur); }
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + Math.min(0.012, dur / 4));
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g);
+    if (dest) { g.connect(dest); } else { out(g); }
+    o.start(t0); o.stop(t0 + dur + 0.05);
+    return o;
+  }
+
+  // шумовой всплеск через фильтр; f1→f2 — движение частоты
+  function noiseBurst(t0, dur, type, f1, f2, q, vol, dest) {
+    var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuffer(dur + 0.05, 'white');
+    f.type = type; f.Q.value = q;
+    f.frequency.setValueAtTime(f1, t0);
+    f.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + dur * 0.35);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    s.connect(f); f.connect(g);
+    if (dest) { g.connect(dest); } else { out(g); }
+    s.start(t0); s.stop(t0 + dur + 0.05);
+  }
+
+  var fx = {
+    miss: function (t) {
+      // вой призрака: синус с вибрато, вниз ~0.8 с
+      var o = tone('sine', 520, 150, t, 0.85, 0.5);
+      var lfo = ctx.createOscillator(), lg = ctx.createGain();
+      lfo.frequency.value = 7; lg.gain.value = 18;
+      lfo.connect(lg); lg.connect(o.frequency);
+      lfo.start(t); lfo.stop(t + 0.9);
+      tone('sine', 1040, 300, t, 0.8, 0.12);
+      // лёгкий скрип
+      noiseBurst(t + 0.05, 0.5, 'bandpass', 900, 420, 9, 0.12);
+    },
+    win: function (t) {
+      var notes = [523.25, 659.25, 783.99, 1046.5, 1318.5, 1568];
+      for (var i = 0; i < notes.length; i++) {
+        var st = t + i * 0.09;
+        tone('triangle', notes[i], 0, st, 0.9, 0.3);
+        tone('sine', notes[i] * 2, 0, st, 0.5, 0.08);
+      }
+      // мерцающий блеск
+      noiseBurst(t + 0.1, 0.9, 'highpass', 6000, 9000, 1, 0.07);
+      noiseBurst(t + 0.45, 0.8, 'highpass', 7000, 10000, 1, 0.05);
+    },
+    open: function (t) { noiseBurst(t, 0.25, 'bandpass', 400, 2200, 1.2, 0.25); },
+    close: function (t) { noiseBurst(t, 0.15, 'bandpass', 1800, 450, 1.2, 0.12); },
+    copy: function (t) {
+      tone('square', 1900, 1700, t, 0.04, 0.1);
+      tone('square', 2400, 2200, t + 0.07, 0.04, 0.1);
+    },
+    tap: function (t) {
+      tone('sine', 220, 120, t, 0.1, 0.5);
+      noiseBurst(t, 0.03, 'bandpass', 1400, 900, 2, 0.15);
+    }
+  };
+
+  // фоновая атмосфера: гул + ветер
+  function startAmbient() {
+    stopAmbient();
+    var t = ctx.currentTime;
+    var layers = [
+      { kind: 'brown', f: 220, lfoF: 0.06, lfoD: 90, vol: 1.0 },
+      { kind: 'pink', f: 500, lfoF: 0.09, lfoD: 220, vol: 0.28 }
+    ];
+    for (var i = 0; i < layers.length; i++) {
+      var L = layers[i];
+      var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      s.buffer = noiseBuffer(6, L.kind); s.loop = true;
+      f.type = 'lowpass'; f.frequency.value = L.f; f.Q.value = 0.7;
+      g.gain.value = L.vol;
+      var lfo = ctx.createOscillator(), lg = ctx.createGain();
+      lfo.frequency.value = L.lfoF; lg.gain.value = L.lfoD;
+      lfo.connect(lg); lg.connect(f.frequency);
+      s.connect(f); f.connect(g); g.connect(ambGain);
+      s.start(t); lfo.start(t);
+      ambNodes.push(s, lfo);
+    }
+    scheduleOdd();
+  }
+
+  function stopAmbient() {
+    if (ambTimer) { clearTimeout(ambTimer); ambTimer = null; }
+    for (var i = 0; i < ambNodes.length; i++) {
+      try { ambNodes[i].stop(); } catch (e) {}
+    }
+    ambNodes = [];
+  }
+
+  // редкий далёкий скрип или капля
+  function scheduleOdd() {
+    ambTimer = setTimeout(function () {
+      try {
+        if (on && !paused && ctx && ctx.state === 'running') {
+          var t = ctx.currentTime + 0.02;
+          if (Math.random() < 0.5) {
+            // скрип половицы
+            var f0 = 140 + Math.random() * 80;
+            var o = tone('sawtooth', f0, f0 * 0.7, t, 0.5, 0.05, ambGain);
+            var fl = ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.frequency.value = 400; fl.Q.value = 5;
+            o.disconnect();
+            var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
+            g.gain.linearRampToValueAtTime(0.18, t + 0.15);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
+            o.connect(fl); fl.connect(g); g.connect(ambGain);
+          } else {
+            // капля
+            var fr = 900 + Math.random() * 500;
+            var og = ctx.createGain();
+            og.connect(ambGain);
+            tone('sine', fr, fr * 0.5, t, 0.18, 0.2, og);
+            if (reverbSend) { og.connect(reverbSend); }
+          }
+        }
+      } catch (e) {}
+      if (on) { scheduleOdd(); }
+    }, 7000 + Math.random() * 8000);
+  }
+
+  function ramp(v, sec) {
+    try {
+      var t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setValueAtTime(master.gain.value, t);
+      master.gain.linearRampToValueAtTime(v, t + sec);
+    } catch (e) {}
+  }
+
+  var api = {
+    enable: function (v) {
+      try {
+        v = !!v;
+        if (v === on) { return; }
+        if (v) {
+          if (!ensureCtx()) { return; }
+          on = true;
+          if (stopTimer) { clearTimeout(stopTimer); stopTimer = null; }
+          wake();
+          startAmbient();
+          ramp(paused ? 0 : MASTER, 1.5);
+        } else {
+          on = false;
+          if (!ctx) { return; }
+          ramp(0, 0.4);
+          if (ambTimer) { clearTimeout(ambTimer); ambTimer = null; }
+          stopTimer = setTimeout(function () {
+            stopTimer = null;
+            if (!on) {
+              stopAmbient();
+              try { ctx.suspend(); } catch (e) {}
+            }
+          }, 450);
+        }
+      } catch (e) {}
+    },
+    isOn: function () { return on; },
+    play: function (name) {
+      try {
+        if (!on || paused || !ctx || !fx[name]) { return; }
+        wake();
+        fx[name](ctx.currentTime + 0.01);
+      } catch (e) {}
+    },
+    pause: function () {
+      try {
+        paused = true;
+        if (on && ctx) { ramp(0, 0.3); }
+      } catch (e) {}
+    },
+    resume: function () {
+      try {
+        paused = false;
+        if (on && ctx) { wake(); ramp(MASTER, 0.6); }
+      } catch (e) {}
+    }
+  };
+  return api;
+})();
+
+/* Частицы на canvas для мини-игры «найди ПриЕм».
+   Файл вставляется внутрь общей IIFE: одно объявление, без глобалов. ES5. */
+var HlwFx = function (canvas, opts) {
+  var ctx = null;
+  var W = 0, H = 0, DPR = 1;
+  var o = { reduce: false, light: null, floorY: null };
+  var running = false;      // ambient включён (start/stop)
+  var raf = 0;
+  var last = 0;
+  var clock = 0;            // своё время в секундах
+  var dust = [];
+  var embers = [];
+  var parts = [];           // частицы burst: дым, искры
+  var flashes = [];         // световые вспышки
+  var emberTimer = 1.5;
+  var dustMode = '';        // 'm' | 'd' — сколько пылинок собрано
+  var ro = null, onWin = null, destroyed = false;
+  var sprites = {};
+
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function safe(fn) { try { return fn(); } catch (e) { return undefined; } }
+
+  /* Предрендеренный мягкий спрайт: радиальный градиент цвета rgb */
+  function sprite(key, r, g, b, size, core) {
+    var s = sprites[key];
+    if (s) return s;
+    var c = document.createElement('canvas');
+    c.width = c.height = size;
+    var x = c.getContext('2d');
+    var h = size / 2;
+    var gr = x.createRadialGradient(h, h, 0, h, h, h);
+    var rgb = r + ',' + g + ',' + b;
+    gr.addColorStop(0, 'rgba(' + rgb + ',1)');
+    gr.addColorStop(core, 'rgba(' + rgb + ',0.45)');
+    gr.addColorStop(0.7, 'rgba(' + rgb + ',0.1)');
+    gr.addColorStop(1, 'rgba(' + rgb + ',0)');
+    x.fillStyle = gr;
+    x.fillRect(0, 0, size, size);
+    sprites[key] = c;
+    return c;
+  }
+  function spDust() { return sprite('dust', 255, 214, 150, 48, 0.25); }
+  function spEmber() { return sprite('ember', 255, 130, 30, 48, 0.2); }
+  function spGold() { return sprite('gold', 254, 218, 0, 48, 0.2); }
+  function spWhite() { return sprite('white', 255, 238, 214, 48, 0.2); }
+  function spPink() { return sprite('pink', 255, 26, 108, 48, 0.2); }
+  function spSmoke() { return sprite('smoke', 118, 104, 138, 128, 0.3); }
+  function spFlashGold() { return sprite('fg', 255, 200, 70, 128, 0.3); }
+  function spFlashSmoke() { return sprite('fs', 170, 150, 200, 128, 0.3); }
+
+  /* Размер буфера и DPR */
+  function resize() {
+    safe(function () {
+      var cw = canvas.clientWidth, ch = canvas.clientHeight;
+      if (!cw || !ch) {
+        var rc = canvas.getBoundingClientRect();
+        cw = rc.width; ch = rc.height;
+      }
+      if (!cw || !ch) return;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var nw = Math.round(cw * dpr), nh = Math.round(ch * dpr);
+      var oldW = W, oldH = H;
+      if (canvas.width !== nw) canvas.width = nw;
+      if (canvas.height !== nh) canvas.height = nh;
+      W = cw; H = ch; DPR = dpr;
+      ctx = ctx || canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      if (oldW && (oldW !== W || oldH !== H)) {
+        var i, p;
+        for (i = 0; i < parts.length; i++) { p = parts[i]; p.x *= W / oldW; p.y *= H / oldH; }
+        for (i = 0; i < embers.length; i++) { p = embers[i]; p.x *= W / oldW; p.y *= H / oldH; }
+      }
+      buildDust();
+      if (!loopNeeded()) render(0); else schedule();
+    });
+  }
+
+  /* Пылинки: координаты в долях, скорости в px/с */
+  function buildDust() {
+    var mode = W < 600 ? 'm' : 'd';
+    if (mode === dustMode && dust.length) return;
+    dustMode = mode;
+    var n = mode === 'm' ? Math.round(rnd(18, 25)) : Math.round(rnd(30, 45));
+    dust = [];
+    for (var i = 0; i < n; i++) {
+      dust.push({
+        fx: Math.random(), fy: Math.random(),
+        vx: rnd(-5, 7), vy: rnd(-7, 3),
+        r: rnd(0.6, 1.8),
+        a: rnd(0.15, 0.6),
+        ph: rnd(0, 6.28), fr: rnd(0.3, 0.9),
+        tw: rnd(0, 6.28), tf: rnd(0.8, 2.2),
+        amp: rnd(3, 9)
+      });
+    }
+  }
+
+  function spawnEmber() {
+    if (embers.length > 8) return;
+    var fl = (typeof o.floorY === 'number') ? o.floorY : 0.7;
+    var top = Math.min(0.9, Math.max(0.55, fl));
+    embers.push({
+      x: rnd(0.08, 0.92) * W, y: rnd(top, 1.0) * H,
+      vy: -rnd(28, 55), ph: rnd(0, 6.28), fr: rnd(0.8, 1.6), amp: rnd(6, 14),
+      r: rnd(1.4, 2.4), life: 0, max: rnd(2.6, 4.2)
+    });
+  }
+
+  function addFlash(x, y, rad, a, dur, sp) {
+    flashes.push({ x: x, y: y, r0: rad * 0.45, r1: rad, a: a, t: 0, dur: dur, sp: sp });
+  }
+
+  function spark(x, y, sp, ang, spd, life, size, g, drag) {
+    parts.push({
+      k: 's', x: x, y: y, vx: Math.cos(ang) * spd, vy: Math.sin(ang) * spd,
+      life: 0, max: life, r: size, sp: sp, g: g, drag: drag,
+      ph: rnd(0, 6.28), tf: rnd(14, 30)
+    });
+  }
+
+  function burst(x, y, kind) {
+    safe(function () {
+      if (destroyed) return;
+      if (!ctx) resize();
+      if (!ctx) return;
+      if (parts.length > 400) parts.length = 0;
+      var i, a;
+      if (o.reduce) {
+        addFlash(x, y, kind === 'gold' ? 110 : 80, kind === 'gold' ? 0.4 : 0.22, 0.4,
+          kind === 'gold' ? spFlashGold() : spFlashSmoke());
+        schedule();
+        return;
+      }
+      if (kind === 'gold') {
+        var n = Math.round(rnd(70, 110));
+        for (i = 0; i < n; i++) {
+          var q = Math.random();
+          var sp = q < 0.6 ? spGold() : (q < 0.88 ? spWhite() : spPink());
+          a = rnd(0, 6.283);
+          var v = rnd(80, 430) * (0.35 + Math.random() * 0.65);
+          spark(x, y, sp, a, v, rnd(1.0, 1.6), rnd(2.4, 4.6), 380, 1.6);
+        }
+        addFlash(x, y, 150, 0.6, 0.55, spFlashGold());
+      } else {
+        var m = Math.round(rnd(12, 18));
+        for (i = 0; i < m; i++) {
+          a = rnd(0, 6.283);
+          var d = rnd(55, 170);
+          parts.push({
+            k: 'm', x: x + Math.cos(a) * rnd(0, 8), y: y + Math.sin(a) * rnd(0, 8),
+            vx: Math.cos(a) * d, vy: Math.sin(a) * d - rnd(8, 30),
+            life: -rnd(0, 0.08), max: rnd(0.8, 1.0),
+            r: rnd(16, 28), grow: rnd(1.9, 2.6), a: rnd(0.3, 0.5)
+          });
+        }
+        var k = Math.round(rnd(4, 6));
+        for (i = 0; i < k; i++) {
+          spark(x, y, i % 2 ? spEmber() : spGold(), rnd(0, 6.283), rnd(70, 190), rnd(0.4, 0.7), rnd(1.4, 2.2), 260, 2.2);
+        }
+      }
+      schedule();
+    });
+  }
+
+  function ease(t) { return t * t * (3 - 2 * t); }
+
+  /* Одна отрисовка кадра */
+  function render(dt) {
+    if (!ctx || !W) return;
+    var i, p, t;
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, W, H);
+    clock += dt;
+    var lt = o.light && typeof o.light.x === 'number' ? o.light : null;
+    var lx = lt ? lt.x * W : 0, ly = lt ? lt.y * H : 0;
+
+    /* ambient */
+    if (running) {
+      ctx.globalCompositeOperation = 'lighter';
+      var dsp = spDust();
+      var cnt = o.reduce ? Math.min(10, dust.length) : dust.length;
+      for (i = 0; i < cnt; i++) {
+        p = dust[i];
+        if (!o.reduce) {
+          p.fx += p.vx * dt / W; p.fy += p.vy * dt / H;
+          if (p.fx < -0.02) p.fx += 1.04; else if (p.fx > 1.02) p.fx -= 1.04;
+          if (p.fy < -0.02) p.fy += 1.04; else if (p.fy > 1.02) p.fy -= 1.04;
+        }
+        var sx = p.fx * W, sy = p.fy * H;
+        if (!o.reduce) {
+          sx += Math.sin(clock * p.fr + p.ph) * p.amp;
+          sy += Math.cos(clock * p.fr * 0.8 + p.ph) * p.amp * 0.6;
+        }
+        var al = p.a;
+        if (!o.reduce) al *= 0.65 + 0.35 * Math.sin(clock * p.tf + p.tw);
+        if (lt) {
+          var dx = (sx - lx) / W, dy = (sy - ly) / W;
+          var dd = Math.sqrt(dx * dx + dy * dy);
+          al *= 1 + 1.6 * Math.max(0, 1 - dd / 0.4);
+        }
+        if (al > 0.95) al = 0.95;
+        var s = p.r * 5.6;
+        ctx.globalAlpha = al;
+        ctx.drawImage(dsp, sx - s / 2, sy - s / 2, s, s);
+      }
+      if (!o.reduce) {
+        var esp = spEmber();
+        for (i = embers.length - 1; i >= 0; i--) {
+          p = embers[i];
+          p.life += dt;
+          t = p.life / p.max;
+          if (t >= 1) { embers.splice(i, 1); continue; }
+          p.y += p.vy * dt;
+          var ex = p.x + Math.sin(clock * p.fr + p.ph) * p.amp;
+          var ea = Math.sin(Math.PI * Math.min(1, t * 1.15)) * (0.7 + 0.3 * Math.sin(clock * 9 + p.ph));
+          var es = p.r * (1 - t * 0.5) * 6;
+          ctx.globalAlpha = Math.max(0, Math.min(1, ea));
+          ctx.drawImage(esp, ex - es / 2, p.y - es / 2, es, es);
+        }
+        emberTimer -= dt;
+        if (emberTimer <= 0) { spawnEmber(); emberTimer = rnd(2, 4); }
+      }
+    }
+
+    /* дым (обычное смешение) */
+    ctx.globalCompositeOperation = 'source-over';
+    var smk = spSmoke();
+    for (i = parts.length - 1; i >= 0; i--) {
+      p = parts[i];
+      if (p.k !== 'm') continue;
+      p.life += dt;
+      if (p.life >= p.max) { parts.splice(i, 1); continue; }
+      if (p.life < 0) continue;
+      t = p.life / p.max;
+      var damp = Math.exp(-1.9 * dt);
+      p.vx *= damp; p.vy *= damp;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      var sz = p.r * (1 + (p.grow - 1) * (1 - (1 - t) * (1 - t))) * 2;
+      ctx.globalAlpha = p.a * Math.sin(Math.PI * Math.pow(t, 0.55)) ;
+      ctx.drawImage(smk, p.x - sz / 2, p.y - sz / 2, sz, sz);
+    }
+
+    /* искры (аддитивно, с короткими следами) */
+    ctx.globalCompositeOperation = 'lighter';
+    for (i = parts.length - 1; i >= 0; i--) {
+      p = parts[i];
+      if (p.k !== 's') continue;
+      p.life += dt;
+      if (p.life >= p.max) { parts.splice(i, 1); continue; }
+      t = p.life / p.max;
+      var dm = Math.exp(-p.drag * dt);
+      p.vx *= dm; p.vy = p.vy * dm + p.g * dt;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+      var tw = 0.6 + 0.4 * Math.sin(clock * p.tf + p.ph);
+      var a0 = (1 - t) * (1 - t * 0.3) * tw;
+      var sr = p.r * (1 - t * 0.5) * 5.4;
+      var j;
+      for (j = 0; j < 3; j++) {
+        var back = j * 0.028;
+        var k2 = 1 - j * 0.28;
+        var ss = sr * k2;
+        ctx.globalAlpha = Math.max(0, a0 * (1 - j * 0.32));
+        ctx.drawImage(p.sp, p.x - p.vx * back - ss / 2, p.y - p.vy * back - ss / 2, ss, ss);
+      }
+    }
+
+    /* вспышки */
+    for (i = flashes.length - 1; i >= 0; i--) {
+      p = flashes[i];
+      p.t += dt;
+      if (p.t >= p.dur) { flashes.splice(i, 1); continue; }
+      t = p.t / p.dur;
+      var fr = p.r0 + (p.r1 - p.r0) * (1 - (1 - t) * (1 - t));
+      ctx.globalAlpha = p.a * (1 - ease(t));
+      ctx.drawImage(p.sp, p.x - fr, p.y - fr, fr * 2, fr * 2);
+    }
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function loopNeeded() {
+    return (running && !o.reduce) || parts.length > 0 || flashes.length > 0;
+  }
+
+  function frame(ts) {
+    raf = 0;
+    if (destroyed) return;
+    safe(function () {
+      var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
+      last = ts;
+      render(dt);
+    });
+    if (loopNeeded()) {
+      raf = window.requestAnimationFrame(frame);
+    } else {
+      last = 0;
+      /* нечего анимировать: в reduce оставляем статику, иначе чистим холст */
+      if (!running && ctx && W) ctx.clearRect(0, 0, W, H);
+    }
+  }
+
+  function schedule() {
+    if (destroyed || raf) return;
+    if (!ctx) resize();
+    if (!ctx) return;
+    if (loopNeeded()) raf = window.requestAnimationFrame(frame);
+    else render(0);
+  }
+
+  var api = {
+    start: function () {
+      safe(function () {
+        if (destroyed) return;
+        running = true;
+        if (!ctx) resize();
+        schedule();
+      });
+    },
+    stop: function () {
+      safe(function () {
+        running = false;
+        embers.length = 0;
+        /* если идёт burst, цикл сам доиграет и остановится */
+        if (!loopNeeded()) {
+          if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
+          last = 0;
+          if (ctx && W) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        }
+      });
+    },
+    burst: burst,
+    setOpts: function (n) {
+      safe(function () {
+        if (!n) return;
+        var wasReduce = o.reduce;
+        if (n.reduce !== undefined) o.reduce = !!n.reduce;
+        if (n.light !== undefined) o.light = n.light;
+        if (n.floorY !== undefined) o.floorY = n.floorY;
+        if (wasReduce !== o.reduce) {
+          parts.length = 0; flashes.length = 0; embers.length = 0;
+        }
+        if (running) schedule();
+      });
+    },
+    destroy: function () {
+      safe(function () {
+        destroyed = true; running = false;
+        if (raf) { window.cancelAnimationFrame(raf); raf = 0; }
+        if (ro) { ro.disconnect(); ro = null; }
+        if (onWin) { window.removeEventListener('resize', onWin); onWin = null; }
+        parts.length = 0; flashes.length = 0; embers.length = 0; dust.length = 0;
+        if (ctx) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, canvas.width, canvas.height); }
+      });
+    }
+  };
+
+  safe(function () {
+    if (opts) api.setOpts(opts);
+    if (typeof window.ResizeObserver === 'function') {
+      ro = new window.ResizeObserver(function () { resize(); });
+      ro.observe(canvas);
+    } else {
+      onWin = function () { resize(); };
+      window.addEventListener('resize', onWin);
+    }
+    resize();
+  });
+
+  return api;
+};
+
+  var RT = {"ymId":null,"promo":"СТРАШНОВКУСНО","shareUrl":null,"shareText":"Я\u00a0нашёл ПриЕм на\u00a0страшной кухне и\u00a0забрал скидку 1000\u00a0₽. Рискнёшь?","shareTitle":"Найди ПриЕм на\u00a0страшной\u00a0кухне","copiedText":"Скопировано","copyFailText":"Не удалось, выдели код вручную","pillProgress":"Проверено <b>{n}</b> из {total}","pillWin":"<b>ПриЕм найден!</b> Промокод ниже","soundOn":"Включить звук","soundOff":"Выключить звук","lamp":{"x":0.318,"y":0.36,"kx":0.128,"ky":0.32},"miss":[{"t":"Мимо!","d":"Тут\u00a0только пыль и\u00a0старый рецепт, который даже не\u00a0стоит пытаться готовить","g":"miss-01","i":{"src":"./assets/modal-miss-01-720.2815aff0.webp","srcset":"./assets/modal-miss-01-720.2815aff0.webp 720w, ./assets/modal-miss-01-1200.0d58ae99.webp 1200w"}},{"t":"Иу","d":"Тут\u00a0прячется лишь сельдерей, которому год. Советую его не\u00a0брать","g":"miss-02","i":{"src":"./assets/modal-miss-02-720.4f4f5f99.webp","srcset":"./assets/modal-miss-02-720.4f4f5f99.webp 720w, ./assets/modal-miss-02-1200.9a1a90c3.webp 1200w"}},{"t":"Не\u00a0в\u00a0этот\u00a0раз","d":"Здесь живёт дух пригоревшей запеканки","g":"miss-05","i":{"src":"./assets/modal-miss-05-720.390a328d.webp","srcset":"./assets/modal-miss-05-720.390a328d.webp 720w, ./assets/modal-miss-05-1200.ce193812.webp 1200w"}},{"t":"Фуэ","d":"Кажется, это\u00a0тут\u00a0лежит аж с\u00a0прошлого\u00a0века","g":"miss-03","i":{"src":"./assets/modal-miss-03-720.ebd6066f.webp","srcset":"./assets/modal-miss-03-720.ebd6066f.webp 720w, ./assets/modal-miss-03-1200.e7dad671.webp 1200w"}},{"t":"Пусто","d":"Только паутина и\u00a0запах недельного\u00a0борща","g":"miss-03","i":{"src":"./assets/modal-miss-03-720.ebd6066f.webp","srcset":"./assets/modal-miss-03-720.ebd6066f.webp 720w, ./assets/modal-miss-03-1200.e7dad671.webp 1200w"}},{"t":"Оу","d":"Ты\u00a0разбудил призрак вчерашней немытой посуды. Он\u00a0явно недоволен","g":"miss-04","i":{"src":"./assets/modal-miss-04-720.7d4692a5.webp","srcset":"./assets/modal-miss-04-720.7d4692a5.webp 720w, ./assets/modal-miss-04-1200.29a5b5fe.webp 1200w"}},{"t":"Аааа","d":"Тут\u00a0живёт только проклятие вечной готовки. Жутко, правда?","g":"miss-05","i":{"src":"./assets/modal-miss-05-720.390a328d.webp","srcset":"./assets/modal-miss-05-720.390a328d.webp 720w, ./assets/modal-miss-05-1200.ce193812.webp 1200w"}},{"t":"Мимо","d":"Но\u00a0кухонный дух оценил твою смелость","g":"miss-04","i":{"src":"./assets/modal-miss-04-720.7d4692a5.webp","srcset":"./assets/modal-miss-04-720.7d4692a5.webp 720w, ./assets/modal-miss-04-1200.29a5b5fe.webp 1200w"}}],"preload":[{"src":"./assets/modal-miss-01-720.2815aff0.webp","srcset":"./assets/modal-miss-01-720.2815aff0.webp 720w, ./assets/modal-miss-01-1200.0d58ae99.webp 1200w"},{"src":"./assets/modal-miss-02-720.4f4f5f99.webp","srcset":"./assets/modal-miss-02-720.4f4f5f99.webp 720w, ./assets/modal-miss-02-1200.9a1a90c3.webp 1200w"},{"src":"./assets/modal-miss-03-720.ebd6066f.webp","srcset":"./assets/modal-miss-03-720.ebd6066f.webp 720w, ./assets/modal-miss-03-1200.e7dad671.webp 1200w"},{"src":"./assets/modal-miss-04-720.7d4692a5.webp","srcset":"./assets/modal-miss-04-720.7d4692a5.webp 720w, ./assets/modal-miss-04-1200.29a5b5fe.webp 1200w"},{"src":"./assets/modal-miss-05-720.390a328d.webp","srcset":"./assets/modal-miss-05-720.390a328d.webp 720w, ./assets/modal-miss-05-1200.ce193812.webp 1200w"},{"src":"./assets/modal-win-720.e848ea72.webp","srcset":"./assets/modal-win-720.e848ea72.webp 720w, ./assets/modal-win-1200.777a0dca.webp 1200w"}]};
   var doc = document;
   var html = doc.documentElement;
   var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -236,8 +913,6 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
 
     var items = [].slice.call(wrap.querySelectorAll('.hlw-item'));
     if (!items.length) return;
-    var stage = wrap.querySelector('.hlw-stage');
-    var hint = wrap.querySelector('.hlw-hint');
     var missOv = wrap.querySelector('#hlw-miss');
     var winOv = wrap.querySelector('#hlw-win');
     var bar = wrap.querySelector('#hlw-bar');
@@ -245,13 +920,50 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
     var shareUrlFn = function () { return RT.shareUrl || (location.origin + location.pathname); };
 
     var winner = rnd(items.length);
-    var order = shuffle(RT.miss.map(function (_, i) { return i; }));
-    var missFor = [];
-    var k = 0, i;
+    // Тексты промаха: группируем по иллюстрации, из каждой группы — случайный текст,
+    // чтобы за игру картинки не повторялись; если предметов больше, чем групп — добираем остальными
+    var groups = {}, gk = [], n0;
+    for (n0 = 0; n0 < RT.miss.length; n0++) {
+      var g = RT.miss[n0].g || ('t' + n0);
+      if (!groups[g]) { groups[g] = []; gk.push(g); }
+      groups[g].push(RT.miss[n0]);
+    }
+    var first = [], rest = [];
+    shuffle(gk).forEach(function (key) {
+      var list = shuffle(groups[key]);
+      first.push(list[0]);
+      rest = rest.concat(list.slice(1));
+    });
+    var pool = first.concat(shuffle(rest));
+    var missFor = [], k = 0, i;
     for (i = 0; i < items.length; i++) {
       if (i === winner) { missFor.push(null); continue; }
-      if (k >= order.length) { order = shuffle(order); k = 0; }
-      missFor.push(RT.miss[order[k++]]);
+      missFor.push(pool[k % pool.length]); k++;
+    }
+    var total = items.length, opened = 0;
+    var scene = wrap.querySelector('.hlw-scene');
+    var pillTxt = wrap.querySelector('.hlw-pill__txt');
+    var canvas = wrap.querySelector('.hlw-fx');
+    var desk = window.matchMedia ? window.matchMedia('(min-width:1024px)') : null;
+    var fx = null;
+    try {
+      if (typeof HlwFx === 'function' && canvas) fx = HlwFx(canvas, { reduce: reduce, light: lampPoint(), floorY: 0.85 });
+    } catch (e) { fx = null; }
+    function lampPoint() {
+      var d = !desk || desk.matches;
+      return d ? { x: RT.lamp.x, y: RT.lamp.y } : { x: RT.lamp.kx, y: RT.lamp.ky };
+    }
+    if (desk && fx && fx.setOpts) {
+      var onMq = function () { try { fx.setOpts({ reduce: reduce, light: lampPoint(), floorY: 0.85 }); } catch (e) {} };
+      if (desk.addEventListener) desk.addEventListener('change', onMq); else if (desk.addListener) desk.addListener(onMq);
+    }
+    var snd = typeof HlwSound === 'object' && HlwSound ? HlwSound : null;
+    function sfx(name) { if (snd) { try { snd.play(name); } catch (e) {} } }
+    function setPill(html) { if (pillTxt) pillTxt.innerHTML = html; }
+    function burstAt(el, kind) {
+      if (!fx || !canvas) return;
+      var r = el.getBoundingClientRect(), c = canvas.getBoundingClientRect();
+      try { fx.burst(r.left + r.width / 2 - c.left, r.top + r.height / 2 - c.top, kind); } catch (e) {}
     }
 
     var st = { started: false, won: false, ov: null, opener: null, timer: null };
@@ -273,6 +985,7 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
       clearTimeout(st.timer);
       lockScroll();
       ov.hidden = false;
+      sfx('open');
       void ov.offsetWidth;
       ov.classList.add('is-visible');
       var f = focusSel && ov.querySelector(focusSel);
@@ -283,6 +996,7 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
       var ov = st.ov;
       if (!ov) return;
       st.ov = null;
+      if (!instant) sfx('close');
       ov.classList.remove('is-visible');
       var done = function () { ov.hidden = true; };
       if (instant || reduce) done(); else st.timer = setTimeout(done, 300);
@@ -318,27 +1032,47 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
       el.classList.add('is-found');
       el.classList.remove('is-open');
       bar.hidden = false;
-      track('win');
+      setPill(RT.pillWin);
+      track('win', { clicks: opened + 1 });
     }
 
+    var busy = false;
     items.forEach(function (el, idx) {
-      el.style.setProperty('--hlw-d', (idx * 0.37).toFixed(2) + 's');
       el.addEventListener('click', function () {
-        if (st.won) return;
+        if (st.won || busy) return;
         if (!st.started) { st.started = true; track('start'); }
+        sfx('tap');
         if (idx === winner) {
+          busy = true;
           markWin(el);
-          openOv(winOv, el, '.hlw-btn');
+          burstAt(el, 'gold');
+          sfx('win');
+          setTimeout(function () { busy = false; openOv(winOv, el, '.hlw-btn'); }, reduce ? 0 : 750);
           return;
         }
         var m = missFor[idx];
-        el.classList.add('is-open');
+        if (!el.classList.contains('is-open')) {
+          el.classList.add('is-open');
+          opened += 1;
+          setPill(RT.pillProgress.replace('{n}', opened).replace('{total}', total));
+        }
         wrap.querySelector('#hlw-miss-title').textContent = m.t;
         wrap.querySelector('#hlw-miss-text').textContent = m.d;
-        var pic = wrap.querySelector('#hlw-miss-pic'), pi = pic.querySelector('img'), ph = pic.querySelector('.hlw-pic__ph');
-        if (m.i) { pi.src = m.i; pi.hidden = false; ph.hidden = true; } else { pi.hidden = true; ph.hidden = false; }
+        var pi = wrap.querySelector('#hlw-miss-img');
+        if (pi.getAttribute('data-src') !== m.i.src) {
+          pi.setAttribute('data-src', m.i.src);
+          pi.srcset = m.i.srcset;
+          pi.src = m.i.src;
+        }
         track('miss', { item: el.getAttribute('data-id') });
-        openOv(missOv, el, '.hlw-btn');
+        burstAt(el, 'smoke');
+        sfx('miss');
+        if (reduce) { openOv(missOv, el, '.hlw-btn'); return; }
+        busy = true;
+        el.classList.remove('is-shake');
+        void el.offsetWidth;
+        el.classList.add('is-shake');
+        setTimeout(function () { el.classList.remove('is-shake'); busy = false; openOv(missOv, el, '.hlw-btn'); }, 420);
       });
     });
 
@@ -352,7 +1086,7 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
       var tip = box.querySelector('.hlw-tip');
       function doCopy() {
         copyText(RT.promo).then(function (ok) {
-          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); track('copy_code'); }
+          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); sfx('copy'); track('copy_code'); }
           else { tip.textContent = RT.copyFailText; flashTip(tip); }
         });
       }
@@ -422,29 +1156,54 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
       });
     });
 
-    /* --- панорама сцены на мобильных --- */
-    var progUntil = 0, userMoved = false;
-    function center() {
-      if (!stage || userMoved) return;
-      var d = stage.scrollWidth - stage.clientWidth;
-      if (d > 0) { progUntil = Date.now() + 500; stage.scrollLeft = d / 2; }
+    /* --- кнопка звука (по умолчанию выключен, без автозапуска) --- */
+    var sb = wrap.querySelector('.hlw-sound');
+    if (sb && !snd) sb.hidden = true;
+    if (sb && snd) sb.addEventListener('click', function () {
+      var on = !snd.isOn();
+      try { snd.enable(on); } catch (e) {}
+      sb.setAttribute('aria-pressed', on ? 'true' : 'false');
+      sb.setAttribute('aria-label', on ? RT.soundOff : RT.soundOn);
+      sb.title = on ? RT.soundOff : RT.soundOn;
+      track('sound', { on: on ? 1 : 0 });
+    });
+
+    /* --- эффекты и звук работают, только пока блок на экране и вкладка видима --- */
+    var inView = false, preloaded = false;
+    function sync() {
+      var live = inView && !doc.hidden;
+      if (fx) { try { live ? fx.start() : fx.stop(); } catch (e) {} }
+      if (snd) { try { live ? snd.resume() : snd.pause(); } catch (e) {} }
     }
-    if (stage && hint) {
-      stage.addEventListener('scroll', function () {
-        if (Date.now() < progUntil) return;
-        userMoved = true;
-        hint.classList.add('is-gone');
-      }, { passive: true });
-      center();
-      raf(center);
-      window.addEventListener('load', center);
-      window.addEventListener('resize', center);
+    function preload() {
+      if (preloaded) return;
+      preloaded = true;
+      var go = function () {
+        (RT.preload || []).forEach(function (p) {
+          var im = new Image();
+          im.decoding = 'async';
+          im.sizes = '(max-width:560px) 100vw, 560px';
+          im.srcset = p.srcset;
+          im.src = p.src;
+        });
+      };
+      if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 2000 }); else setTimeout(go, 600);
     }
+    if (window.IntersectionObserver && scene) {
+      new IntersectionObserver(function (es) {
+        inView = es[0].isIntersecting;
+        if (inView) preload();
+        sync();
+      }, { rootMargin: '200px 0px' }).observe(scene);
+    } else { inView = true; preload(); sync(); }
+    doc.addEventListener('visibilitychange', sync);
+    inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }
 
   /* ---------- установка / переустановка (innerHTML в priem.menu) ---------- */
   function ensure() {
     var w = doc.getElementById('hlw-wrap');
+    if (active && !doc.body.contains(active.wrap) && active.destroy) { active.destroy(); }
     if (w && !w.getAttribute('data-hlw-ready')) init(w);
     if (lock.on && (!active || !doc.body.contains(active.wrap))) unlockScroll();
   }
@@ -475,10 +1234,5 @@ background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weig
 })();
 
 </script>
-</div>
-<section id="menu-plans-v2" class="stub"><h2>Экран 3: меню и тарифы</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
-<section id="screen4" class="stub"><h2>Экран 4</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
-<section id="screen5" class="stub"><h2>Экран 5</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
-<section id="order" class="stub"><h2>Экран 6: заказ</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
-</main>
+</div></div>
 </body></html>

@@ -8,52 +8,54 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { execSync } from 'child_process'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(ROOT, 'dist')
+
 
 /* =====================================================================
  *  HLW_CONFIG — всё, что правит человек. После правки: node scripts/build.mjs
  * ===================================================================== */
 
-/** CDN с ассетами. После пуша ассетов в ElenaSamanchuk/priem-halloween-assets подставь sha коммита. */
-const ASSETS_BASE = 'https://cdn.jsdelivr.net/gh/ElenaSamanchuk/priem-halloween-assets@SHA_TBD'
+/**
+ * CDN с ассетами: jsDelivr из публичного репозитория. Ссылка закрепляется на коммит,
+ * в котором последний раз менялась папка assets/ (имена файлов ещё и с хешем содержимого).
+ * Переопределить: HLW_REF=<sha|main> node scripts/build.mjs
+ */
+const REPO = 'ElenaSamanchuk/priem-halloween-game'
+function assetsRef() {
+  if (process.env.HLW_REF) return process.env.HLW_REF
+  try { return execSync('git log -1 --format=%H -- assets', { cwd: ROOT }).toString().trim().slice(0, 12) || 'main' } catch (e) { return 'main' }
+}
+const ASSETS_BASE = `https://cdn.jsdelivr.net/gh/${REPO}@${assetsRef()}/assets`
 /** Для превью и priem-sim: ассеты лежат рядом со страницей. */
-const LOCAL_ASSETS = './assets/'
+const LOCAL_ASSETS = './assets'
+
+/** assets/manifest.json пишет scripts/prepare-assets.py (имена с хешем, координаты предметов) */
+const MAN = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/manifest.json'), 'utf8'))
 
 const HLW_CONFIG = {
-  /** 'fit' — на <768px пещера скрыта, окно кухни во всю ширину (отступ 8px); 'pan' — окно кухни листается пальцем (опция) */
-  mobileMode: 'fit',
-  ymId: null, // номер счётчика Яндекс.Метрики или null
+  ymId: null, // номер счётчика Яндекс.Метрики (цели hlw_*) или null — события всё равно уходят в dataLayer
 
-  /**
-   * Сцена (макет Figma): caveBg — фон-пещера на всю ширину (кадр 2880x1203, cover);
-   * kitchen — «окно» кухни с рваным краем по центру (≈1261x985 в кадре 2880x1203, PNG/WebP с альфой).
-   * Предметы позиционируются в процентах ОТ ОКНА КУХНИ.
-   */
-  scene: {
-    caveBg: '', // файл относительно ASSETS_BASE; пусто = градиент-заглушка
-    kitchen: '', // файл окна кухни; пусто = заглушка с рваным краем
-    kitchenW: 1261, // пропорции окна
-    kitchenH: 985,
-    frameW: 2880, // пропорции кадра-пещеры
-    frameH: 1203,
-  },
-
-  /** Палитра бренда */
-  theme: { bg: '#362050', panel: '#4c2f72', pink: '#ff1a6c', yellow: '#feda00', secondary: '#7b4fd1', glow: '255,200,40' },
+  /** Палитра бренда (макет: плашка #4C2F72, кнопки #FF1A6C и #8C41E3) */
+  theme: { panel: '#4c2f72', pink: '#ff1a6c', yellow: '#feda00', secondary: '#8c41e3', glow: '255,200,40' },
 
   copy: {
-    title: 'Найди ПриЕм на страшной кухне',
-    lead: 'Открывай предметы и ищи, где спрятался ПриЕм',
+    sceneLabel: 'Страшная кухня: найди, где спрятан ПриЕм',
+    pillStart: 'Найди, где спрятался <b>ПриЕм</b>',
+    pillProgress: 'Проверено <b>{n}</b> из {total}', // {n}, {total}
+    pillWin: '<b>ПриЕм найден!</b> Промокод ниже',
+    soundOn: 'Включить звук',
+    soundOff: 'Выключить звук',
     continueCta: 'Продолжить поиск',
     closeLabel: 'Закрыть',
     win: {
-      img: '', // иллюстрация победы (≈1298x1000), файл относительно ASSETS_BASE; пусто = заглушка
+      img: 'win',
       title: 'Ого, ты не только смелый, но и удачливый!',
-      text: 'Ты нашёл ПриЕм, а значит тебе больше не нужно заходить на страшную кухню. Заказывай готовую еду ещё выгоднее с промокодом СТРАШНОВКУСНО на 1000 ₽ (на заказы от 5 дней)',
+      text: 'Ты нашёл ПриЕм, а значит тебе больше не нужно заходить на страшную кухню. Заказывай готовую еду ещё выгоднее с промокодом {promo} на 1000 ₽ (на заказы от 5 дней)',
       orderCta: 'Смело заказать ПриЕм с выгодой',
-      shareCta: 'Рассказать друзьям',
+      shareCta: 'Рассказать друзьям', // в макете «Поделиться в соцсетях», в ТЗ — «Рассказать друзьям»
       copyCta: 'Скопировать',
       copiedTip: 'Скопировано',
       copyFailTip: 'Не удалось, выдели код вручную',
@@ -61,49 +63,57 @@ const HLW_CONFIG = {
       shareVk: 'ВКонтакте',
       shareTg: 'Telegram',
       shareCopy: 'Скопировать ссылку',
-      shareText: 'Я нашёл ПриЕм на страшной кухне. Попробуй и ты',
-      shareTitle: 'Найди ПриЕм',
+      shareText: 'Я нашёл ПриЕм на страшной кухне и забрал скидку 1000 ₽. Рискнёшь?',
+      shareTitle: 'Найди ПриЕм на страшной кухне',
     },
-    /** 8 вариантов промаха [заголовок, текст, иллюстрация] — выдаются без повторов случайным пустым предметам; иллюстрация — файл относительно ASSETS_BASE, '' = заглушка */
+    /**
+     * 8 текстов промаха [заголовок, текст, иллюстрация]. Нарисовано 5 иллюстраций (miss-01…05),
+     * у трёх текстов картинка общая с близким по смыслу. За игру 5 пустых предметов — рантайм берёт
+     * по одному тексту на иллюстрацию, поэтому картинки за игру не повторяются, а тексты — случайные.
+     */
     miss: [
-      ['Мимо!', 'Тут только пыль и старый рецепт, который даже не стоит пытаться готовить', ''],
-      ['Иу', 'Тут прячется лишь сельдерей, которому год. Советую его не брать', ''],
-      ['Не в этот раз', 'Здесь живёт дух пригоревшей запеканки', ''],
-      ['Фуэ', 'Кажется, это тут лежит аж с прошлого века', ''],
-      ['Пусто', 'Только паутина и запах недельного борща', ''],
-      ['Оу', 'Ты разбудил призрак вчерашней немытой посуды. Он явно недоволен', ''],
-      ['Аааа', 'Тут живёт только проклятие вечной готовки. Жутко, правда?', ''],
-      ['Мимо', 'Но кухонный дух оценил твою смелость', ''],
+      ['Мимо!', 'Тут только пыль и старый рецепт, который даже не стоит пытаться готовить', 'miss-01'],
+      ['Иу', 'Тут прячется лишь сельдерей, которому год. Советую его не брать', 'miss-02'],
+      ['Не в этот раз', 'Здесь живёт дух пригоревшей запеканки', 'miss-05'],
+      ['Фуэ', 'Кажется, это тут лежит аж с прошлого века', 'miss-03'],
+      ['Пусто', 'Только паутина и запах недельного борща', 'miss-03'],
+      ['Оу', 'Ты разбудил призрак вчерашней немытой посуды. Он явно недоволен', 'miss-04'],
+      ['Аааа', 'Тут живёт только проклятие вечной готовки. Жутко, правда?', 'miss-05'],
+      ['Мимо', 'Но кухонный дух оценил твою смелость', 'miss-04'],
     ],
   },
 
   promo: 'СТРАШНОВКУСНО',
 
   links: {
-    order: '#menu-plans-v2', // якорь (плавный скролл) или полный URL
-    shareUrl: null, // null = location.origin + location.pathname
+    order: '#menu-plans-v2', // якорь блока заказа на странице (плавный скролл) или полный URL
+    shareUrl: null, // ссылка с ?cmz=… для шеринга; null = адрес текущей страницы без параметров
   },
 
   /**
-   * Предметы. Координаты — проценты от сцены (scene.w × scene.h).
-   *  id    — стабильный идентификатор (аналитика)
-   *  label — aria-label кнопки (озвучивается скринридером, подпись на заглушке)
-   *  x,y,w,h — левый верх и размер слоя, % от ОКНА КУХНИ
-   *  src   — файл слоя (PNG/WebP с прозрачностью) относительно ASSETS_BASE; '' = заглушка-фигура
-   *  shape — только для заглушки: 'rect' | 'round' | 'tall' | 'pumpkin'
+   * Предметы (порядок = порядок обхода с клавиатуры). Координаты и картинки — из manifest.json.
+   *  anim — мини-анимация на ховере: swing (качается на цепи), creak (скрипит), wobble (покачивается), rattle (дребезжит)
+   *  origin — точка вращения
    */
   items: [
-    { id: 'cabinet-double', label: 'Шкаф', x: 5, y: 10, w: 36, h: 40, src: '', shape: 'rect' },
-    { id: 'cabinet-single', label: 'Шкафчик', x: 44, y: 12, w: 18, h: 30, src: '', shape: 'tall' },
-    { id: 'pumpkin-lamp', label: 'Светильник-тыква', x: 68, y: 14, w: 14, h: 20, src: '', shape: 'pumpkin' },
-    { id: 'veg-crate', label: 'Ящик с овощами', x: 6, y: 66, w: 24, h: 22, src: '', shape: 'rect' },
-    { id: 'cauldron', label: 'Котёл', x: 40, y: 58, w: 22, h: 32, src: '', shape: 'round' },
-    { id: 'pan', label: 'Сковорода', x: 68, y: 56, w: 22, h: 26, src: '', shape: 'round' },
+    { id: 'pumpkin-lamp', label: 'Светильник-тыква', anim: 'swing', origin: '50% 0%' },
+    { id: 'cabinet-double', label: 'Шкаф с приоткрытой дверцей', anim: 'creak', origin: '50% 0%' },
+    { id: 'cabinet-single', label: 'Навесной шкафчик', anim: 'creak', origin: '50% 0%' },
+    { id: 'veg-crate', label: 'Ящик с овощами', anim: 'rattle', origin: '50% 100%' },
+    { id: 'cauldron', label: 'Котёл', anim: 'wobble', origin: '50% 100%' },
+    { id: 'pan', label: 'Сковорода под крышкой', anim: 'rattle', origin: '50% 100%' },
   ],
+
+  /** Сцена: свет лампы и туман по полу — в % кадра (деск) и % окна кухни (<1024) */
+  scene: {
+    top: 11.9, // высота каменной полки над окном кухни, % кадра — там счётчик и звук
+    lamp: { x: 31.8, y: 36, w: 20, kx: 12.8, ky: 32, kw: 46 },
+    fog: { x: 27.2, y: 70, w: 43.8, h: 24, kx: 2.8, ky: 69, kw: 94.4, kh: 28 },
+  },
 }
 
 /* ===================== типограф (применяется к текстам при сборке) ===================== */
-const NB = ' '
+const NB = '\u00a0'
 const SHORT = [
   'а','и','в','во','на','но','не','ни','о','об','от','по','за','из','до','с','со','к','ко','у','я','он','же','бы','ли','ты','да',
   'для','при','под','над','без','про','или','как','что','то','это','тут',
@@ -119,45 +129,67 @@ export function typograph(text) {
       s = s.replace(/(\d)[ \t]+(₽|руб\.?|дн\.)/gu, `$1${NB}$2`)
       s = s.replace(/(\d{1,2})[ \t]+(?=[А-Яа-яЁё])/gu, `$1${NB}`)
       s = s.replace(/[ \t]+—/gu, `${NB}—`)
+      s = s.replace(/[ \t]+([^\s]{1,6})$/u, `${NB}$1`) // короткое последнее слово не остаётся одно
       return s
     })
     .join('\n')
 }
 
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/ /g, '&nbsp;')
+
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\u00a0/g, '&nbsp;')
 
 /* ===================== сборка блока ===================== */
-function assetUrl(base, file) {
-  return base.replace(/\/$/, '') + '/' + file
-}
+const url = (base, file) => base.replace(/\/$/, '') + '/' + file
+const pct = (v) => (+v).toFixed(3) + '%'
+const ICON_SOUND_OFF = '<svg class="hlw-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3 3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4 9.91 6.09 12 8.18V4z"/></svg>'
+const ICON_SOUND_ON = '<svg class="hlw-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>'
+const ICON_CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" fill="none"/></svg>'
 
 function buildBlock(base) {
   const C = HLW_CONFIG
   const T = typograph
   const copy = C.copy
   const w = copy.win
-  const pic = (file, id, label) =>
-    `<div class="hlw-pic"${id ? ` id="${id}"` : ''}><img src="${file ? esc(assetUrl(base, file)) : ''}" alt=""${file ? '' : ' hidden'}><div class="hlw-pic__ph"${file ? ' hidden' : ''} aria-hidden="true">${label}</div></div>`
-  const cave = C.scene.caveBg ? `<img class="hlw-cave" src="${esc(assetUrl(base, C.scene.caveBg))}" alt="" draggable="false">` : ''
-  const bg = C.scene.kitchen ? `<img class="hlw-bg" src="${esc(assetUrl(base, C.scene.kitchen))}" alt="" draggable="false">` : ''
+  const S = MAN.scene
+  const kb = S.kitchenBox
+  const modal = (key) => MAN.modals[key]
+  const picSet = (key) => {
+    const m = modal(key)
+    return { src: url(base, m.w720), srcset: `${url(base, m.w720)} 720w, ${url(base, m.w1200)} 1200w` }
+  }
+
+  // Предметы
   const itemsHtml = C.items
-    .map((it) => {
-      const style = `left:${it.x}%;top:${it.y}%;width:${it.w}%;height:${it.h}%`
-      const inner = it.src
-        ? `<img class="hlw-item__img" src="${esc(assetUrl(base, it.src))}" alt="" draggable="false">`
-        : `<span class="hlw-art">${esc(T(it.label))}</span>`
-      return `<button type="button" class="hlw-item" data-id="${esc(it.id)}" data-shape="${esc(it.shape || 'rect')}" aria-label="${esc(it.label)}" style="${style}">${inner}</button>`
+    .map((it, i) => {
+      const m = MAN.items[it.id]
+      if (!m) throw new Error('Нет предмета в manifest: ' + it.id)
+      const f = m.frame, k = m.kitchen
+      const style = `--fx:${pct(f.x)};--fy:${pct(f.y)};--fw:${pct(f.w)};--fh:${pct(f.h)};--kx:${pct(k.x)};--ky:${pct(k.y)};--kw:${pct(k.w)};--kh:${pct(k.h)};--o:${it.origin};--hlw-d:${(i * 0.43).toFixed(2)}s`
+      return `<button type="button" class="hlw-item" data-id="${esc(it.id)}" data-anim="${esc(it.anim)}" aria-label="${esc(it.label)}" style="${style}"><img class="hlw-item__img" src="${esc(url(base, m.src))}" alt="" draggable="false" decoding="async"></button>`
     })
     .join('')
+
+  const L = C.scene.lamp, G = C.scene.fog
+  const wrapStyle = [
+    `--hlw-panel:${C.theme.panel}`, `--hlw-pink:${C.theme.pink}`, `--hlw-yellow:${C.theme.yellow}`, `--hlw-sec:${C.theme.secondary}`, `--hlw-glow:${C.theme.glow}`,
+    `--hlw-kar:${kb.w}/${kb.h}`, `--hlw-topk:${C.scene.top / 100}`,
+    `--lx:${L.x}%`, `--ly:${L.y}%`, `--lw:${L.w}%`, `--klx:${L.kx}%`, `--kly:${L.ky}%`, `--klw:${L.kw}%`,
+    `--gx:${G.x}%`, `--gy:${G.y}%`, `--gw:${G.w}%`, `--gh:${G.h}%`, `--kgx:${G.kx}%`, `--kgy:${G.ky}%`, `--kgw:${G.kw}%`, `--kgh:${G.kh}%`,
+  ].join(';')
+
+  // Фон сцены: деск — весь кадр, <1024 — окно кухни
+  const bg = `<picture><source media="(min-width:1024px)" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
+
+  const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
   const promoBox = `<div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод ${esc(C.promo)}">${esc(C.promo)}</button><button type="button" class="hlw-copy">${esc(w.copyCta)}</button><span class="hlw-tip" role="status" aria-live="polite"></span></div>`
   const orderBtn = `<a class="hlw-btn" href="${esc(C.links.order)}" data-hlw-order${/^https?:/.test(C.links.order) ? ' target="_blank" rel="noopener"' : ''}>${esc(T(w.orderCta))}</a>`
-  const closeBtn = `<button type="button" class="hlw-close" data-hlw-close aria-label="${esc(copy.closeLabel)}">&times;</button>`
+  const closeBtn = `<button type="button" class="hlw-close" data-hlw-close aria-label="${esc(copy.closeLabel)}">${ICON_CLOSE}</button>`
+  const winPic = picSet(w.img)
 
-  const css = fs.readFileSync(path.join(ROOT, 'src/game.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').trim()
+  const css = fs.readFileSync(path.join(ROOT, 'src/game.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').trim() + '\n#hlw-wrap .hlw-hl{color:var(--hlw-yellow);font-weight:800;white-space:nowrap}'
 
   const norm = (s) => s.replace(/ /g, '\\u00a0')
   const rt = {
-    mobileMode: C.mobileMode,
     ymId: C.ymId,
     promo: C.promo,
     shareUrl: C.links.shareUrl,
@@ -165,105 +197,81 @@ function buildBlock(base) {
     shareTitle: T(w.shareTitle),
     copiedText: w.copiedTip,
     copyFailText: w.copyFailTip,
-    miss: copy.miss.map(([t, d, i]) => ({ t: T(t), d: T(d), i: i ? assetUrl(base, i) : '' })),
+    pillProgress: copy.pillProgress,
+    pillWin: copy.pillWin,
+    soundOn: copy.soundOn,
+    soundOff: copy.soundOff,
+    lamp: { x: L.x / 100, y: L.y / 100, kx: L.kx / 100, ky: L.ky / 100 },
+    miss: copy.miss.map(([t, d, i]) => ({ t: T(t), d: T(d), g: i, i: picSet(i) })),
+    preload: Object.keys(MAN.modals).map((k) => picSet(k)),
   }
-  const js = fs
-    .readFileSync(path.join(ROOT, 'src/game.js'), 'utf8')
-    .replace('/*__HLW_RT__*/{}', norm(JSON.stringify(rt)))
+  const read = (f) => fs.readFileSync(path.join(ROOT, f), 'utf8')
+  const parts = ['src/sound.js', 'src/fx.js'].filter((f) => fs.existsSync(path.join(ROOT, f))).map(read).join('\n')
+  const js = read('src/game.js')
+    .replace('/*__HLW_MODULES__*/', () => parts)
+    .replace('/*__HLW_RT__*/{}', () => norm(JSON.stringify(rt)))
     .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
-    .split('\n')
-    .filter((l) => !/^\s*\/\/(?!\s*<)/.test(l))
-    .join('\n')
   if (/<\/script/i.test(js)) throw new Error('JS содержит </script')
 
   const beaconGo =
     "(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()"
   const beacon = `<img id="hlw-boot-beacon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="1" height="1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" onload="${beaconGo}" onerror="${beaconGo}">`
 
-  const preload = C.items
-    .filter((it) => it.src)
-    .map((it) => `<link rel="preload" as="image" href="${esc(assetUrl(base, it.src))}">`)
-    .concat([C.scene.caveBg, C.scene.kitchen].filter(Boolean).map((f) => `<link rel="preload" as="image" href="${esc(assetUrl(base, f))}">`))
-    .join('\n')
+  const markup = `<section id="halloween-game" aria-label="${esc(T(copy.sceneLabel))}">
+<div id="hlw-wrap" class="hlw-wrap" style="${wrapStyle}">
+<div class="hlw-top"><div class="hlw-pill" role="status" aria-live="polite"><span class="hlw-pill__dot" aria-hidden="true"></span><span class="hlw-pill__txt">${T(copy.pillStart)}</span></div>
+<button type="button" class="hlw-sound" aria-pressed="false" aria-label="${esc(copy.soundOn)}" title="${esc(copy.soundOn)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
+<div class="hlw-scene">
+${bg}
+<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>
+<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>
+<canvas class="hlw-fx" aria-hidden="true"></canvas>
 
-  const markup = `<section id="halloween-game" aria-label="${esc(T(copy.title))}">
-<div id="hlw-wrap" class="hlw-wrap hlw--${C.mobileMode === 'pan' ? 'pan' : 'fit'}" style="--hlw-bg:${C.theme.bg};--hlw-panel:${C.theme.panel};--hlw-pink:${C.theme.pink};--hlw-yellow:${C.theme.yellow};--hlw-sec:${C.theme.secondary};--hlw-glow:${C.theme.glow};--hlw-kw:${(C.scene.kitchenW / C.scene.frameW * 100).toFixed(2)}%;--hlw-kar:${C.scene.kitchenW}/${C.scene.kitchenH}">
-<div class="hlw-head"><h2 class="hlw-title">${esc(T(copy.title))}</h2><p class="hlw-lead">${esc(T(copy.lead))}</p></div>
-<div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">${esc(w.barLabel)}</span>${promoBox}${orderBtn.replace('class="hlw-btn"', 'class="hlw-btn"')}</div>
-<div class="hlw-stagewrap">${cave}
-<div class="hlw-stage" role="group" aria-label="Кухня"><div class="hlw-scene${C.scene.kitchen ? '' : ' hlw-scene--ph'}">${bg}${itemsHtml}</div></div>
-<div class="hlw-hint" aria-hidden="true">листай кухню &#8596;</div>
 </div>
+<div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">${esc(w.barLabel)}</span>${promoBox}${orderBtn}</div>
 <div class="hlw-overlay" id="hlw-miss" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-miss-title" aria-describedby="hlw-miss-text" tabindex="-1">
-${closeBtn}${pic('', 'hlw-miss-pic', 'иллюстрация промаха')}<div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><button type="button" class="hlw-btn" data-hlw-close>${esc(T(copy.continueCta))}</button></div>
+${closeBtn}<div class="hlw-pic"><img id="hlw-miss-img" alt="" sizes="(max-width:560px) 100vw, 560px" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><div class="hlw-actions"><button type="button" class="hlw-btn" data-hlw-close>${esc(T(copy.continueCta))}</button></div></div>
 </div></div>
 <div class="hlw-overlay" id="hlw-win" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1">
-${closeBtn}${pic(w.img, '', 'иллюстрация победы')}<div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${esc(T(w.text))}</p>${promoBox}${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button>
-<div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php?url=" target="_blank" rel="noopener">${esc(w.shareVk)}</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url?url=" target="_blank" rel="noopener">${esc(w.shareTg)}</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">${esc(w.shareCopy)}</button></div></div>
-</div></div></div>
+${closeBtn}<div class="hlw-pic"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:560px) 100vw, 560px" loading="lazy" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
+<div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php" target="_blank" rel="noopener">${esc(w.shareVk)}</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url" target="_blank" rel="noopener">${esc(w.shareTg)}</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">${esc(w.shareCopy)}</button></div></div>
+</div></div>
 </div>
 </section>`.replace(/\n/g, '')
 
-  return `${preload ? preload + '\n' : ''}<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${js}\n</script>\n`
+  const preload = `<link rel="preload" as="image" href="${esc(url(base, S.frame1x))}" imagesrcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" media="(min-width:1024px)">`
+  return `${preload}\n<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${js}\n</script>\n`
 }
 
-/* ===================== страницы-имитации ===================== */
-const stub = (id, title, extra = '') =>
-  `<section${id ? ` id="${id}"` : ''} class="stub"><h2>${title}</h2><p>Заглушка экрана — его генерирует админка сайта.</p>${extra}</section>`
-
-function pageShell(title, body, extraHead = '') {
+/* ===================== страницы просмотра (только игровой блок) ===================== */
+function pageShell(title, body) {
   return `<!doctype html>
 <html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title>
-<style>
-body{margin:0;font-family:system-ui,sans-serif;background:#fff;color:#222}
-#navbar{position:fixed;left:0;right:0;top:0;height:57px;z-index:1000;background:#2b1b3f;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
-#navbar.navbar{display:flex}
-main,#tilda{padding-top:57px}
-.stub{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;border-bottom:1px solid #ddd;background:#f6f3fa}
-.stub:nth-child(even){background:#eef6f1}
-.stub a.cta{display:inline-block;padding:14px 22px;background:#7a3cff;color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
-/* имитация стилей Тильды, которые мешают */
-.t-records a{color:#ff8562}.t-records ul{padding-left:40px}
-</style>${extraHead}</head><body>
-<div id="navbar" class="navbar">PriEm · шапка (fixed)</div>
+<style>html,body{margin:0;background:#130c0e}</style></head><body>
 ${body}
 </body></html>`
 }
 
+/** Превью: только блок, как он встанет в T123 */
 function buildPreview(block) {
-  const body = `<main class="t-records">
-${stub('screen1', 'Экран 1 (заглушка)', '<a class="cta" id="to-game" href="#halloween-game">Найти ПриЕм</a>')}
-<div class="t-rec">${block}</div>
-${stub('menu-plans-v2', 'Экран 3: меню и тарифы')}
-${stub('screen4', 'Экран 4')}
-${stub('screen5', 'Экран 5')}
-${stub('order', 'Экран 6: заказ')}
-</main>`
-  return pageShell('Превью: найди ПриЕм', body)
+  return pageShell('Найди ПриЕм — игровой блок', `<div class="t-records"><div class="t-rec">${block}</div></div>`)
 }
 
+/** Проверка для priem.menu: сайт кладёт страницу Тильды через innerHTML — <script> там сам не запускается */
 function buildSim() {
   const body = `<div id="tilda" class="tilda-page t-records"></div>
 <script>
-/* Имитация priem.menu: Vue кладёт страницу Тильды через innerHTML, <script> не исполняется */
 (function(){
-  var q=location.search;
-  fetch('./halloween-game-tilda.html?'+Date.now()).then(function(r){return r.text()}).then(function(t){
+  fetch('./halloween-game-local.html?'+Date.now()).then(function(r){return r.text()}).then(function(t){
     var host=document.getElementById('tilda');
-    var full='<section id="screen1" class="stub"><h2>Экран 1</h2><a class="cta" href="#halloween-game">Найти ПриЕм</a></section>'
-      +t
-      +'<section id="menu-plans-v2" class="stub"><h2>Экран 3: меню и тарифы</h2></section><section id="order" class="stub"><h2>Экран 6</h2></section>';
-    host.innerHTML=full;
-    window.__simInjected=1;
-    if(/repatch/.test(q)){
-      setTimeout(function(){host.innerHTML=full;window.__simRepatched=1},1500);
-    }
+    host.innerHTML=t;
+    if(/repatch/.test(location.search)){setTimeout(function(){host.innerHTML=t},1500)}
   });
 })();
 </script>`
-  return pageShell('Имитация priem.menu (innerHTML)', body)
+  return pageShell('Найди ПриЕм — проверка вставки через innerHTML', body)
 }
 
 /* ===================== запуск ===================== */

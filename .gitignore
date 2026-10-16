@@ -1,2 +1,4 @@
 node_modules/
+assets-src/
+screens-dev/
 .DS_Store

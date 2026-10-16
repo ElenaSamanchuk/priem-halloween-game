@@ -1,0 +1,142 @@
+{
+ "scene": {
+  "frame2x": "scene-2880.d6ff1ca6.webp",
+  "frame1x": "scene-1440.4ed0677d.webp",
+  "kitchen": "kitchen-1400.e611c2cb.webp",
+  "kitchenSmall": "kitchen-800.654b2a1f.webp",
+  "kitchenBox": {
+   "x": 746,
+   "y": 114,
+   "w": 1337,
+   "h": 1044
+  },
+  "frame": {
+   "w": 2880,
+   "h": 1203
+  }
+ },
+ "items": {
+  "pumpkin-lamp": {
+   "src": "item-pumpkin-lamp.c3903d52.webp",
+   "frame": {
+    "x": 26.851,
+    "y": 14.397,
+    "w": 10.0,
+    "h": 28.761
+   },
+   "kitchen": {
+    "x": 2.043,
+    "y": 5.67,
+    "w": 21.541,
+    "h": 33.142
+   }
+  },
+  "cabinet-double": {
+   "src": "item-cabinet-double.2a321ebc.webp",
+   "frame": {
+    "x": 42.345,
+    "y": 24.554,
+    "w": 12.743,
+    "h": 25.603
+   },
+   "kitchen": {
+    "x": 35.419,
+    "y": 17.375,
+    "w": 27.45,
+    "h": 29.502
+   }
+  },
+  "cabinet-single": {
+   "src": "item-cabinet-single.318d29f1.webp",
+   "frame": {
+    "x": 53.111,
+    "y": 22.473,
+    "w": 7.812,
+    "h": 26.018
+   },
+   "kitchen": {
+    "x": 58.61,
+    "y": 14.976,
+    "w": 16.829,
+    "h": 29.981
+   }
+  },
+  "veg-crate": {
+   "src": "item-veg-crate.0ac84e96.webp",
+   "frame": {
+    "x": 40.09,
+    "y": 66.111,
+    "w": 8.854,
+    "h": 19.285
+   },
+   "kitchen": {
+    "x": 30.561,
+    "y": 65.26,
+    "w": 19.073,
+    "h": 22.222
+   }
+  },
+  "cauldron": {
+   "src": "item-cauldron.4abd528a.webp",
+   "frame": {
+    "x": 47.917,
+    "y": 64.989,
+    "w": 9.34,
+    "h": 21.114
+   },
+   "kitchen": {
+    "x": 47.42,
+    "y": 63.967,
+    "w": 20.12,
+    "h": 24.33
+   }
+  },
+  "pan": {
+   "src": "item-pan.674b38ad.webp",
+   "frame": {
+    "x": 55.158,
+    "y": 79.51,
+    "w": 11.528,
+    "h": 11.222
+   },
+   "kitchen": {
+    "x": 63.018,
+    "y": 80.699,
+    "w": 24.832,
+    "h": 12.931
+   }
+  }
+ },
+ "modals": {
+  "miss-01": {
+   "w1200": "modal-miss-01-1200.0d58ae99.webp",
+   "w720": "modal-miss-01-720.2815aff0.webp",
+   "ratio": 1.298
+  },
+  "miss-02": {
+   "w1200": "modal-miss-02-1200.9a1a90c3.webp",
+   "w720": "modal-miss-02-720.4f4f5f99.webp",
+   "ratio": 1.298
+  },
+  "miss-03": {
+   "w1200": "modal-miss-03-1200.e7dad671.webp",
+   "w720": "modal-miss-03-720.ebd6066f.webp",
+   "ratio": 1.298
+  },
+  "miss-04": {
+   "w1200": "modal-miss-04-1200.29a5b5fe.webp",
+   "w720": "modal-miss-04-720.7d4692a5.webp",
+   "ratio": 1.298
+  },
+  "miss-05": {
+   "w1200": "modal-miss-05-1200.ce193812.webp",
+   "w720": "modal-miss-05-720.390a328d.webp",
+   "ratio": 1.298
+  },
+  "win": {
+   "w1200": "modal-win-1200.777a0dca.webp",
+   "w720": "modal-win-720.e848ea72.webp",
+   "ratio": 1.298
+  }
+ }
+}

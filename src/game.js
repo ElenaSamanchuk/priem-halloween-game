@@ -3,6 +3,7 @@
   if (window.__hlwInstalled) return;
   window.__hlwInstalled = 1;
 
+  /*__HLW_MODULES__*/
   var RT = /*__HLW_RT__*/{};
   var doc = document;
   var html = doc.documentElement;
@@ -100,8 +101,6 @@
 
     var items = [].slice.call(wrap.querySelectorAll('.hlw-item'));
     if (!items.length) return;
-    var stage = wrap.querySelector('.hlw-stage');
-    var hint = wrap.querySelector('.hlw-hint');
     var missOv = wrap.querySelector('#hlw-miss');
     var winOv = wrap.querySelector('#hlw-win');
     var bar = wrap.querySelector('#hlw-bar');
@@ -109,13 +108,50 @@
     var shareUrlFn = function () { return RT.shareUrl || (location.origin + location.pathname); };
 
     var winner = rnd(items.length);
-    var order = shuffle(RT.miss.map(function (_, i) { return i; }));
-    var missFor = [];
-    var k = 0, i;
+    // Тексты промаха: группируем по иллюстрации, из каждой группы — случайный текст,
+    // чтобы за игру картинки не повторялись; если предметов больше, чем групп — добираем остальными
+    var groups = {}, gk = [], n0;
+    for (n0 = 0; n0 < RT.miss.length; n0++) {
+      var g = RT.miss[n0].g || ('t' + n0);
+      if (!groups[g]) { groups[g] = []; gk.push(g); }
+      groups[g].push(RT.miss[n0]);
+    }
+    var first = [], rest = [];
+    shuffle(gk).forEach(function (key) {
+      var list = shuffle(groups[key]);
+      first.push(list[0]);
+      rest = rest.concat(list.slice(1));
+    });
+    var pool = first.concat(shuffle(rest));
+    var missFor = [], k = 0, i;
     for (i = 0; i < items.length; i++) {
       if (i === winner) { missFor.push(null); continue; }
-      if (k >= order.length) { order = shuffle(order); k = 0; }
-      missFor.push(RT.miss[order[k++]]);
+      missFor.push(pool[k % pool.length]); k++;
+    }
+    var total = items.length, opened = 0;
+    var scene = wrap.querySelector('.hlw-scene');
+    var pillTxt = wrap.querySelector('.hlw-pill__txt');
+    var canvas = wrap.querySelector('.hlw-fx');
+    var desk = window.matchMedia ? window.matchMedia('(min-width:1024px)') : null;
+    var fx = null;
+    try {
+      if (typeof HlwFx === 'function' && canvas) fx = HlwFx(canvas, { reduce: reduce, light: lampPoint(), floorY: 0.85 });
+    } catch (e) { fx = null; }
+    function lampPoint() {
+      var d = !desk || desk.matches;
+      return d ? { x: RT.lamp.x, y: RT.lamp.y } : { x: RT.lamp.kx, y: RT.lamp.ky };
+    }
+    if (desk && fx && fx.setOpts) {
+      var onMq = function () { try { fx.setOpts({ reduce: reduce, light: lampPoint(), floorY: 0.85 }); } catch (e) {} };
+      if (desk.addEventListener) desk.addEventListener('change', onMq); else if (desk.addListener) desk.addListener(onMq);
+    }
+    var snd = typeof HlwSound === 'object' && HlwSound ? HlwSound : null;
+    function sfx(name) { if (snd) { try { snd.play(name); } catch (e) {} } }
+    function setPill(html) { if (pillTxt) pillTxt.innerHTML = html; }
+    function burstAt(el, kind) {
+      if (!fx || !canvas) return;
+      var r = el.getBoundingClientRect(), c = canvas.getBoundingClientRect();
+      try { fx.burst(r.left + r.width / 2 - c.left, r.top + r.height / 2 - c.top, kind); } catch (e) {}
     }
 
     var st = { started: false, won: false, ov: null, opener: null, timer: null };
@@ -137,6 +173,7 @@
       clearTimeout(st.timer);
       lockScroll();
       ov.hidden = false;
+      sfx('open');
       void ov.offsetWidth;
       ov.classList.add('is-visible');
       var f = focusSel && ov.querySelector(focusSel);
@@ -147,6 +184,7 @@
       var ov = st.ov;
       if (!ov) return;
       st.ov = null;
+      if (!instant) sfx('close');
       ov.classList.remove('is-visible');
       var done = function () { ov.hidden = true; };
       if (instant || reduce) done(); else st.timer = setTimeout(done, 300);
@@ -182,27 +220,47 @@
       el.classList.add('is-found');
       el.classList.remove('is-open');
       bar.hidden = false;
-      track('win');
+      setPill(RT.pillWin);
+      track('win', { clicks: opened + 1 });
     }
 
+    var busy = false;
     items.forEach(function (el, idx) {
-      el.style.setProperty('--hlw-d', (idx * 0.37).toFixed(2) + 's');
       el.addEventListener('click', function () {
-        if (st.won) return;
+        if (st.won || busy) return;
         if (!st.started) { st.started = true; track('start'); }
+        sfx('tap');
         if (idx === winner) {
+          busy = true;
           markWin(el);
-          openOv(winOv, el, '.hlw-btn');
+          burstAt(el, 'gold');
+          sfx('win');
+          setTimeout(function () { busy = false; openOv(winOv, el, '.hlw-btn'); }, reduce ? 0 : 750);
           return;
         }
         var m = missFor[idx];
-        el.classList.add('is-open');
+        if (!el.classList.contains('is-open')) {
+          el.classList.add('is-open');
+          opened += 1;
+          setPill(RT.pillProgress.replace('{n}', opened).replace('{total}', total));
+        }
         wrap.querySelector('#hlw-miss-title').textContent = m.t;
         wrap.querySelector('#hlw-miss-text').textContent = m.d;
-        var pic = wrap.querySelector('#hlw-miss-pic'), pi = pic.querySelector('img'), ph = pic.querySelector('.hlw-pic__ph');
-        if (m.i) { pi.src = m.i; pi.hidden = false; ph.hidden = true; } else { pi.hidden = true; ph.hidden = false; }
+        var pi = wrap.querySelector('#hlw-miss-img');
+        if (pi.getAttribute('data-src') !== m.i.src) {
+          pi.setAttribute('data-src', m.i.src);
+          pi.srcset = m.i.srcset;
+          pi.src = m.i.src;
+        }
         track('miss', { item: el.getAttribute('data-id') });
-        openOv(missOv, el, '.hlw-btn');
+        burstAt(el, 'smoke');
+        sfx('miss');
+        if (reduce) { openOv(missOv, el, '.hlw-btn'); return; }
+        busy = true;
+        el.classList.remove('is-shake');
+        void el.offsetWidth;
+        el.classList.add('is-shake');
+        setTimeout(function () { el.classList.remove('is-shake'); busy = false; openOv(missOv, el, '.hlw-btn'); }, 420);
       });
     });
 
@@ -216,7 +274,7 @@
       var tip = box.querySelector('.hlw-tip');
       function doCopy() {
         copyText(RT.promo).then(function (ok) {
-          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); track('copy_code'); }
+          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); sfx('copy'); track('copy_code'); }
           else { tip.textContent = RT.copyFailText; flashTip(tip); }
         });
       }
@@ -286,29 +344,54 @@
       });
     });
 
-    /* --- панорама сцены на мобильных --- */
-    var progUntil = 0, userMoved = false;
-    function center() {
-      if (!stage || userMoved) return;
-      var d = stage.scrollWidth - stage.clientWidth;
-      if (d > 0) { progUntil = Date.now() + 500; stage.scrollLeft = d / 2; }
+    /* --- кнопка звука (по умолчанию выключен, без автозапуска) --- */
+    var sb = wrap.querySelector('.hlw-sound');
+    if (sb && !snd) sb.hidden = true;
+    if (sb && snd) sb.addEventListener('click', function () {
+      var on = !snd.isOn();
+      try { snd.enable(on); } catch (e) {}
+      sb.setAttribute('aria-pressed', on ? 'true' : 'false');
+      sb.setAttribute('aria-label', on ? RT.soundOff : RT.soundOn);
+      sb.title = on ? RT.soundOff : RT.soundOn;
+      track('sound', { on: on ? 1 : 0 });
+    });
+
+    /* --- эффекты и звук работают, только пока блок на экране и вкладка видима --- */
+    var inView = false, preloaded = false;
+    function sync() {
+      var live = inView && !doc.hidden;
+      if (fx) { try { live ? fx.start() : fx.stop(); } catch (e) {} }
+      if (snd) { try { live ? snd.resume() : snd.pause(); } catch (e) {} }
     }
-    if (stage && hint) {
-      stage.addEventListener('scroll', function () {
-        if (Date.now() < progUntil) return;
-        userMoved = true;
-        hint.classList.add('is-gone');
-      }, { passive: true });
-      center();
-      raf(center);
-      window.addEventListener('load', center);
-      window.addEventListener('resize', center);
+    function preload() {
+      if (preloaded) return;
+      preloaded = true;
+      var go = function () {
+        (RT.preload || []).forEach(function (p) {
+          var im = new Image();
+          im.decoding = 'async';
+          im.sizes = '(max-width:560px) 100vw, 560px';
+          im.srcset = p.srcset;
+          im.src = p.src;
+        });
+      };
+      if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 2000 }); else setTimeout(go, 600);
     }
+    if (window.IntersectionObserver && scene) {
+      new IntersectionObserver(function (es) {
+        inView = es[0].isIntersecting;
+        if (inView) preload();
+        sync();
+      }, { rootMargin: '200px 0px' }).observe(scene);
+    } else { inView = true; preload(); sync(); }
+    doc.addEventListener('visibilitychange', sync);
+    inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }
 
   /* ---------- установка / переустановка (innerHTML в priem.menu) ---------- */
   function ensure() {
     var w = doc.getElementById('hlw-wrap');
+    if (active && !doc.body.contains(active.wrap) && active.destroy) { active.destroy(); }
     if (w && !w.getAttribute('data-hlw-ready')) init(w);
     if (lock.on && (!active || !doc.body.contains(active.wrap))) unlockScroll();
   }
