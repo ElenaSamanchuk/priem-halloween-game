@@ -187,7 +187,7 @@
       if (!instant) sfx('close');
       ov.classList.remove('is-visible');
       var done = function () { ov.hidden = true; };
-      if (instant || reduce) done(); else st.timer = setTimeout(done, 300);
+      if (instant || reduce) done(); else st.timer = setTimeout(done, 380);
       unlockScroll();
       var back = st.opener;
       if (back && (back.disabled || !doc.body.contains(back))) back = st.won ? wrap.querySelector('#hlw-bar .hlw-copy') : null;
@@ -232,6 +232,8 @@
         sfx('tap');
         if (idx === winner) {
           busy = true;
+          var wi = winOv.querySelector('.hlw-pic img');
+          if (wi && wi.decode) { try { wi.decode().catch(function () {}); } catch (e) {} }
           markWin(el);
           burstAt(el, 'gold');
           sfx('win');
@@ -252,6 +254,8 @@
           pi.srcset = m.i.srcset;
           pi.src = m.i.src;
         }
+        // распаковываем картинку заранее, пока предмет вздрагивает — попап открывается без рывка
+        if (pi.decode) { try { pi.decode().catch(function () {}); } catch (e) {} }
         track('miss', { item: el.getAttribute('data-id') });
         burstAt(el, 'smoke');
         sfx('miss');
@@ -260,7 +264,7 @@
         el.classList.remove('is-shake');
         void el.offsetWidth;
         el.classList.add('is-shake');
-        setTimeout(function () { el.classList.remove('is-shake'); busy = false; openOv(missOv, el, '.hlw-btn'); }, 420);
+        setTimeout(function () { el.classList.remove('is-shake'); busy = false; openOv(missOv, el, '.hlw-btn'); }, 480);
       });
     });
 

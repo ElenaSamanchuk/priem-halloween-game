@@ -165,7 +165,7 @@ function buildBlock(base) {
       if (!m) throw new Error('Нет предмета в manifest: ' + it.id)
       const f = m.frame, k = m.kitchen
       const style = `--fx:${pct(f.x)};--fy:${pct(f.y)};--fw:${pct(f.w)};--fh:${pct(f.h)};--kx:${pct(k.x)};--ky:${pct(k.y)};--kw:${pct(k.w)};--kh:${pct(k.h)};--o:${it.origin};--hlw-d:${(i * 0.43).toFixed(2)}s`
-      return `<button type="button" class="hlw-item" data-id="${esc(it.id)}" data-anim="${esc(it.anim)}" aria-label="${esc(it.label)}" style="${style}"><img class="hlw-item__img" src="${esc(url(base, m.src))}" alt="" draggable="false" decoding="async"></button>`
+      return `<button type="button" class="hlw-item" data-id="${esc(it.id)}" aria-label="${esc(it.label)}" style="${style}"><img class="hlw-item__img" src="${esc(url(base, m.src))}" alt="" draggable="false" decoding="async"></button>`
     })
     .join('')
 
@@ -186,7 +186,7 @@ function buildBlock(base) {
   const closeBtn = `<button type="button" class="hlw-close" data-hlw-close aria-label="${esc(copy.closeLabel)}">${ICON_CLOSE}</button>`
   const winPic = picSet(w.img)
 
-  const css = fs.readFileSync(path.join(ROOT, 'src/game.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').trim() + '\n#hlw-wrap .hlw-hl{color:var(--hlw-yellow);font-weight:800;white-space:nowrap}'
+  const css = fs.readFileSync(path.join(ROOT, 'src/game.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\n\s*/g, '\n').trim() + '\n#hlw-wrap .hlw-hl{color:#fff;font-weight:800;white-space:nowrap;background:var(--hlw-pink);padding:1px 6px;border-radius:5px;-webkit-box-decoration-break:clone;box-decoration-break:clone}'
 
   const norm = (s) => s.replace(/ /g, '\\u00a0')
   const rt = {
@@ -235,7 +235,7 @@ ${closeBtn}<div class="hlw-pic"><img id="hlw-miss-img" alt="" sizes="(max-width:
 </div></div>
 <div class="hlw-overlay" id="hlw-win" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1">
-${closeBtn}<div class="hlw-pic"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:560px) 100vw, 560px" loading="lazy" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
+${closeBtn}<div class="hlw-pic"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:560px) 100vw, 560px" decoding="async"></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
 <div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php" target="_blank" rel="noopener">${esc(w.shareVk)}</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url" target="_blank" rel="noopener">${esc(w.shareTg)}</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">${esc(w.shareCopy)}</button></div></div>
 </div></div>
 </div>

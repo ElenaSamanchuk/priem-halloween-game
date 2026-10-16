@@ -287,6 +287,11 @@ var HlwFx = function (canvas, opts) {
   function frame(ts) {
     raf = 0;
     if (destroyed) return;
+    /* только фон (пыль, угольки) — 30 кадров/с хватает, вдвое меньше работы; вспышки — на полной частоте */
+    if (last && !parts.length && !flashes.length && ts - last < 31) {
+      raf = window.requestAnimationFrame(frame);
+      return;
+    }
     safe(function () {
       var dt = last ? Math.min(0.05, (ts - last) / 1000) : 0.016;
       last = ts;
