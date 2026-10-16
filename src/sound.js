@@ -8,17 +8,19 @@ var HlwSound = (function () {
   var reverbSend = null;
   var on = false;
   var paused = false;
-  var ambNodes = [];      // источники фона, чтобы остановить
-  var ambTimer = null;
+  var ambRev = null;
   var stopTimer = null;
   var MASTER = 0.16;
 
-  function ensureCtx() {
+  function ensureCtx(forced) {
     if (ctx) { return ctx; }
     try {
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if (!AC) { return null; }
-      ctx = new AC();
+      if (forced) { ctx = forced; }
+      else {
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) { return null; }
+        ctx = new AC();
+      }
       var comp = ctx.createDynamicsCompressor();
       comp.threshold.value = -18; comp.knee.value = 20; comp.ratio.value = 8;
       comp.attack.value = 0.005; comp.release.value = 0.2;
@@ -26,7 +28,10 @@ var HlwSound = (function () {
       master.gain.value = 0;
       master.connect(comp); comp.connect(ctx.destination);
       bus = ctx.createGain(); bus.gain.value = 3.2; bus.connect(master);
-      ambGain = ctx.createGain(); ambGain.gain.value = 1; ambGain.connect(master);
+      // фон: тише эффектов, срез верха ~5 кГц
+      ambGain = ctx.createGain(); ambGain.gain.value = 0.5;
+      var ambLP = ctx.createBiquadFilter(); ambLP.type = 'lowpass'; ambLP.frequency.value = 5000; ambLP.Q.value = 0.5;
+      ambGain.connect(ambLP); ambLP.connect(master);
       // «пещерная» реверберация из затухающего шума
       try {
         var len = Math.floor(ctx.sampleRate * 1.6);
@@ -38,6 +43,7 @@ var HlwSound = (function () {
         reverb = ctx.createConvolver(); reverb.buffer = ir;
         reverbSend = ctx.createGain(); reverbSend.gain.value = 0.28;
         reverbSend.connect(reverb); reverb.connect(master);
+        ambRev = ctx.createGain(); ambRev.gain.value = 0.9; ambLP.connect(ambRev); ambRev.connect(reverbSend);
       } catch (e1) { reverb = null; reverbSend = null; }
       // разблокировка iOS тихим буфером
       var ub = ctx.createBuffer(1, 1, 22050), us = ctx.createBufferSource();
@@ -142,66 +148,99 @@ var HlwSound = (function () {
     }
   };
 
-  // фоновая атмосфера: гул + ветер
+  // ---- Фон: музыкальная шкатулка, ре минор, 3/4, ~80 bpm, 12 тактов по кругу ----
+  var BEAT = 60 / 80;
+  var BAR = BEAT * 3;
+  // мелодия: 6 восьмых на такт (MIDI, 0 = пауза)
+  var MEL = [
+    [74, 77, 81, 77, 74, 0], [77, 81, 79, 77, 76, 0], [74, 79, 77, 74, 70, 0], [73, 76, 81, 76, 73, 69],
+    [81, 79, 77, 74, 77, 81], [77, 72, 77, 81, 77, 72], [82, 79, 77, 74, 70, 74], [76, 73, 76, 81, 79, 76],
+    [79, 74, 70, 74, 79, 82], [81, 77, 74, 77, 81, 77], [79, 76, 73, 76, 79, 76], [73, 76, 81, 76, 73, 0]
+  ];
+  var BASS = [50, 50, 43, 45, 50, 41, 46, 45, 43, 50, 45, 45];
+  var barIdx = 0, loopIdx = 0, nextBar = 0, voices = 0, maxVoices = 12, sched = null;
+
+  function mtof(m) { return 440 * Math.pow(2, (m - 69) / 12); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+
+  // один «язычок» шкатулки: синус + 3-я и 5-я гармоники
+  function boxNote(m, t, vol) {
+    if (voices >= maxVoices) { return; }
+    var f = mtof(m), dur = rnd(1.2, 2.0), det = rnd(-3, 3);
+    var parts = [[1, 1, 1], [3, 0.12, 0.45], [5, 0.05, 0.25]];
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    g.connect(ambGain);
+    var last = null;
+    voices++;
+    for (var i = 0; i < parts.length; i++) {
+      var o = ctx.createOscillator(), pg = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = f * parts[i][0]; o.detune.value = det;
+      pg.gain.setValueAtTime(parts[i][1], t);
+      pg.gain.exponentialRampToValueAtTime(0.0001, t + dur * parts[i][2]);
+      o.connect(pg); pg.connect(g);
+      o.start(t); o.stop(t + dur + 0.05);
+      last = o;
+    }
+    last.onended = function () { voices--; try { g.disconnect(); } catch (e) {} };
+  }
+
+  // тихое пиццикато баса
+  function bassNote(m, t, vol) {
+    if (voices >= maxVoices) { return; }
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'triangle'; o.frequency.value = mtof(m);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+    o.connect(g); g.connect(ambGain);
+    voices++;
+    o.onended = function () { voices--; try { g.disconnect(); } catch (e) {} };
+    o.start(t); o.stop(t + 0.6);
+  }
+
+  // запланировать такт barIdx, начиная с t
+  function scheduleBar(t) {
+    var mel = MEL[barIdx], i;
+    for (i = 0; i < 6; i++) {
+      if (mel[i]) { boxNote(mel[i], t + i * BEAT / 2 + rnd(-0.008, 0.008), rnd(0.26, 0.4)); }
+    }
+    bassNote(BASS[barIdx], t, rnd(0.12, 0.17));
+    bassNote(BASS[barIdx] + 7, t + BEAT * 2, rnd(0.05, 0.08));
+    // колокольчик раз в 2 цикла в начале круга
+    if (barIdx === 0 && loopIdx % 2 === 1) { boxNote(86, t + BEAT * 1.5, 0.22); }
+    barIdx++;
+    if (barIdx >= MEL.length) { barIdx = 0; loopIdx++; }
+  }
+
+  // lookahead: планируем всё, что попадает до until
+  function schedule(until) {
+    while (nextBar < until) {
+      scheduleBar(nextBar);
+      nextBar += BAR;
+    }
+  }
+
+  function tick() {
+    try {
+      if (on && !paused && ctx) {
+        schedule(ctx.currentTime + 0.3);
+      }
+    } catch (e) {}
+    if (on && !paused) { sched = setTimeout(tick, 100); } else { sched = null; }
+  }
+
   function startAmbient() {
     stopAmbient();
-    var t = ctx.currentTime;
-    var layers = [
-      { kind: 'brown', f: 220, lfoF: 0.06, lfoD: 90, vol: 1.0 },
-      { kind: 'pink', f: 500, lfoF: 0.09, lfoD: 220, vol: 0.28 }
-    ];
-    for (var i = 0; i < layers.length; i++) {
-      var L = layers[i];
-      var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
-      s.buffer = noiseBuffer(6, L.kind); s.loop = true;
-      f.type = 'lowpass'; f.frequency.value = L.f; f.Q.value = 0.7;
-      g.gain.value = L.vol;
-      var lfo = ctx.createOscillator(), lg = ctx.createGain();
-      lfo.frequency.value = L.lfoF; lg.gain.value = L.lfoD;
-      lfo.connect(lg); lg.connect(f.frequency);
-      s.connect(f); f.connect(g); g.connect(ambGain);
-      s.start(t); lfo.start(t);
-      ambNodes.push(s, lfo);
-    }
-    scheduleOdd();
+    barIdx = 0; loopIdx = 0;
+    nextBar = ctx.currentTime + 0.15;
+    tick();
   }
 
   function stopAmbient() {
-    if (ambTimer) { clearTimeout(ambTimer); ambTimer = null; }
-    for (var i = 0; i < ambNodes.length; i++) {
-      try { ambNodes[i].stop(); } catch (e) {}
-    }
-    ambNodes = [];
-  }
-
-  // редкий далёкий скрип или капля
-  function scheduleOdd() {
-    ambTimer = setTimeout(function () {
-      try {
-        if (on && !paused && ctx && ctx.state === 'running') {
-          var t = ctx.currentTime + 0.02;
-          if (Math.random() < 0.5) {
-            // скрип половицы
-            var f0 = 140 + Math.random() * 80;
-            var o = tone('sawtooth', f0, f0 * 0.7, t, 0.5, 0.05, ambGain);
-            var fl = ctx.createBiquadFilter(); fl.type = 'bandpass'; fl.frequency.value = 400; fl.Q.value = 5;
-            o.disconnect();
-            var g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t);
-            g.gain.linearRampToValueAtTime(0.18, t + 0.15);
-            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.5);
-            o.connect(fl); fl.connect(g); g.connect(ambGain);
-          } else {
-            // капля
-            var fr = 900 + Math.random() * 500;
-            var og = ctx.createGain();
-            og.connect(ambGain);
-            tone('sine', fr, fr * 0.5, t, 0.18, 0.2, og);
-            if (reverbSend) { og.connect(reverbSend); }
-          }
-        }
-      } catch (e) {}
-      if (on) { scheduleOdd(); }
-    }, 7000 + Math.random() * 8000);
+    if (sched) { clearTimeout(sched); sched = null; }
   }
 
   function ramp(v, sec) {
@@ -229,7 +268,6 @@ var HlwSound = (function () {
           on = false;
           if (!ctx) { return; }
           ramp(0, 0.4);
-          if (ambTimer) { clearTimeout(ambTimer); ambTimer = null; }
           stopTimer = setTimeout(function () {
             stopTimer = null;
             if (!on) {
@@ -241,6 +279,14 @@ var HlwSound = (function () {
       } catch (e) {}
     },
     isOn: function () { return on; },
+    // служебное: сыграть фон в OfflineAudioContext (для превью/тестов)
+    _offline: function (octx, sec) {
+      try {
+        if (!ensureCtx(octx)) { return; }
+        master.gain.value = MASTER; maxVoices = 99999; barIdx = 0; loopIdx = 0; nextBar = 0.1;
+        schedule(sec);
+      } catch (e) {}
+    },
     play: function (name) {
       try {
         if (!on || paused || !ctx || !fx[name]) { return; }
@@ -251,13 +297,18 @@ var HlwSound = (function () {
     pause: function () {
       try {
         paused = true;
+        stopAmbient();
         if (on && ctx) { ramp(0, 0.3); }
       } catch (e) {}
     },
     resume: function () {
       try {
         paused = false;
-        if (on && ctx) { wake(); ramp(MASTER, 0.6); }
+        if (on && ctx) {
+          wake(); ramp(MASTER, 0.6);
+          nextBar = ctx.currentTime + 0.15; // с начала такта
+          if (!sched) { tick(); }
+        }
       } catch (e) {}
     }
   };
