@@ -11,6 +11,7 @@ async function run(page, label, vp, mobile) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
   page.on('pageerror', (e) => errors.push(String(e)))
   await page.waitForSelector('#hlw-wrap[data-hlw-ready]', { timeout: 8000 })
+  await page.evaluate(() => { const d = document.createElement('div'); d.id = 'menu-plans-v2'; d.style.height = '1500px'; document.body.appendChild(d) })
   ok(true, `${label}: игра стартовала`)
   const sw = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
   ok(sw <= 0, `${label}: нет горизонтальной прокрутки страницы (${sw})`)
@@ -22,9 +23,10 @@ async function run(page, label, vp, mobile) {
   const items = page.locator('.hlw-item')
   const n = await items.count()
   ok(n === 6, `${label}: 6 предметов`)
-  const titles = []; let clicks = 0, won = false
+  const titles = [], pics = []; let clicks = 0, won = false
   for (let i = 0; i < n; i++) {
     await items.nth(i).click(); clicks++
+    await page.waitForSelector('.hlw-overlay.is-visible', { timeout: 3000 })
     if (await page.locator('#hlw-win.is-visible').count()) {
       won = true
       await page.waitForTimeout(400)
@@ -33,6 +35,7 @@ async function run(page, label, vp, mobile) {
     }
     await page.waitForTimeout(350)
     titles.push(await page.locator('#hlw-miss-title').textContent() + '|' + await page.locator('#hlw-miss-text').textContent())
+    pics.push(await page.locator('#hlw-miss-img').getAttribute('data-src'))
     if (i === 0) {
       await page.screenshot({ path: `${SHOTS}${label}-2-miss.png` })
       const locked = await page.evaluate(() => document.documentElement.classList.contains('hlw-lock'))
@@ -40,7 +43,7 @@ async function run(page, label, vp, mobile) {
       await page.keyboard.press('Escape'); await page.waitForTimeout(400)
       ok(!(await page.evaluate(() => document.documentElement.classList.contains('hlw-lock'))), `${label}: Esc закрыл, скролл разблокирован`)
       // повторный клик тот же текст
-      await items.nth(0).click(); await page.waitForTimeout(350)
+      await items.nth(0).click(); await page.waitForSelector('#hlw-miss.is-visible'); await page.waitForTimeout(350)
       const again = await page.locator('#hlw-miss-title').textContent() + '|' + await page.locator('#hlw-miss-text').textContent()
       ok(again === titles[0], `${label}: повторный клик показывает тот же текст`)
       // подложка
@@ -52,6 +55,7 @@ async function run(page, label, vp, mobile) {
   }
   ok(won, `${label}: победитель найден за ${clicks} кликов`)
   ok(new Set(titles).size === titles.length, `${label}: промахи без повторов (${titles.length})`)
+  ok(new Set(pics).size === pics.length, `${label}: иллюстрации промахов без повторов (${pics.length})`)
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
   await page.locator('#hlw-win .hlw-copy').click(); await page.waitForTimeout(200)
   ok((await page.evaluate(() => navigator.clipboard.readText())) === 'СТРАШНОВКУСНО', `${label}: копирование промокода`)
@@ -70,7 +74,7 @@ async function run(page, label, vp, mobile) {
   // заказ -> скролл к якорю
   await page.locator('#hlw-bar [data-hlw-order]').click(); await page.waitForTimeout(1200)
   const top = await page.evaluate(() => document.getElementById('menu-plans-v2').getBoundingClientRect().top)
-  ok(top > 30 && top < 120, `${label}: плавный скролл к #menu-plans-v2 с учётом шапки (top=${Math.round(top)})`)
+  ok(top > -2 && top < 20, `${label}: плавный скролл к #menu-plans-v2 (top=${Math.round(top)})`)
   ok(errors.length === 0, `${label}: нет ошибок консоли ${errors.join(' ; ')}`)
 }
 

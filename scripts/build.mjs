@@ -264,7 +264,7 @@ function buildSim() {
   const body = `<div id="tilda" class="tilda-page t-records"></div>
 <script>
 (function(){
-  fetch('./halloween-game-local.html?'+Date.now()).then(function(r){return r.text()}).then(function(t){
+  fetch('./halloween-game-tilda.html?'+Date.now()).then(function(r){return r.text()}).then(function(t){
     var host=document.getElementById('tilda');
     host.innerHTML=t;
     if(/repatch/.test(location.search)){setTimeout(function(){host.innerHTML=t},1500)}

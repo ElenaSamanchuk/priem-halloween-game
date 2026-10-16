@@ -57,10 +57,10 @@ animation:hlw-breathe 2.8s ease-in-out infinite;animation-delay:var(--hlw-d,0s);
 #hlw-wrap .hlw-item:not(:disabled):hover{transform:scale(1.05)}
 #hlw-wrap .hlw-item:not(:disabled):hover .hlw-item__img{animation:none;opacity:1;filter:brightness(1.22) drop-shadow(0 0 14px rgba(var(--hlw-glow),.9))}
 #hlw-wrap .hlw-item.is-open:not(:disabled):hover .hlw-item__img{opacity:.45;filter:brightness(1.05)}
-#hlw-wrap .hlw-item[data-anim="swing"]:not(:disabled):hover{animation:hlw-swing 1.4s ease-in-out infinite}
-#hlw-wrap .hlw-item[data-anim="wobble"]:not(:disabled):hover{animation:hlw-wobble .9s ease-in-out infinite}
-#hlw-wrap .hlw-item[data-anim="rattle"]:not(:disabled):hover{animation:hlw-rattle .5s linear infinite}
-#hlw-wrap .hlw-item[data-anim="creak"]:not(:disabled):hover{animation:hlw-creak 1.1s ease-in-out infinite}
+#hlw-wrap .hlw-item[data-anim="swing"]:not(:disabled):not(.is-open):hover{animation:hlw-swing 1.4s ease-in-out infinite}
+#hlw-wrap .hlw-item[data-anim="wobble"]:not(:disabled):not(.is-open):hover{animation:hlw-wobble .9s ease-in-out infinite}
+#hlw-wrap .hlw-item[data-anim="rattle"]:not(:disabled):not(.is-open):hover{animation:hlw-rattle .5s linear infinite}
+#hlw-wrap .hlw-item[data-anim="creak"]:not(:disabled):not(.is-open):hover{animation:hlw-creak 1.1s ease-in-out infinite}
 }
 @keyframes hlw-swing{0%,100%{transform:scale(1.05) rotate(0)}25%{transform:scale(1.05) rotate(4deg)}75%{transform:scale(1.05) rotate(-4deg)}}
 @keyframes hlw-wobble{0%,100%{transform:scale(1.05) rotate(0)}30%{transform:scale(1.05) rotate(-2.5deg)}60%{transform:scale(1.05) rotate(2deg)}}
