@@ -226,6 +226,7 @@
       el.classList.remove('is-open');
       bar.hidden = false;
       setPill(RT.pillWin);
+      var tc = wrap.querySelector('.hlw-torch'); if (tc) tc.classList.remove('is-on');
       track('win', { clicks: opened + 1 });
     }
 
@@ -388,6 +389,21 @@
       sb.title = on ? RT.soundOff : RT.soundOn;
       track('sound', { on: on ? 1 : 0 });
     });
+
+    /* --- «фонарик» за курсором (только мышь на деске) --- */
+    var torch = wrap.querySelector('.hlw-torch'), beam = torch && torch.firstChild;
+    if (torch && scene && window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+      var tx = 0, ty = 0, tq = false;
+      var place = function () { tq = false; beam.style.transform = 'translate3d(' + tx + 'px,' + ty + 'px,0)'; };
+      scene.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        var r = scene.getBoundingClientRect();
+        tx = e.clientX - r.left; ty = e.clientY - r.top;
+        if (!torch.classList.contains('is-on') && !st.won) torch.classList.add('is-on');
+        if (!tq) { tq = true; raf(place); }
+      });
+      scene.addEventListener('pointerleave', function () { torch.classList.remove('is-on'); });
+    }
 
     /* --- эффекты и звук работают, только пока блок на экране и вкладка видима --- */
     var inView = false, preloaded = false;

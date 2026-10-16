@@ -227,7 +227,7 @@ function buildBlock(base) {
 ${bg}
 <div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>
 <div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>
-<canvas class="hlw-fx" aria-hidden="true"></canvas>
+<div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
 </div>
 <div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">${esc(w.barLabel)}</span>${promoBox}${orderBtn}</div>
