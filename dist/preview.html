@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Превью: найди ПриЕм</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#fff;color:#222}
+#navbar{position:fixed;left:0;right:0;top:0;height:57px;z-index:1000;background:#2b1b3f;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#navbar.navbar{display:flex}
+main,#tilda{padding-top:57px}
+.stub{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;border-bottom:1px solid #ddd;background:#f6f3fa}
+.stub:nth-child(even){background:#eef6f1}
+.stub a.cta{display:inline-block;padding:14px 22px;background:#7a3cff;color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
+/* имитация стилей Тильды, которые мешают */
+.t-records a{color:#ff8562}.t-records ul{padding-left:40px}
+</style></head><body>
+<div id="navbar" class="navbar">PriEm · шапка (fixed)</div>
+<main class="t-records">
+<section id="screen1" class="stub"><h2>Экран 1 (заглушка)</h2><p>Заглушка экрана — его генерирует админка сайта.</p><a class="cta" id="to-game" href="#halloween-game">Найти ПриЕм</a></section>
+<div class="t-rec"><style>
+@font-face{font-family:"HlwMontserrat";font-style:normal;font-weight:400 900;font-display:swap;src:url("https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459W1hyzbi.woff2") format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"HlwMontserrat";font-style:normal;font-weight:400 900;font-display:swap;src:url("https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459Wlhyw.woff2") format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+html.hlw-lock{overflow:hidden !important}
+html body .t-rec:has(#hlw-wrap),
+html body .t-rec:has(#hlw-wrap) .t-container,
+html body .t-rec:has(#hlw-wrap) .t-col,
+html body .t-rec:has(#hlw-wrap) .t-text,
+html body .t-rec:has(#hlw-wrap) .t396,
+html body .t-rec:has(#hlw-wrap) .t396__artboard{width:100% !important;max-width:none !important;padding-left:0 !important;padding-right:0 !important}
+html body .t-rec:has(#hlw-wrap),
+html body .t-rec:has(#hlw-wrap) .t396__artboard,
+html body .t-rec:has(#hlw-wrap) .t-container{overflow:visible !important;pointer-events:auto !important;height:auto !important;min-height:0 !important;max-height:none !important}
+html body .t-rec:has(#hlw-wrap) .t-cover__filter,
+html body .t-rec:has(#hlw-wrap) .t396__filter,
+html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
+#halloween-game{display:block;width:100%;scroll-margin-top:72px}
+#hlw-wrap{
+--hlw-bg:#362050;--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#7b4fd1;--hlw-glow:255,200,40;--hlw-cream:#fff6ef;
+position:relative;display:block;width:100%;margin:0;padding:clamp(20px,4vw,48px) 0 clamp(16px,3vw,36px);
+background:var(--hlw-bg);
+color:var(--hlw-cream);font-family:"HlwMontserrat",Montserrat,system-ui,-apple-system,"Segoe UI",sans-serif;
+font-size:16px;line-height:1.4;text-align:left;box-sizing:border-box;-webkit-text-size-adjust:100%
+}
+#hlw-wrap *,#hlw-wrap *::before,#hlw-wrap *::after{box-sizing:border-box}
+#hlw-wrap h2,#hlw-wrap p{margin:0;padding:0;font-family:inherit}
+#hlw-wrap a{color:inherit;text-decoration:none}
+#hlw-wrap button{font-family:inherit;margin:0;-webkit-appearance:none;appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#hlw-wrap img{max-width:none;border:0;background:none;box-shadow:none}
+#hlw-wrap [hidden]{display:none !important}
+#hlw-wrap .hlw-head{max-width:760px;margin:0 auto;padding:0 16px 18px;text-align:center}
+#hlw-wrap .hlw-title{font-size:clamp(24px,4.4vw,44px);font-weight:900;line-height:1.1;color:#fff}
+#hlw-wrap .hlw-lead{margin-top:10px;font-size:clamp(14px,2vw,18px);font-weight:500;color:rgba(255,244,227,.82)}
+#hlw-wrap .hlw-bar{max-width:880px;margin:0 auto 16px;padding:14px 16px;border-radius:16px;background:rgba(255,26,108,.14);border:1.5px solid rgba(255,26,108,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 16px;animation:hlw-fade .4s ease both}
+#hlw-wrap .hlw-bar__label{font-weight:600;font-size:14px}
+#hlw-wrap .hlw-bar .hlw-promo{margin:0}
+#hlw-wrap .hlw-bar .hlw-btn{width:auto;min-width:0;margin-top:0;padding:12px 22px}
+#hlw-wrap .hlw-stagewrap{position:relative;width:100%;aspect-ratio:2880/1203;overflow:hidden;background:radial-gradient(70% 90% at 50% 50%,#4a2a70 0%,#2a1740 60%,#1b0f2c 100%)}
+#hlw-wrap .hlw-cave{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
+#hlw-wrap .hlw-stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:var(--hlw-kw,43.8%);max-height:85%}
+#hlw-wrap .hlw-scene{position:relative;width:100%;aspect-ratio:var(--hlw-kar,1261/985);container-type:inline-size;
+background:radial-gradient(60% 50% at 50% 30%,rgba(255,150,60,.2),transparent 70%),linear-gradient(180deg,#3a2352 0%,#241438 55%,#150b24 100%)}
+#hlw-wrap .hlw-scene--ph{clip-path:polygon(2% 3%,12% 0,24% 2.5%,38% 0.5%,52% 3%,66% 0,80% 2%,92% 0.5%,98% 4%,99.5% 20%,98% 36%,100% 52%,98.5% 70%,99.5% 88%,96% 99%,84% 97.5%,70% 100%,56% 98%,42% 100%,28% 97.5%,14% 99.5%,3% 97%,0.5% 82%,2% 66%,0% 48%,1.5% 30%,0% 14%)}
+#hlw-wrap .hlw-bg{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none}
+#hlw-wrap .hlw-item{
+position:absolute;z-index:2;display:block;padding:0;margin:0;border:0;background:transparent;color:inherit;cursor:pointer;
+border-radius:14%;transition:transform .25s ease,opacity .3s ease,filter .3s ease;
+animation:hlw-glow 2.6s ease-in-out infinite;animation-delay:var(--hlw-d,0s)
+}
+#hlw-wrap .hlw-item::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%)}
+#hlw-wrap .hlw-item__img{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none;-webkit-user-drag:none}
+#hlw-wrap .hlw-art{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:4%;text-align:center;
+font-size:14px;font-size:clamp(11px,2.2cqw,30px);font-weight:700;line-height:1.1;color:#ffe9c7;
+background:rgba(255,196,120,.22);border:2px solid rgba(255,214,150,.6);border-radius:16%;pointer-events:none}
+#hlw-wrap .hlw-item[data-shape="round"] .hlw-art{border-radius:50%}
+#hlw-wrap .hlw-item[data-shape="tall"] .hlw-art{border-radius:10%}
+#hlw-wrap .hlw-item[data-shape="pumpkin"] .hlw-art{border-radius:50% 50% 44% 44%}
+@keyframes hlw-glow{
+0%,100%{filter:drop-shadow(0 0 4px rgba(var(--hlw-glow),.45)) drop-shadow(0 0 1px rgba(var(--hlw-glow),.6))}
+50%{filter:drop-shadow(0 0 16px rgba(var(--hlw-glow),.85)) drop-shadow(0 0 4px rgba(var(--hlw-glow),.85))}
+}
+@media (hover:hover){
+#hlw-wrap .hlw-item:not(.is-open):not(:disabled):hover{transform:scale(1.06);animation:none;filter:drop-shadow(0 0 22px rgba(var(--hlw-glow),1)) drop-shadow(0 0 4px rgba(var(--hlw-glow),.9))}
+}
+#hlw-wrap .hlw-item:focus{outline:none}
+#hlw-wrap .hlw-item:focus-visible{outline:3px solid #ffd27a;outline-offset:4px}
+#hlw-wrap .hlw-item.is-open{animation:none;filter:none;opacity:.5}
+#hlw-wrap .hlw-item.is-found{animation:none;opacity:1;filter:drop-shadow(0 0 14px rgba(var(--hlw-glow),.85))}
+#hlw-wrap .hlw-item:disabled{cursor:default;animation:none}
+#hlw-wrap .hlw-item:disabled:not(.is-found){filter:none;opacity:.45}
+#hlw-wrap .hlw-hint{display:none;position:absolute;left:50%;bottom:14px;transform:translateX(-50%);z-index:5;pointer-events:none;
+padding:8px 16px;border-radius:999px;background:rgba(54,32,80,.9);border:1px solid rgba(254,218,0,.7);font-size:13px;font-weight:700;white-space:nowrap;
+animation:hlw-hint 1.8s ease-in-out infinite}
+@keyframes hlw-hint{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% + 8px))}}
+@media (max-width:767px){
+#hlw-wrap .hlw-stagewrap{aspect-ratio:auto;padding:8px;background:var(--hlw-bg)}
+#hlw-wrap .hlw-cave{display:none}
+#hlw-wrap .hlw-stage{position:relative;left:auto;top:auto;transform:none;width:100%;max-height:none}
+#hlw-wrap.hlw--pan .hlw-stage{overflow-x:auto;overflow-y:hidden;height:75vh;height:75svh;max-height:640px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#hlw-wrap.hlw--pan .hlw-scene{height:100%;width:auto;min-width:100%;aspect-ratio:var(--hlw-kar,1261/985)}
+#hlw-wrap.hlw--pan .hlw-hint{display:block}
+#hlw-wrap.hlw--pan .hlw-hint.is-gone{display:none}
+}
+#hlw-wrap .hlw-overlay{position:fixed;left:0;top:0;right:0;bottom:0;z-index:2147483000;display:flex;align-items:center;justify-content:center;padding:16px;
+background:rgba(14,6,24,.8);opacity:0;transition:opacity .3s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#hlw-wrap .hlw-overlay.is-visible{opacity:1}
+#hlw-wrap .hlw-dialog{position:relative;width:min(100%,649px);margin:auto;max-height:92vh;max-height:92svh;overflow-y:auto;overscroll-behavior:contain;border-radius:20px;background:var(--hlw-panel);
+transform:scale(.92);opacity:0;transition:transform .3s ease,opacity .3s ease;color:#fff;box-shadow:0 18px 60px rgba(0,0,0,.55)}
+#hlw-wrap .hlw-overlay.is-visible .hlw-dialog{transform:scale(1);opacity:1}
+#hlw-wrap .hlw-dialog:focus{outline:none}
+#hlw-wrap .hlw-pic{position:relative;width:100%;aspect-ratio:1298/1000;overflow:hidden;background:linear-gradient(160deg,#6b43a0,#2a1740)}
+#hlw-wrap .hlw-pic img{display:block;width:100%;height:100%;object-fit:cover}
+#hlw-wrap .hlw-pic__ph{position:absolute;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:rgba(255,246,239,.6);text-align:center;border:2px dashed rgba(255,246,239,.3);margin:14px;border-radius:12px}
+#hlw-wrap .hlw-body{padding:clamp(20px,5vw,32px) clamp(20px,5vw,32px) clamp(24px,5vw,32px);text-align:left}
+#hlw-wrap .hlw-close{position:absolute;right:12px;top:12px;z-index:3;width:44px;height:44px;padding:0;border:0;border-radius:50%;background:rgba(20,8,32,.6);color:#fff;font-size:28px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+#hlw-wrap .hlw-close:hover{background:rgba(20,8,32,.85)}
+#hlw-wrap .hlw-close:focus-visible,#hlw-wrap .hlw-btn:focus-visible,#hlw-wrap .hlw-code:focus-visible,#hlw-wrap .hlw-copy:focus-visible,#hlw-wrap .hlw-sharelink:focus-visible{outline:3px solid var(--hlw-yellow);outline-offset:3px}
+#hlw-wrap .hlw-dtitle{font-size:clamp(22px,5.5vw,28px);font-weight:800;line-height:1.15;color:#fff;text-align:left}
+#hlw-wrap .hlw-dtext{margin-top:12px;font-size:clamp(16px,4.2vw,20px);font-weight:500;line-height:1.4;color:#fff;text-align:left}
+#hlw-wrap .hlw-btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:52px;margin-top:20px;padding:12px 20px;border:0;border-radius:8px;
+background:var(--hlw-pink);color:#fff;font-size:clamp(14px,3.8vw,17px);font-weight:700;line-height:1.2;text-align:center;cursor:pointer;transition:transform .15s ease,filter .15s ease}
+#hlw-wrap .hlw-btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+#hlw-wrap .hlw-btn--sec{background:var(--hlw-sec);margin-top:12px}
+#hlw-wrap .hlw-promo{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:20px 0 0;padding:8px;border:2px dashed var(--hlw-yellow);border-radius:8px;background:rgba(54,32,80,.7)}
+#hlw-wrap .hlw-code{flex:1 1 auto;min-width:max-content;padding:8px 10px;border:0;background:transparent;color:var(--hlw-yellow);font-size:clamp(16px,4.6vw,22px);font-weight:800;letter-spacing:.04em;text-align:left;cursor:pointer}
+#hlw-wrap .hlw-copy{flex:1 1 130px;min-height:44px;padding:8px 14px;border:0;border-radius:8px;background:var(--hlw-yellow);color:#362050;font-size:14px;font-weight:700;cursor:pointer}
+#hlw-wrap .hlw-tip{position:absolute;right:8px;top:-32px;padding:4px 10px;border-radius:8px;background:#1a0f10;color:#fff;font-size:12px;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;pointer-events:none}
+#hlw-wrap .hlw-tip.is-on{opacity:1;transform:none}
+#hlw-wrap .hlw-sharerow{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+#hlw-wrap .hlw-sharelink{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:2px solid #fff;border-radius:8px;background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+@keyframes hlw-fade{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+#hlw-wrap .hlw-item{animation:none;filter:drop-shadow(0 0 8px rgba(var(--hlw-glow),.6));transition:none}
+#hlw-wrap .hlw-item.is-open{filter:none}
+#hlw-wrap .hlw-overlay,#hlw-wrap .hlw-dialog,#hlw-wrap .hlw-tip{transition:none}
+#hlw-wrap .hlw-hint,#hlw-wrap .hlw-bar{animation:none}
+}
+</style>
+<section id="halloween-game" aria-label="Найди ПриЕм на&nbsp;страшной кухне"><div id="hlw-wrap" class="hlw-wrap hlw--fit" style="--hlw-bg:#362050;--hlw-panel:#4c2f72;--hlw-pink:#ff1a6c;--hlw-yellow:#feda00;--hlw-sec:#7b4fd1;--hlw-glow:255,200,40;--hlw-kw:43.78%;--hlw-kar:1261/985"><div class="hlw-head"><h2 class="hlw-title">Найди ПриЕм на&nbsp;страшной кухне</h2><p class="hlw-lead">Открывай предметы и&nbsp;ищи, где спрятался ПриЕм</p></div><div class="hlw-bar" id="hlw-bar" hidden><span class="hlw-bar__label">Твой промокод</span><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a></div><div class="hlw-stagewrap"><div class="hlw-stage" role="group" aria-label="Кухня"><div class="hlw-scene hlw-scene--ph"><button type="button" class="hlw-item" data-id="cabinet-double" data-shape="rect" aria-label="Шкаф" style="left:5%;top:10%;width:36%;height:40%"><span class="hlw-art">Шкаф</span></button><button type="button" class="hlw-item" data-id="cabinet-single" data-shape="tall" aria-label="Шкафчик" style="left:44%;top:12%;width:18%;height:30%"><span class="hlw-art">Шкафчик</span></button><button type="button" class="hlw-item" data-id="pumpkin-lamp" data-shape="pumpkin" aria-label="Светильник-тыква" style="left:68%;top:14%;width:14%;height:20%"><span class="hlw-art">Светильник-тыква</span></button><button type="button" class="hlw-item" data-id="veg-crate" data-shape="rect" aria-label="Ящик с овощами" style="left:6%;top:66%;width:24%;height:22%"><span class="hlw-art">Ящик с&nbsp;овощами</span></button><button type="button" class="hlw-item" data-id="cauldron" data-shape="round" aria-label="Котёл" style="left:40%;top:58%;width:22%;height:32%"><span class="hlw-art">Котёл</span></button><button type="button" class="hlw-item" data-id="pan" data-shape="round" aria-label="Сковорода" style="left:68%;top:56%;width:22%;height:26%"><span class="hlw-art">Сковорода</span></button></div></div><div class="hlw-hint" aria-hidden="true">листай кухню &#8596;</div></div><div class="hlw-overlay" id="hlw-miss" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-miss-title" aria-describedby="hlw-miss-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть">&times;</button><div class="hlw-pic" id="hlw-miss-pic"><img src="" alt="" hidden><div class="hlw-pic__ph" aria-hidden="true">иллюстрация промаха</div></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-miss-title"></h2><p class="hlw-dtext" id="hlw-miss-text"></p><button type="button" class="hlw-btn" data-hlw-close>Продолжить поиск</button></div></div></div><div class="hlw-overlay" id="hlw-win" hidden><div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1"><button type="button" class="hlw-close" data-hlw-close aria-label="Закрыть">&times;</button><div class="hlw-pic"><img src="" alt="" hidden><div class="hlw-pic__ph" aria-hidden="true">иллюстрация победы</div></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">Ого, ты&nbsp;не&nbsp;только смелый, но&nbsp;и&nbsp;удачливый!</h2><p class="hlw-dtext" id="hlw-win-text">Ты&nbsp;нашёл ПриЕм, а&nbsp;значит тебе больше не&nbsp;нужно заходить на&nbsp;страшную кухню. Заказывай готовую еду ещё выгоднее с&nbsp;промокодом СТРАШНОВКУСНО на&nbsp;1000&nbsp;₽ (на&nbsp;заказы от&nbsp;5&nbsp;дней)</p><div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод СТРАШНОВКУСНО">СТРАШНОВКУСНО</button><button type="button" class="hlw-copy">Скопировать</button><span class="hlw-tip" role="status" aria-live="polite"></span></div><a class="hlw-btn" href="#menu-plans-v2" data-hlw-order>Смело заказать ПриЕм с&nbsp;выгодой</a><button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">Рассказать друзьям</button><div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php?url=" target="_blank" rel="noopener">ВКонтакте</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url?url=" target="_blank" rel="noopener">Telegram</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">Скопировать ссылку</button></div></div></div></div></div></div></section>
+<img id="hlw-boot-beacon" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="1" height="1" aria-hidden="true" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none" onload="(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()" onerror="(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()">
+<script id="hlw-js">
+(function () {
+  if (window.__hlwInstalled) return;
+  window.__hlwInstalled = 1;
+
+  var RT = {"mobileMode":"fit","ymId":null,"promo":"СТРАШНОВКУСНО","shareUrl":null,"shareText":"Я\u00a0нашёл ПриЕм на\u00a0страшной кухне. Попробуй и\u00a0ты","shareTitle":"Найди ПриЕм","copiedText":"Скопировано","copyFailText":"Не удалось, выдели код вручную","miss":[{"t":"Мимо!","d":"Тут\u00a0только пыль и\u00a0старый рецепт, который даже не\u00a0стоит пытаться готовить","i":""},{"t":"Иу","d":"Тут\u00a0прячется лишь сельдерей, которому год. Советую его не\u00a0брать","i":""},{"t":"Не\u00a0в\u00a0этот раз","d":"Здесь живёт дух пригоревшей запеканки","i":""},{"t":"Фуэ","d":"Кажется, это\u00a0тут\u00a0лежит аж с\u00a0прошлого века","i":""},{"t":"Пусто","d":"Только паутина и\u00a0запах недельного борща","i":""},{"t":"Оу","d":"Ты\u00a0разбудил призрак вчерашней немытой посуды. Он\u00a0явно недоволен","i":""},{"t":"Аааа","d":"Тут\u00a0живёт только проклятие вечной готовки. Жутко, правда?","i":""},{"t":"Мимо","d":"Но\u00a0кухонный дух оценил твою смелость","i":""}]};
+  var doc = document;
+  var html = doc.documentElement;
+  var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var active = null; // текущий экземпляр игры
+  var lock = { on: false, y: 0, ios: false, pad: '', bodyCss: '' };
+
+  function raf(fn) { (window.requestAnimationFrame || window.setTimeout)(fn, 16); }
+
+  function rnd(n) {
+    var c = window.crypto || window.msCrypto;
+    if (c && c.getRandomValues) {
+      var a = new Uint32Array(1);
+      c.getRandomValues(a);
+      return a[0] % n;
+    }
+    return Math.floor(Math.random() * n);
+  }
+
+  function shuffle(a) {
+    var r = a.slice();
+    for (var i = r.length - 1; i > 0; i--) {
+      var j = rnd(i + 1), t = r[i];
+      r[i] = r[j]; r[j] = t;
+    }
+    return r;
+  }
+
+  function track(name, params) {
+    var o = { event: 'hlw_' + name }, k;
+    if (params) for (k in params) if (params.hasOwnProperty(k)) o[k] = params[k];
+    (window.dataLayer = window.dataLayer || []).push(o);
+    if (RT.ymId && typeof window.ym === 'function') {
+      try { window.ym(RT.ymId, 'reachGoal', 'hlw_' + name, params || undefined); } catch (e) {}
+    }
+  }
+
+  /* ---------- блокировка прокрутки страницы ---------- */
+  function lockScroll() {
+    if (lock.on) return;
+    lock.on = true;
+    lock.y = window.pageYOffset || html.scrollTop || 0;
+    lock.ios = /iP(ad|hone|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var sbw = window.innerWidth - html.clientWidth;
+    lock.pad = html.style.paddingRight;
+    if (sbw > 0) html.style.paddingRight = sbw + 'px';
+    html.classList.add('hlw-lock');
+    if (lock.ios) {
+      var b = doc.body;
+      lock.bodyCss = b.style.cssText;
+      b.style.position = 'fixed';
+      b.style.top = -lock.y + 'px';
+      b.style.left = '0';
+      b.style.right = '0';
+      b.style.width = '100%';
+    }
+  }
+
+  function unlockScroll() {
+    if (!lock.on) return;
+    lock.on = false;
+    html.classList.remove('hlw-lock');
+    html.style.paddingRight = lock.pad;
+    if (lock.ios) {
+      doc.body.style.cssText = lock.bodyCss;
+      try { window.scrollTo({ top: lock.y, left: 0, behavior: 'instant' }); } catch (e) { window.scrollTo(0, lock.y); }
+    }
+  }
+
+  /* ---------- буфер обмена ---------- */
+  function copyText(text) {
+    function fallback() {
+      var ta = doc.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0';
+      doc.body.appendChild(ta);
+      ta.select();
+      try { ta.setSelectionRange(0, text.length); } catch (e) {}
+      var ok = false;
+      try { ok = doc.execCommand('copy'); } catch (e2) {}
+      doc.body.removeChild(ta);
+      return ok;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallback(); });
+    }
+    return Promise.resolve(fallback());
+  }
+
+  /* ---------- экземпляр игры ---------- */
+  function init(wrap) {
+    if (wrap.getAttribute('data-hlw-ready')) return;
+    wrap.setAttribute('data-hlw-ready', '1');
+
+    var items = [].slice.call(wrap.querySelectorAll('.hlw-item'));
+    if (!items.length) return;
+    var stage = wrap.querySelector('.hlw-stage');
+    var hint = wrap.querySelector('.hlw-hint');
+    var missOv = wrap.querySelector('#hlw-miss');
+    var winOv = wrap.querySelector('#hlw-win');
+    var bar = wrap.querySelector('#hlw-bar');
+    var shareRow = wrap.querySelector('#hlw-sharerow');
+    var shareUrlFn = function () { return RT.shareUrl || (location.origin + location.pathname); };
+
+    var winner = rnd(items.length);
+    var order = shuffle(RT.miss.map(function (_, i) { return i; }));
+    var missFor = [];
+    var k = 0, i;
+    for (i = 0; i < items.length; i++) {
+      if (i === winner) { missFor.push(null); continue; }
+      if (k >= order.length) { order = shuffle(order); k = 0; }
+      missFor.push(RT.miss[order[k++]]);
+    }
+
+    var st = { started: false, won: false, ov: null, opener: null, timer: null };
+    var inst = { wrap: wrap, st: st };
+    active = inst;
+
+    /* --- попапы --- */
+    function focusables(ov) {
+      var list = ov.querySelectorAll('a[href],button:not([disabled])');
+      var out = [];
+      for (var n = 0; n < list.length; n++) if (list[n].offsetParent !== null || list[n] === doc.activeElement) out.push(list[n]);
+      return out;
+    }
+
+    function openOv(ov, opener, focusSel) {
+      if (st.ov) closeOv(true);
+      st.ov = ov;
+      st.opener = opener || null;
+      clearTimeout(st.timer);
+      lockScroll();
+      ov.hidden = false;
+      void ov.offsetWidth;
+      ov.classList.add('is-visible');
+      var f = focusSel && ov.querySelector(focusSel);
+      (f || ov.querySelector('.hlw-dialog')).focus();
+    }
+
+    function closeOv(instant) {
+      var ov = st.ov;
+      if (!ov) return;
+      st.ov = null;
+      ov.classList.remove('is-visible');
+      var done = function () { ov.hidden = true; };
+      if (instant || reduce) done(); else st.timer = setTimeout(done, 300);
+      unlockScroll();
+      var back = st.opener;
+      if (back && (back.disabled || !doc.body.contains(back))) back = st.won ? wrap.querySelector('#hlw-bar .hlw-copy') : null;
+      if (back && back.focus) { try { back.focus({ preventScroll: true }); } catch (e) { back.focus(); } }
+    }
+    inst.close = closeOv;
+
+    [missOv, winOv].forEach(function (ov) {
+      ov.addEventListener('mousedown', function (e) { if (e.target === ov) ov.setAttribute('data-bd', '1'); else ov.removeAttribute('data-bd'); });
+      ov.addEventListener('click', function (e) {
+        if (e.target === ov && ov.getAttribute('data-bd')) { ov.removeAttribute('data-bd'); closeOv(); }
+      });
+      ov.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') return;
+        var f = focusables(ov);
+        if (!f.length) { e.preventDefault(); return; }
+        var first = f[0], last = f[f.length - 1], a = doc.activeElement;
+        if (e.shiftKey && (a === first || a === ov.querySelector('.hlw-dialog'))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+      });
+    });
+    [].slice.call(wrap.querySelectorAll('[data-hlw-close]')).forEach(function (b) {
+      b.addEventListener('click', function () { closeOv(); });
+    });
+
+    /* --- предметы --- */
+    function markWin(el) {
+      st.won = true;
+      items.forEach(function (it) { it.disabled = true; });
+      el.classList.add('is-found');
+      el.classList.remove('is-open');
+      bar.hidden = false;
+      track('win');
+    }
+
+    items.forEach(function (el, idx) {
+      el.style.setProperty('--hlw-d', (idx * 0.37).toFixed(2) + 's');
+      el.addEventListener('click', function () {
+        if (st.won) return;
+        if (!st.started) { st.started = true; track('start'); }
+        if (idx === winner) {
+          markWin(el);
+          openOv(winOv, el, '.hlw-btn');
+          return;
+        }
+        var m = missFor[idx];
+        el.classList.add('is-open');
+        wrap.querySelector('#hlw-miss-title').textContent = m.t;
+        wrap.querySelector('#hlw-miss-text').textContent = m.d;
+        var pic = wrap.querySelector('#hlw-miss-pic'), pi = pic.querySelector('img'), ph = pic.querySelector('.hlw-pic__ph');
+        if (m.i) { pi.src = m.i; pi.hidden = false; ph.hidden = true; } else { pi.hidden = true; ph.hidden = false; }
+        track('miss', { item: el.getAttribute('data-id') });
+        openOv(missOv, el, '.hlw-btn');
+      });
+    });
+
+    /* --- копирование промокода --- */
+    function flashTip(tip) {
+      tip.classList.add('is-on');
+      clearTimeout(tip._t);
+      tip._t = setTimeout(function () { tip.classList.remove('is-on'); }, 2000);
+    }
+    [].slice.call(wrap.querySelectorAll('.hlw-promo')).forEach(function (box) {
+      var tip = box.querySelector('.hlw-tip');
+      function doCopy() {
+        copyText(RT.promo).then(function (ok) {
+          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); track('copy_code'); }
+          else { tip.textContent = RT.copyFailText; flashTip(tip); }
+        });
+      }
+      box.querySelector('.hlw-code').addEventListener('click', doCopy);
+      box.querySelector('.hlw-copy').addEventListener('click', doCopy);
+    });
+
+    /* --- заказ: плавный скролл с учётом фиксированной шапки --- */
+    [].slice.call(wrap.querySelectorAll('[data-hlw-order]')).forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        track('order_click');
+        var href = a.getAttribute('href') || '';
+        if (href.charAt(0) !== '#' || href.length < 2) return;
+        var t = doc.getElementById(href.slice(1));
+        if (!t) return;
+        e.preventDefault();
+        closeOv(true);
+        raf(function () {
+          var nb = doc.getElementById('navbar'), off = 0;
+          if (nb) {
+            var pos = window.getComputedStyle(nb).position;
+            if (pos === 'fixed' || pos === 'sticky') off = nb.getBoundingClientRect().height;
+          }
+          var y = t.getBoundingClientRect().top + (window.pageYOffset || 0) - off - 8;
+          try { window.scrollTo({ top: Math.max(0, y), behavior: reduce ? 'auto' : 'smooth' }); } catch (e2) { window.scrollTo(0, Math.max(0, y)); }
+        });
+      });
+    });
+
+    /* --- шеринг --- */
+    var shareBtn = wrap.querySelector('#hlw-share');
+    var vk = wrap.querySelector('#hlw-share-vk');
+    var tg = wrap.querySelector('#hlw-share-tg');
+    var cl = wrap.querySelector('#hlw-share-copy');
+    function fillShare() {
+      var u = encodeURIComponent(shareUrlFn());
+      vk.href = 'https://vk.com/share.php?url=' + u;
+      tg.href = 'https://t.me/share/url?url=' + u + '&text=' + encodeURIComponent(RT.shareText);
+    }
+    function toggleRow(force) {
+      var show = typeof force === 'boolean' ? force : shareRow.hidden;
+      fillShare();
+      shareRow.hidden = !show;
+      shareBtn.setAttribute('aria-expanded', show ? 'true' : 'false');
+    }
+    shareBtn.addEventListener('click', function () {
+      var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      if (coarse && navigator.share) {
+        track('share_click', { channel: 'native' });
+        navigator.share({ title: RT.shareTitle, text: RT.shareText, url: shareUrlFn() }).catch(function (err) {
+          if (!err || err.name !== 'AbortError') toggleRow(true);
+        });
+        return;
+      }
+      toggleRow();
+    });
+    vk.addEventListener('click', function () { fillShare(); track('share_click', { channel: 'vk' }); });
+    tg.addEventListener('click', function () { fillShare(); track('share_click', { channel: 'telegram' }); });
+    cl.addEventListener('click', function () {
+      track('share_click', { channel: 'copy_link' });
+      copyText(shareUrlFn()).then(function (ok) {
+        var old = cl.getAttribute('data-label') || cl.textContent;
+        cl.setAttribute('data-label', old);
+        cl.textContent = ok ? RT.copiedText : RT.copyFailText;
+        clearTimeout(cl._t);
+        cl._t = setTimeout(function () { cl.textContent = old; }, 2000);
+      });
+    });
+
+    /* --- панорама сцены на мобильных --- */
+    var progUntil = 0, userMoved = false;
+    function center() {
+      if (!stage || userMoved) return;
+      var d = stage.scrollWidth - stage.clientWidth;
+      if (d > 0) { progUntil = Date.now() + 500; stage.scrollLeft = d / 2; }
+    }
+    if (stage && hint) {
+      stage.addEventListener('scroll', function () {
+        if (Date.now() < progUntil) return;
+        userMoved = true;
+        hint.classList.add('is-gone');
+      }, { passive: true });
+      center();
+      raf(center);
+      window.addEventListener('load', center);
+      window.addEventListener('resize', center);
+    }
+  }
+
+  /* ---------- установка / переустановка (innerHTML в priem.menu) ---------- */
+  function ensure() {
+    var w = doc.getElementById('hlw-wrap');
+    if (w && !w.getAttribute('data-hlw-ready')) init(w);
+    if (lock.on && (!active || !doc.body.contains(active.wrap))) unlockScroll();
+  }
+
+  doc.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && active && active.st.ov) {
+      e.preventDefault();
+      active.close();
+    }
+  });
+
+  if (window.MutationObserver) {
+    var pending = false;
+    new MutationObserver(function () {
+      if (pending) return;
+      pending = true;
+      raf(function () { pending = false; ensure(); });
+    }).observe(html, { childList: true, subtree: true });
+  }
+  var tries = 0;
+  var poll = setInterval(function () {
+    tries += 1;
+    ensure();
+    var w = doc.getElementById('hlw-wrap');
+    if ((w && w.getAttribute('data-hlw-ready')) || tries > 80) clearInterval(poll);
+  }, 250);
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', ensure); else ensure();
+})();
+
+</script>
+</div>
+<section id="menu-plans-v2" class="stub"><h2>Экран 3: меню и тарифы</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
+<section id="screen4" class="stub"><h2>Экран 4</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
+<section id="screen5" class="stub"><h2>Экран 5</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
+<section id="order" class="stub"><h2>Экран 6: заказ</h2><p>Заглушка экрана — его генерирует админка сайта.</p></section>
+</main>
+</body></html>

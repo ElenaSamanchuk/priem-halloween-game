@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Имитация priem.menu (innerHTML)</title>
+<style>
+body{margin:0;font-family:system-ui,sans-serif;background:#fff;color:#222}
+#navbar{position:fixed;left:0;right:0;top:0;height:57px;z-index:1000;background:#2b1b3f;color:#fff;display:flex;align-items:center;padding:0 16px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+#navbar.navbar{display:flex}
+main,#tilda{padding-top:57px}
+.stub{min-height:70vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px;border-bottom:1px solid #ddd;background:#f6f3fa}
+.stub:nth-child(even){background:#eef6f1}
+.stub a.cta{display:inline-block;padding:14px 22px;background:#7a3cff;color:#fff;border-radius:10px;text-decoration:none;font-weight:700}
+/* имитация стилей Тильды, которые мешают */
+.t-records a{color:#ff8562}.t-records ul{padding-left:40px}
+</style></head><body>
+<div id="navbar" class="navbar">PriEm · шапка (fixed)</div>
+<div id="tilda" class="tilda-page t-records"></div>
+<script>
+/* Имитация priem.menu: Vue кладёт страницу Тильды через innerHTML, <script> не исполняется */
+(function(){
+  var q=location.search;
+  fetch('./halloween-game-tilda.html?'+Date.now()).then(function(r){return r.text()}).then(function(t){
+    var host=document.getElementById('tilda');
+    var full='<section id="screen1" class="stub"><h2>Экран 1</h2><a class="cta" href="#halloween-game">Найти ПриЕм</a></section>'
+      +t
+      +'<section id="menu-plans-v2" class="stub"><h2>Экран 3: меню и тарифы</h2></section><section id="order" class="stub"><h2>Экран 6</h2></section>';
+    host.innerHTML=full;
+    window.__simInjected=1;
+    if(/repatch/.test(q)){
+      setTimeout(function(){host.innerHTML=full;window.__simRepatched=1},1500);
+    }
+  });
+})();
+</script>
+</body></html>
