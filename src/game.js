@@ -235,7 +235,20 @@
     }
 
     var busy = false;
-    var winkN = 0, winkT = null;
+    // рамка фокуса — только при работе с клавиатуры: мышь/палец её выключают, Tab возвращает
+    wrap.addEventListener('pointerdown', function () { wrap.classList.add('hlw-pointer'); }, true);
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Tab') wrap.classList.remove('hlw-pointer'); });
+    var winkN = 0, winkT = null, winkEl = null;
+    function boil(el) {
+      el.classList.remove('is-boil'); void el.offsetWidth; el.classList.add('is-boil');
+      sfx('boil'); buzz([10, 30, 10, 30, 10, 30, 60]); track('easter_boil');
+      var stm = wrap.querySelector('.hlw-steam');
+      setTimeout(function () {
+        if (stm) { stm.classList.remove('is-on', 'is-face', 'is-jet'); void stm.offsetWidth; stm.classList.add('is-jet'); setTimeout(function () { stm.classList.remove('is-jet'); }, 2000); }
+        burstAt(el, 'smoke');
+      }, 550);
+      setTimeout(function () { el.classList.remove('is-boil'); }, 1000);
+    }
     function wink(el) {
       el.classList.remove('is-wink'); wrap.classList.remove('is-wink'); void el.offsetWidth;
       el.classList.add('is-wink'); wrap.classList.add('is-wink');
@@ -245,10 +258,12 @@
     items.forEach(function (el, idx) {
       el.addEventListener('click', function (ev) {
         if (st.won || busy) return;
-        // пасхалка: три быстрых клика по уже проверенной тыкве-лампе
-        if (el.getAttribute('data-id') === 'pumpkin-lamp' && el.classList.contains('is-open') && !ev.hlwReplay) {
+        // пасхалки: 3 быстрых клика по проверенной тыкве — подмигнёт, 4 по проверенному котлу — закипит
+        var eggN = { 'pumpkin-lamp': 3, cauldron: 4 }[el.getAttribute('data-id')];
+        if (eggN && el.classList.contains('is-open') && !ev.hlwReplay) {
+          if (winkEl !== el) { winkN = 0; winkEl = el; }
           winkN += 1; clearTimeout(winkT);
-          if (winkN >= 3) { winkN = 0; wink(el); return; }
+          if (winkN >= eggN) { winkN = 0; if (eggN === 3) wink(el); else boil(el); return; }
           winkT = setTimeout(function () { var n = winkN; winkN = 0; if (n) { var e2 = new MouseEvent('click'); e2.hlwReplay = true; el.dispatchEvent(e2); } }, 350);
           return;
         }

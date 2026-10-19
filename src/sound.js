@@ -168,6 +168,15 @@ var HlwSound = (function () {
       tone('triangle', 1319, 1319, t + 0.16, 0.3, 0.12);
       tone('sine', 440, 880, t + 0.32, 0.25, 0.1);
     },
+    boil: function (t) {
+      // бульканье: несколько коротких «блупов» вверх + шипящая струя пара
+      for (var i = 0; i < 7; i++) {
+        var st = t + i * 0.11 + Math.random() * 0.05, f = 160 + Math.random() * 120;
+        tone('sine', f, f * 2.2, st, 0.09, 0.22);
+      }
+      noiseBurst(t + 0.55, 1.6, 'highpass', 2500, 5200, 0.7, 0.22);
+      noiseBurst(t + 0.6, 1.2, 'bandpass', 1200, 3000, 0.8, 0.1);
+    },
     hint: function (t) {
       // тихое «тиньк» подсказки
       tone('sine', 1568, 1568, t, 0.6, 0.12);
