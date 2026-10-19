@@ -154,5 +154,10 @@
    "a720": "modal-win-720.0377768a.avif",
    "ratio": 1.298
   }
+ },
+ "ghost": {
+  "webp": "ghost-640.ccb87ec0.webp",
+  "avif": "ghost-640.2c72e0b8.avif",
+  "ratio": 0.8531
  }
 }

@@ -227,6 +227,7 @@
       bar.hidden = false;
       setPill(RT.pillWin);
       var tc = wrap.querySelector('.hlw-torch'); if (tc) tc.classList.remove('is-on');
+      if (inst.ghostCheer) inst.ghostCheer();
       track('win', { clicks: opened + 1 });
     }
 
@@ -405,6 +406,31 @@
       scene.addEventListener('pointerleave', function () { torch.classList.remove('is-on'); });
     }
 
+    /* --- призрак выглядывает из-за края (раз в 10–16 с, пока блок на экране и попап закрыт) --- */
+    var ghost = wrap.querySelector('.hlw-ghost'), gTimer = null, gSide = rnd(2) ? 'r' : 'l', gFirst = true;
+    function ghostSchedule() {
+      clearTimeout(gTimer);
+      if (!ghost || reduce || st.won) return;
+      gTimer = setTimeout(ghostPeek, gFirst ? 3500 : 10000 + rnd(6000));
+      gFirst = false;
+    }
+    function ghostPeek() {
+      if (!ghost || st.won) return;
+      if (!inView || doc.hidden || st.ov) { ghostSchedule(); return; }
+      gSide = gSide === 'l' ? 'r' : 'l';
+      ghost.className = 'hlw-ghost is-' + gSide;
+      void ghost.offsetWidth;
+      ghost.classList.add('is-peek');
+      gTimer = setTimeout(function () { ghost.classList.remove('is-peek'); ghostSchedule(); }, 4700);
+    }
+    inst.ghostCheer = function () {
+      if (!ghost) return;
+      clearTimeout(gTimer);
+      ghost.className = 'hlw-ghost is-r';
+      void ghost.offsetWidth;
+      ghost.classList.add('is-cheer');
+    };
+
     /* --- эффекты и звук работают, только пока блок на экране и вкладка видима --- */
     var inView = false, preloaded = false;
     function sync() {
@@ -431,10 +457,10 @@
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {
         inView = es[0].isIntersecting;
-        if (inView) preload();
+        if (inView) { preload(); if (!gTimer) ghostSchedule(); }
         sync();
       }, { rootMargin: '200px 0px' }).observe(scene);
-    } else { inView = true; preload(); sync(); }
+    } else { inView = true; preload(); sync(); ghostSchedule(); }
     doc.addEventListener('visibilitychange', sync);
     inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }

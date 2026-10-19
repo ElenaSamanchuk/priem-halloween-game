@@ -117,6 +117,13 @@ for f in sorted(os.listdir(os.path.join(SRC, 'modals'))):
     man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 78)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 78)),
                           'a1200': hashed(avif(big, f'modal-{key}-1200.avif')), 'a720': hashed(avif(small, f'modal-{key}-720.avif', 60)), 'ratio': round(im.width / im.height, 4)}
 
+# Призрак (вырезан из иллюстрации победы скриптом scripts/cut-ghost.py), с альфой
+gp = os.path.join(SRC, 'ghost.png')
+if os.path.exists(gp):
+    g = Image.open(gp).convert('RGBA')
+    g = g.resize((round(640 * g.width / g.height), 640), Image.LANCZOS)
+    man['ghost'] = {'webp': hashed(webp(g, 'ghost-640.webp', 86)), 'avif': hashed(avif(g, 'ghost-640.avif', 62)), 'ratio': round(g.width / g.height, 4)}
+
 json.dump(man, open(os.path.join(OUT, 'manifest.json'), 'w'), ensure_ascii=False, indent=1)
 tot = 0
 for f in sorted(os.listdir(OUT)):

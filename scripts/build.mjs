@@ -139,6 +139,23 @@ export function typograph(text) {
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/\u00a0/g, '&nbsp;')
 
+/* Паутина: тонкий SVG из угла (0,0), радиальные нити + провисающие дуги. Детерминированная — без рандома при сборке */
+function cobwebSvg(cls) {
+  const R = 200, rays = [4, 19, 34, 50, 66, 81, 88].map((d) => (d * Math.PI) / 180)
+  const pt = (a, r) => [+(Math.cos(a) * r).toFixed(1), +(Math.sin(a) * r).toFixed(1)]
+  let d = ''
+  rays.forEach((a, i) => { const [x, y] = pt(a, R * (0.86 + (i % 3) * 0.07)); d += `M0 0L${x} ${y}` })
+  for (let k = 1; k <= 6; k++) {
+    const r = R * (0.14 * k) * (1 + (k % 2) * 0.04)
+    for (let i = 0; i < rays.length - 1; i++) {
+      const [x1, y1] = pt(rays[i], r), [x2, y2] = pt(rays[i + 1], r * (1 + ((i + k) % 3 - 1) * 0.03))
+      const mid = (rays[i] + rays[i + 1]) / 2, [cx, cy] = pt(mid, r * 0.8)
+      d += `M${x1} ${y1}Q${cx} ${cy} ${x2} ${y2}`
+    }
+  }
+  return `<svg class="${cls}" viewBox="0 0 ${R} ${R}" aria-hidden="true" focusable="false"><path d="${d}" fill="none" stroke="rgba(232,228,240,.55)" stroke-width=".7" vector-effect="non-scaling-stroke" stroke-linecap="round"/></svg>`
+}
+
 /* ===================== сборка блока ===================== */
 const url = (base, file) => base.replace(/\/$/, '') + '/' + file
 const pct = (v) => (+v).toFixed(3) + '%'
@@ -181,6 +198,9 @@ function buildBlock(base) {
   // Фон сцены: деск — весь кадр, <1024 — окно кухни
   const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" sizes="100vw"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
 
+  const webs = ['l', 'r'].map((side) => `<div class="hlw-web hlw-web--${side}" aria-hidden="true">${cobwebSvg('hlw-web__svg')}</div>`).join('')
+  const G2 = MAN.ghost
+  const ghost = G2 ? `<div class="hlw-ghost" aria-hidden="true" style="--gr:${G2.ratio}"><div class="hlw-ghost__bob"><picture><source type="image/avif" srcset="${esc(url(base, G2.avif))}"><img src="${esc(url(base, G2.webp))}" alt="" draggable="false" decoding="async" loading="lazy"></picture></div></div>` : ''
   const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
   const promoBox = `<div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод ${esc(C.promo)}">${esc(C.promo)}</button><button type="button" class="hlw-copy">${esc(w.copyCta)}</button><span class="hlw-tip" role="status" aria-live="polite"></span></div>`
   const orderBtn = `<a class="hlw-btn" href="${esc(C.links.order)}" data-hlw-order${/^https?:/.test(C.links.order) ? ' target="_blank" rel="noopener"' : ''}>${esc(T(w.orderCta))}</a>`
@@ -225,7 +245,7 @@ function buildBlock(base) {
 <button type="button" class="hlw-sound" aria-pressed="true" aria-label="${esc(copy.soundOff)}" title="${esc(copy.soundOff)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
 <div class="hlw-scene">
 ${bg}
-<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>
+<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}${ghost}
 <div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
