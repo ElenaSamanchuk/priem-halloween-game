@@ -22,7 +22,7 @@
  },
  "items": {
   "pumpkin-lamp": {
-   "src": "item-pumpkin-lamp.c3903d52.webp",
+   "src": "item-pumpkin-lamp.7268bc99.webp",
    "frame": {
     "x": 26.851,
     "y": 14.397,
@@ -37,7 +37,7 @@
    }
   },
   "cabinet-double": {
-   "src": "item-cabinet-double.2a321ebc.webp",
+   "src": "item-cabinet-double.29269ecb.webp",
    "frame": {
     "x": 42.345,
     "y": 24.554,
@@ -52,7 +52,7 @@
    }
   },
   "cabinet-single": {
-   "src": "item-cabinet-single.318d29f1.webp",
+   "src": "item-cabinet-single.8812c708.webp",
    "frame": {
     "x": 53.111,
     "y": 22.473,
@@ -67,7 +67,7 @@
    }
   },
   "veg-crate": {
-   "src": "item-veg-crate.0ac84e96.webp",
+   "src": "item-veg-crate.ce0236e2.webp",
    "frame": {
     "x": 40.09,
     "y": 66.111,
@@ -82,7 +82,7 @@
    }
   },
   "cauldron": {
-   "src": "item-cauldron.4abd528a.webp",
+   "src": "item-cauldron.16c56c7b.webp",
    "frame": {
     "x": 47.917,
     "y": 64.989,
@@ -97,7 +97,7 @@
    }
   },
   "pan": {
-   "src": "item-pan.674b38ad.webp",
+   "src": "item-pan.f9974ae2.webp",
    "frame": {
     "x": 55.158,
     "y": 79.51,
@@ -157,10 +157,10 @@
   }
  },
  "layers": {
-  "cave1x": "cave-1440.dd4f649b.webp",
-  "cave1xA": "cave-1440.8a6d241c.avif",
-  "cave2x": "cave-2880.da4c06ed.webp",
-  "cave2xA": "cave-2880.a9fa099d.avif",
+  "cave1x": "cave-1440.1d32faac.webp",
+  "cave1xA": "cave-1440.f83c7c42.avif",
+  "cave2x": "cave-2880.0c8b6ea0.webp",
+  "cave2xA": "cave-2880.457f47c5.avif",
   "kit": "kitchen-layer-1312.da4fa8c8.webp",
   "kitA": "kitchen-layer-1312.e9cc0eab.avif",
   "kitHi": "kitchen-layer-1968.528b8242.webp",

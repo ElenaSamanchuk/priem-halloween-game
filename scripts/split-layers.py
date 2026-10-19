@@ -30,7 +30,7 @@ k = np.dstack([f3, (np.clip(a3, 0, 1) * 255).astype(np.uint8)])[box3[1]:box3[3],
 Image.fromarray(k).save(os.path.join(SRC, 'layer-kitchen.png'))
 # пещера: проём залит тёмным с мягкой внутренней тенью
 dark = np.array([12, 7, 9], np.float32)
-hole = cv2.GaussianBlur(cv2.dilate(mask, np.ones((3, 3), np.uint8)).astype(np.float32), (0, 0), 6)[..., None]
+hole = cv2.GaussianBlur(cv2.erode(mask, np.ones((17, 17), np.uint8)).astype(np.float32), (0, 0), 3)[..., None]  # провал уже кухни: в покое не виден, темнота только при сдвиге
 f3f = f3.astype(np.float32); h3 = cv2.resize(hole, (f3.shape[1], f3.shape[0]))[..., None]
 cave = f3f * (1 - h3) + dark * h3
 Image.fromarray(cave.astype(np.uint8)).save(os.path.join(SRC, 'layer-cave.png'))

@@ -95,6 +95,14 @@ for fname, iid in ITEMS.items():
     w, h = round(crop.width * s), round(crop.height * s)
     x, y = p['fx'] + l * s, p['fy'] + t * s
     small = crop.resize((w, h), Image.LANCZOS)
+    # растушёвка краёв: запечённое свечение не должно обрываться прямой линией
+    import numpy as _np
+    a_ = _np.asarray(small.split()[3]).astype(_np.float32)
+    fe = max(6, round(min(w, h) * 0.08))
+    yy = _np.minimum(_np.arange(h), _np.arange(h)[::-1])[:, None] / fe
+    xx = _np.minimum(_np.arange(w), _np.arange(w)[::-1])[None, :] / fe
+    edge = _np.clip(_np.minimum(yy, xx), 0, 1)
+    small.putalpha(Image.fromarray((a_ * edge).astype(_np.uint8)))
     name = hashed(webp(small, f'item-{iid}.webp', 88))
     kb = man['scene']['kitchenBox']
     man['items'][iid] = {

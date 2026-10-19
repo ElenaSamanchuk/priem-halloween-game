@@ -69,9 +69,11 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 }
 
 /* Пасхалка: значок «!!» на краю проёма — призрак говорит «Бу!» и уплывает */
-#hlw-wrap .hlw-egg{position:absolute;z-index:2;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;transition:box-shadow .3s ease,transform .3s ease}
+#hlw-wrap .hlw-egg{position:absolute;z-index:2;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer}
 #hlw-wrap .hlw-egg::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);border-radius:50%}
-@media (hover:hover){#hlw-wrap .hlw-egg:hover{box-shadow:0 0 0 2px rgba(254,218,0,.5),0 0 18px rgba(254,218,0,.55);transform:scale(1.08)}}
+#hlw-wrap .hlw-egg::after{content:"";position:absolute;inset:-35%;border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(var(--hlw-glow),.55),rgba(var(--hlw-glow),.22) 55%,rgba(var(--hlw-glow),0));transition:opacity .5s ease}
+@media (hover:hover){#hlw-wrap .hlw-egg:hover::after{opacity:1;animation:hlw-breathe 2.4s cubic-bezier(.45,0,.55,1) infinite}}
 #hlw-wrap .hlw-egg:focus-visible{outline:3px solid #fff;outline-offset:3px}
 #hlw-wrap .hlw-boo{position:absolute;z-index:3;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);pointer-events:none;visibility:hidden}
 #hlw-wrap .hlw-boo__g{position:absolute;left:50%;bottom:50%;width:520%;aspect-ratio:var(--gr,.85);transform-origin:50% 100%;opacity:0}
@@ -83,6 +85,36 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 #hlw-wrap .hlw-boo.is-on .hlw-boo__say{animation:hlw-boo-say 2.8s cubic-bezier(.33,0,.2,1) both}
 @keyframes hlw-boo-g{0%{opacity:0;transform:translate(-50%,10%) scale(.15)}18%{opacity:.95;transform:translate(-50%,0) scale(1.05)}26%{transform:translate(-50%,0) scale(1)}60%{opacity:.95;transform:translate(-50%,-6%) scale(1)}100%{opacity:0;transform:translate(10%,-90%) scale(.7) rotate(14deg)}}
 @keyframes hlw-boo-say{0%,14%{opacity:0;transform:translate(-50%,0) scale(.4)}22%{opacity:1;transform:translate(-50%,0) scale(1.12)}28%,58%{opacity:1;transform:translate(-50%,0) scale(1)}72%,100%{opacity:0;transform:translate(-50%,-30%) scale(.9)}}
+
+/* Капли с потолка пещеры: блик падает, на дне — брызги (только transform/opacity) */
+#hlw-wrap .hlw-drops{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+#hlw-wrap .hlw-drop{position:absolute;top:0;width:3px;height:14px;margin-left:-1.5px;border-radius:50% 50% 50% 50%/30% 30% 70% 70%;
+  background:linear-gradient(180deg,rgba(220,235,255,0),rgba(220,235,255,.85));box-shadow:0 0 6px rgba(200,225,255,.6);animation:hlw-fall var(--t,1s) cubic-bezier(.55,0,1,.45) forwards}
+#hlw-wrap .hlw-splash{position:absolute;width:26px;height:8px;margin:-4px 0 0 -13px;border-radius:50%;border:1.5px solid rgba(210,230,255,.7);opacity:0;animation:hlw-splash .55s ease-out forwards}
+@keyframes hlw-fall{from{transform:translateY(-20px);opacity:0}8%{opacity:1}to{transform:translateY(var(--d,400px));opacity:.9}}
+@keyframes hlw-splash{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
+
+/* Пар над котлом: клубится при наведении, в нём на секунду проступает лицо */
+#hlw-wrap .hlw-steam{position:absolute;z-index:2;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);pointer-events:none}
+#hlw-wrap .hlw-steam i{position:absolute;bottom:0;left:50%;width:70%;aspect-ratio:1;margin-left:-35%;border-radius:50%;opacity:0;
+  background:radial-gradient(closest-side,rgba(235,232,240,.5),rgba(235,232,240,.18) 60%,rgba(235,232,240,0))}
+#hlw-wrap .hlw-steam.is-on i{animation:hlw-steam 2.4s cubic-bezier(.33,0,.4,1) both}
+#hlw-wrap .hlw-steam.is-on i:nth-child(2){animation-delay:.25s;left:35%}
+#hlw-wrap .hlw-steam.is-on i:nth-child(3){animation-delay:.5s;left:62%}
+#hlw-wrap .hlw-steam.is-on i:nth-child(4){animation-delay:.8s;left:46%}
+@keyframes hlw-steam{0%{opacity:0;transform:translateY(10%) scale(.5)}25%{opacity:.85}100%{opacity:0;transform:translateY(-120%) scale(1.7)}}
+#hlw-wrap .hlw-steam__face{position:absolute;left:50%;top:-10%;width:95%;aspect-ratio:var(--gr,.85);transform:translateX(-50%);opacity:0;
+  -webkit-mask-image:radial-gradient(48% 34% at 40% 26%,#000 35%,transparent 75%);mask-image:radial-gradient(48% 34% at 40% 26%,#000 35%,transparent 75%)}
+#hlw-wrap .hlw-steam__face img{display:block;width:100%;height:100%;object-fit:contain}
+#hlw-wrap .hlw-steam.is-face .hlw-steam__face{animation:hlw-face 2s ease-in-out .6s both}
+@keyframes hlw-face{0%{opacity:0;transform:translate(-50%,10%) scale(.9)}35%,60%{opacity:.6;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-14%) scale(1.06)}}
+
+/* Тыква-лампа подмигивает: свет дважды гаснет и вспыхивает, лампа качается */
+#hlw-wrap .hlw-item.is-wink{animation:hlw-wink-swing 1.4s cubic-bezier(.45,0,.55,1) both !important}
+#hlw-wrap .hlw-item.is-wink .hlw-item__img{animation:hlw-wink 1.1s linear both !important}
+#hlw-wrap.is-wink .hlw-lamp{animation:hlw-wink 1.1s linear both}
+@keyframes hlw-wink{0%{opacity:1}12%{opacity:.05}22%{opacity:1}40%{opacity:1}50%{opacity:.05}60%,100%{opacity:1}}
+@keyframes hlw-wink-swing{0%,100%{transform:rotate(0)}25%{transform:rotate(5deg)}55%{transform:rotate(-4deg)}80%{transform:rotate(2deg)}}
 
 /* Паутина в верхних углах окна кухни: медленно колышется (только transform) */
 #hlw-wrap .hlw-web{position:absolute;z-index:2;pointer-events:none;width:var(--ww,9%);aspect-ratio:1;opacity:.75;transform-origin:0 0;animation:hlw-sway 7s cubic-bezier(.45,0,.55,1) infinite}
@@ -213,7 +245,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-top,#hlw-wrap .hlw-scene,#hlw-wrap .hlw-bar{position:relative;z-index:1}
   #hlw-wrap .hlw-scene{position:relative;inset:auto;flex:0 0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;container-type:normal}
   #hlw-wrap .hlw-stage{position:relative;left:auto;top:auto;transform:none;width:min(100%,760px);aspect-ratio:var(--hlw-kar,1337/1044);box-shadow:0 18px 50px rgba(0,0,0,.6)}
-  #hlw-wrap .hlw-item,#hlw-wrap .hlw-egg,#hlw-wrap .hlw-boo{left:var(--kx);top:var(--ky);width:var(--kw);height:var(--kh)}
+  #hlw-wrap .hlw-item,#hlw-wrap .hlw-egg,#hlw-wrap .hlw-boo,#hlw-wrap .hlw-steam{left:var(--kx);top:var(--ky);width:var(--kw);height:var(--kh)}
   #hlw-wrap .hlw-web{width:18%}
   #hlw-wrap .hlw-web--l{left:3.2%;top:3.2%}
   #hlw-wrap .hlw-web--r{left:96.8%;top:3.2%}
@@ -293,7 +325,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-item,#hlw-wrap .hlw-item__img{animation:none !important;transition:none}
   #hlw-wrap .hlw-item:not(.is-open) .hlw-item__img{opacity:.85}
   #hlw-wrap .hlw-web,#hlw-wrap .hlw-ghost__bob,#hlw-wrap .hlw-eyes,#hlw-wrap .hlw-eyes i{animation:none}
-  #hlw-wrap .hlw-flash{display:none}
+  #hlw-wrap .hlw-flash,#hlw-wrap .hlw-drops,#hlw-wrap .hlw-steam{display:none}
   #hlw-wrap .hlw-boo.is-on .hlw-boo__g,#hlw-wrap .hlw-boo.is-on .hlw-boo__say{animation-duration:.01s;opacity:1}
   #hlw-wrap .hlw-ghost.is-peek{animation:none}
   #hlw-wrap .hlw-lamp,#hlw-wrap .hlw-fog::before,#hlw-wrap .hlw-fog::after,#hlw-wrap .hlw-pill__dot{animation:none}

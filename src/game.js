@@ -235,9 +235,23 @@
     }
 
     var busy = false;
+    var winkN = 0, winkT = null;
+    function wink(el) {
+      el.classList.remove('is-wink'); wrap.classList.remove('is-wink'); void el.offsetWidth;
+      el.classList.add('is-wink'); wrap.classList.add('is-wink');
+      sfx('wink'); buzz([15, 60, 15]); track('easter_wink');
+      setTimeout(function () { el.classList.remove('is-wink'); wrap.classList.remove('is-wink'); }, 1500);
+    }
     items.forEach(function (el, idx) {
-      el.addEventListener('click', function () {
+      el.addEventListener('click', function (ev) {
         if (st.won || busy) return;
+        // пасхалка: три быстрых клика по уже проверенной тыкве-лампе
+        if (el.getAttribute('data-id') === 'pumpkin-lamp' && el.classList.contains('is-open') && !ev.hlwReplay) {
+          winkN += 1; clearTimeout(winkT);
+          if (winkN >= 3) { winkN = 0; wink(el); return; }
+          winkT = setTimeout(function () { var n = winkN; winkN = 0; if (n) { var e2 = new MouseEvent('click'); e2.hlwReplay = true; el.dispatchEvent(e2); } }, 350);
+          return;
+        }
         if (!st.started) { st.started = true; track('start'); }
         sfx('tap');
         if (idx === winner) {
@@ -478,10 +492,10 @@
       var px = 0, py = 0, tx2 = 0, ty2 = 0, pRun = false;
       var deskMq = window.matchMedia('(min-width:1024px)');
       var stepP = function () {
-        px += (tx2 - px) * 0.08; py += (ty2 - py) * 0.08;
+        px += (tx2 - px) * 0.06; py += (ty2 - py) * 0.06;
         var on = deskMq.matches;
-        front.style.transform = on ? 'translate3d(' + (px * 12).toFixed(2) + 'px,' + (py * 7).toFixed(2) + 'px,0)' : '';
-        back.style.transform = on ? 'translate3d(' + (px * -7).toFixed(2) + 'px,' + (py * -4).toFixed(2) + 'px,0) scale(1.02)' : '';
+        front.style.transform = on ? 'translate3d(' + (px * 5).toFixed(2) + 'px,' + (py * 3).toFixed(2) + 'px,0)' : '';
+        back.style.transform = on ? 'translate3d(' + (px * -3).toFixed(2) + 'px,' + (py * -2).toFixed(2) + 'px,0) scale(1.02)' : '';
         if (Math.abs(tx2 - px) > 0.002 || Math.abs(ty2 - py) > 0.002) raf(stepP);
         else {
           pRun = false;
@@ -498,6 +512,47 @@
       });
       scene.addEventListener('pointerleave', function () { tx2 = 0; ty2 = 0; kick(); });
     }
+
+    /* --- капли с потолка: раз в 6–12 с, пока блок на экране --- */
+    var drops = wrap.querySelector('.hlw-drops'), dTimer = null;
+    function dropSchedule() {
+      clearTimeout(dTimer);
+      if (!drops || reduce) return;
+      dTimer = setTimeout(function () {
+        if (inView && !doc.hidden && !st.ov && drops.offsetParent !== null) {
+          var W = drops.clientWidth, H = drops.clientHeight;
+          var x = (rnd(2) ? 0.04 + rnd(20) / 100 : 0.76 + rnd(20) / 100) * W; // над пещерой по бокам
+          if (rnd(4) === 0) x = (0.32 + rnd(36) / 100) * W; // иногда — над кухней
+          var land = H * (0.82 + rnd(12) / 100), t = Math.sqrt(land / 900) + 0.15;
+          var d = doc.createElement('i'); d.className = 'hlw-drop';
+          d.style.left = x + 'px'; d.style.setProperty('--d', land + 'px'); d.style.setProperty('--t', t.toFixed(2) + 's');
+          drops.appendChild(d);
+          setTimeout(function () {
+            if (d.parentNode) d.parentNode.removeChild(d);
+            var sp = doc.createElement('i'); sp.className = 'hlw-splash'; sp.style.left = x + 'px'; sp.style.top = land + 'px';
+            drops.appendChild(sp); sfx('drip');
+            setTimeout(function () { if (sp.parentNode) sp.parentNode.removeChild(sp); }, 600);
+          }, t * 1000);
+        }
+        dropSchedule();
+      }, 6000 + rnd(6000));
+    }
+
+    /* --- пар над котлом при наведении (деск); лицо — не чаще раза в 6 с --- */
+    var steam = wrap.querySelector('.hlw-steam'), caul = wrap.querySelector('.hlw-item[data-id="cauldron"]'), sBusy = false, faceAt = 0;
+    if (steam && caul) caul.addEventListener('mouseenter', function () {
+      if (sBusy || reduce) return;
+      sBusy = true;
+      var now = Date.now(), face = now - faceAt > 6000;
+      if (face) {
+        faceAt = now;
+        var im = steam.querySelector('img'), so = steam.querySelector('source');
+        if (im && !im.getAttribute('src')) { if (so) so.srcset = so.getAttribute('data-srcset'); im.src = im.getAttribute('data-src'); }
+      }
+      steam.classList.remove('is-on', 'is-face'); void steam.offsetWidth;
+      steam.classList.add('is-on'); if (face) steam.classList.add('is-face');
+      setTimeout(function () { steam.classList.remove('is-on', 'is-face'); sBusy = false; }, 3300);
+    });
 
     /* --- пасхалка: значок «!!» — призрак говорит «Бу!» и уплывает --- */
     var egg = wrap.querySelector('.hlw-egg'), boo = wrap.querySelector('.hlw-boo'), booT = null;
@@ -552,10 +607,10 @@
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {
         inView = es[0].isIntersecting;
-        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); }
+        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); if (!dTimer) dropSchedule(); }
         sync();
       }, { rootMargin: '200px 0px' }).observe(scene);
-    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); }
+    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); dropSchedule(); }
     doc.addEventListener('visibilitychange', sync);
     inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }

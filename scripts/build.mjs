@@ -216,6 +216,9 @@ function buildBlock(base) {
   const bd = LY.badge, d = bd.r * 2
   const eggStyle = `--fx:${pct((bd.x - bd.r) / 28.8)};--fy:${pct((bd.y - bd.r) / 12.03)};--fw:${pct(d / 28.8)};--fh:${pct(d / 12.03)};--kx:${pct((bd.x - bd.r - kb.x) / kb.w * 100)};--ky:${pct((bd.y - bd.r - kb.y) / kb.h * 100)};--kw:${pct(d / kb.w * 100)};--kh:${pct(d / kb.h * 100)}`
   const egg = `<button type="button" class="hlw-egg" aria-label="${esc(copy.eggLabel)}" style="${eggStyle}"></button><div class="hlw-boo" aria-hidden="true" style="${eggStyle}"><div class="hlw-boo__g">${G2 ? `<picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture>` : ''}</div><div class="hlw-boo__say">${esc(copy.eggSay)}</div></div>`
+  // пар над котлом (деск, при наведении): 4 клуба + призрачное лицо из иллюстрации
+  const steamStyle = '--fx:48.85%;--fy:44.9%;--fw:7.47%;--fh:21.1%;--kx:49.43%;--ky:40.85%;--kw:16.1%;--kh:24.33%'
+  const steam = `<div class="hlw-steam" aria-hidden="true" style="${steamStyle}"><i></i><i></i><i></i><i></i>${G2 ? `<div class="hlw-steam__face"><picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture></div>` : ''}</div>`
   const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
   const promoBox = `<div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод ${esc(C.promo)}">${esc(C.promo)}</button><button type="button" class="hlw-copy">${esc(w.copyCta)}</button><span class="hlw-tip" role="status" aria-live="polite"></span></div>`
   const orderBtn = `<a class="hlw-btn" href="${esc(C.links.order)}" data-hlw-order${/^https?:/.test(C.links.order) ? ' target="_blank" rel="noopener"' : ''}>${esc(T(w.orderCta))}</a>`
@@ -267,9 +270,9 @@ function buildBlock(base) {
 <div class="hlw-scene">
 <div class="hlw-stage">${bg}
 <div class="hlw-front">${klayer}<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
-<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}
+<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}${steam}
 </div></div>
-${eyes}<div class="hlw-flash" aria-hidden="true"></div>${ghost}
+${eyes}<div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
 </div>
