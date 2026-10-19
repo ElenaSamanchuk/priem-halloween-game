@@ -248,7 +248,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-pic,#hlw-wrap #hlw-win .hlw-pic{max-height:24vh;max-height:24svh}
 }
 @media (max-width:374px){
-  #hlw-wrap .hlw-dtitle{font-size:19px}
+  #hlw-wrap .hlw-dtitle{font-size:18px}
   #hlw-wrap .hlw-dtext{font-size:15px}
   #hlw-wrap .hlw-body{padding:16px 16px 18px}
   #hlw-wrap .hlw-btn{min-height:46px}
