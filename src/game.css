@@ -236,3 +236,34 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-overlay,#hlw-wrap .hlw-dialog,#hlw-wrap .hlw-tip{transition:none}
   #hlw-wrap .hlw-bar{animation:none}
 }
+
+/* Невысокие экраны: иллюстрация попапа ниже, чтобы кнопки помещались без прокрутки */
+@media (max-height:860px){
+  #hlw-wrap .hlw-pic,#hlw-wrap #hlw-win .hlw-pic{max-height:30vh;max-height:30svh}
+  #hlw-wrap .hlw-dtext{margin-top:8px}
+  #hlw-wrap .hlw-promo{margin-top:14px}
+  #hlw-wrap .hlw-actions{margin-top:14px;gap:10px}
+}
+@media (max-height:700px){
+  #hlw-wrap .hlw-pic,#hlw-wrap #hlw-win .hlw-pic{max-height:24vh;max-height:24svh}
+}
+@media (max-width:374px){
+  #hlw-wrap .hlw-dtitle{font-size:20px}
+  #hlw-wrap .hlw-dtext{font-size:15px}
+  #hlw-wrap .hlw-body{padding:16px 16px 18px}
+  #hlw-wrap .hlw-btn{min-height:46px}
+}
+/* Телефон в альбомной ориентации: кухня по высоте экрана, попап в две колонки */
+@media (max-width:1023px) and (orientation:landscape) and (max-height:560px){
+  #hlw-wrap .hlw-scene{width:min(100%,calc((100svh - 64px) * 1337 / 1044))}
+  #hlw-wrap .hlw-dialog,#hlw-wrap #hlw-win .hlw-dialog{width:min(100%,820px);display:flex;align-items:stretch;max-height:calc(100svh - 20px)}
+  #hlw-wrap .hlw-pic,#hlw-wrap #hlw-win .hlw-pic{flex:0 0 38%;max-height:none;aspect-ratio:auto}
+  #hlw-wrap .hlw-pic::after{display:none}
+  #hlw-wrap .hlw-body{flex:1 1 auto;overflow-y:auto;padding:16px 20px}
+  #hlw-wrap .hlw-dtitle{font-size:20px}
+  #hlw-wrap .hlw-dtext{font-size:15px}
+  #hlw-wrap .hlw-promo{flex-wrap:nowrap}
+  #hlw-wrap .hlw-code{flex:1 1 auto;text-align:left;font-size:18px}
+  #hlw-wrap .hlw-copy{flex:0 0 auto}
+  #hlw-wrap .hlw-actions .hlw-btn{flex:1 1 auto}
+}
