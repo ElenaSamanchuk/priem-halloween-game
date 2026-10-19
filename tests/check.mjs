@@ -11,6 +11,8 @@ async function run(page, label, vp, mobile) {
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
   page.on('pageerror', (e) => errors.push(String(e)))
   await page.waitForSelector('#hlw-wrap[data-hlw-ready]', { timeout: 8000 })
+  // робот кликает только по «неподвижным» элементам: пульс подсказки и подъём на ховере в тесте выключаем
+  await page.addStyleTag({ content: '#hlw-wrap .hlw-item{animation:none!important}' })
   await page.evaluate(() => { const d = document.createElement('div'); d.id = 'menu-plans-v2'; d.style.height = '1500px'; document.body.appendChild(d) })
   ok(true, `${label}: игра стартовала`)
   const sw = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)

@@ -9,6 +9,8 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
+let esbuild = null
+try { esbuild = (await import('esbuild')).default } catch (e) { console.warn('esbuild не найден — JS без минификации') }
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const DIST = path.join(ROOT, 'dist')
@@ -190,7 +192,7 @@ function buildBlock(base) {
   const L = C.scene.lamp, G = C.scene.fog
   const wrapStyle = [
     `--hlw-panel:${C.theme.panel}`, `--hlw-pink:${C.theme.pink}`, `--hlw-yellow:${C.theme.yellow}`, `--hlw-sec:${C.theme.secondary}`, `--hlw-glow:${C.theme.glow}`,
-    `--hlw-kar:${kb.w}/${kb.h}`, `--hlw-topk:${C.scene.top / 100}`,
+    `--hlw-kar:${kb.w}/${kb.h}`, `--hlw-cave:url(${url(base, S.frame1x)})`, `--hlw-topk:${C.scene.top / 100}`,
     `--lx:${L.x}%`, `--ly:${L.y}%`, `--lw:${L.w}%`, `--klx:${L.kx}%`, `--kly:${L.ky}%`, `--klw:${L.kw}%`,
     `--gx:${G.x}%`, `--gy:${G.y}%`, `--gw:${G.w}%`, `--gh:${G.h}%`, `--kgx:${G.kx}%`, `--kgy:${G.ky}%`, `--kgw:${G.kw}%`, `--kgh:${G.kh}%`,
   ].join(';')
@@ -199,6 +201,9 @@ function buildBlock(base) {
   const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" sizes="100vw"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
 
   const webs = ['l', 'r'].map((side) => `<div class="hlw-web hlw-web--${side}" aria-hidden="true">${cobwebSvg('hlw-web__svg')}</div>`).join('')
+  // глаза в темноте пещеры: позиции в % кадра (только деск), период и задержка — разные, чтобы не синхронились
+  const EYES = [[4, 30, 13, 0], [9, 62, 17, 5], [93, 26, 15, 9], [95.5, 56, 19, 2.5], [88, 76, 23, 13]]
+  const eyes = EYES.map(([x, y, dur, del]) => `<div class="hlw-eyes" aria-hidden="true" style="left:${x}%;top:${y}%;animation-duration:${dur}s;animation-delay:${del}s"><i></i><i></i></div>`).join('')
   const G2 = MAN.ghost
   const ghost = G2 ? `<div class="hlw-ghost" aria-hidden="true" style="--gr:${G2.ratio}"><div class="hlw-ghost__bob"><picture><source type="image/avif" srcset="${esc(url(base, G2.avif))}"><img src="${esc(url(base, G2.webp))}" alt="" draggable="false" decoding="async" loading="lazy"></picture></div></div>` : ''
   const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
@@ -233,7 +238,11 @@ function buildBlock(base) {
     .replace('/*__HLW_MODULES__*/', () => parts)
     .replace('/*__HLW_RT__*/{}', () => norm(JSON.stringify(rt)))
     .replace(/^\s*\/\*[\s\S]*?\*\/\s*/, '')
-  if (/<\/script/i.test(js)) throw new Error('JS содержит </script')
+  let jsOut = js
+  if (esbuild) {
+    jsOut = esbuild.transformSync(js, { minify: true, target: 'es5', legalComments: 'none', charset: 'utf8' }).code.trim()
+  }
+  if (/<\/script/i.test(jsOut)) throw new Error('JS содержит </script')
 
   const beaconGo =
     "(function(){function go(){if(window.__hlwInstalled)return true;var s=document.getElementById('hlw-js');if(!s)return false;try{(0,eval)(s.text||s.textContent||'')}catch(e){}return true}if(go())return;var n=0;var t=setInterval(function(){n+=1;if(go()||n>40)clearInterval(t)},250)})()"
@@ -243,10 +252,13 @@ function buildBlock(base) {
 <div id="hlw-wrap" class="hlw-wrap" style="${wrapStyle}">
 <div class="hlw-top"><div class="hlw-pill" role="status" aria-live="polite"><span class="hlw-pill__dot" aria-hidden="true"></span><span class="hlw-pill__txt">${T(copy.pillStart)}</span></div>
 <button type="button" class="hlw-sound" aria-pressed="true" aria-label="${esc(copy.soundOff)}" title="${esc(copy.soundOff)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
+<div class="hlw-ambient" aria-hidden="true"><img src="${esc(url(base, S.kitchenSmall))}" alt="" decoding="async" loading="lazy"></div>
 <div class="hlw-scene">
-${bg}
-<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}${ghost}
+<div class="hlw-stage">${bg}
+<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
 <div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>
+</div>
+${eyes}<div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
 </div>
@@ -265,7 +277,7 @@ ${closeBtn}<div class="hlw-pic"><picture><source type="image/avif" srcset="${esc
 </section>`.replace(/\n/g, '')
 
   const preload = `<link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" imagesizes="100vw" media="(min-width:1024px)"><link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" imagesizes="(max-width:760px) 100vw, 760px" media="(max-width:1023px)">`
-  return `${preload}\n<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${js}\n</script>\n`
+  return `${preload}\n<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${jsOut}\n</script>\n`
 }
 
 /* ===================== страницы просмотра (только игровой блок) ===================== */

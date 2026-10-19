@@ -150,6 +150,17 @@ var HlwSound = (function () {
     tap: function (t) {
       tone('sine', 220, 120, t, 0.1, 0.5);
       noiseBurst(t, 0.03, 'bandpass', 1400, 900, 2, 0.15);
+    },
+    thunder: function (t) {
+      // далёкий гром: короткий треск и длинный низкий раскат
+      noiseBurst(t, 0.18, 'bandpass', 2600, 700, 0.7, 0.08);
+      noiseBurst(t + 0.08, 2.6, 'lowpass', 260, 45, 0.6, 0.55);
+      noiseBurst(t + 0.5, 1.8, 'lowpass', 180, 40, 0.5, 0.35);
+    },
+    hint: function (t) {
+      // тихое «тиньк» подсказки
+      tone('sine', 1568, 1568, t, 0.6, 0.12);
+      tone('sine', 2093, 2093, t + 0.12, 0.7, 0.09);
     }
   };
 

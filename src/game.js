@@ -138,8 +138,10 @@
       if (typeof HlwFx === 'function' && canvas) fx = HlwFx(canvas, { reduce: reduce, light: lampPoint(), floorY: 0.85 });
     } catch (e) { fx = null; }
     function lampPoint() {
-      var d = !desk || desk.matches;
-      return d ? { x: RT.lamp.x, y: RT.lamp.y } : { x: RT.lamp.kx, y: RT.lamp.ky };
+      var l = wrap.querySelector('.hlw-lamp'), c = canvas && canvas.getBoundingClientRect();
+      if (!l || !c || !c.width) return { x: RT.lamp.x, y: RT.lamp.y };
+      var r = l.getBoundingClientRect();
+      return { x: (r.left + r.width / 2 - c.left) / c.width, y: (r.top + r.height / 2 - c.top) / c.height };
     }
     if (desk && fx && fx.setOpts) {
       var onMq = function () { try { fx.setOpts({ reduce: reduce, light: lampPoint(), floorY: 0.85 }); } catch (e) {} };
@@ -228,6 +230,7 @@
       setPill(RT.pillWin);
       var tc = wrap.querySelector('.hlw-torch'); if (tc) tc.classList.remove('is-on');
       if (inst.ghostCheer) inst.ghostCheer();
+      wrap.classList.add('is-won');
       track('win', { clicks: opened + 1 });
     }
 
@@ -431,6 +434,60 @@
       ghost.classList.add('is-cheer');
     };
 
+    /* --- молния: раз в 30–45 с, пока блок на экране --- */
+    var flash = wrap.querySelector('.hlw-flash'), fTimer = null;
+    function flashSchedule() {
+      clearTimeout(fTimer);
+      if (!flash || reduce) return;
+      fTimer = setTimeout(function () {
+        if (inView && !doc.hidden && !st.ov) {
+          flash.classList.remove('is-on'); void flash.offsetWidth; flash.classList.add('is-on');
+          setTimeout(function () { sfx('thunder'); }, 350);
+        }
+        flashSchedule();
+      }, 30000 + rnd(15000));
+    }
+
+    /* --- подсказка: 12 с без кликов — случайный непроверенный предмет вспыхивает, призрак выглядывает с его стороны --- */
+    var hTimer = null;
+    function hintSchedule() {
+      clearTimeout(hTimer);
+      if (st.won) return;
+      hTimer = setTimeout(function () {
+        if (st.won) return;
+        if (!inView || doc.hidden || st.ov) { hintSchedule(); return; }
+        var left = items.filter(function (it) { return !it.classList.contains('is-open'); });
+        if (!left.length) return;
+        var el = left[rnd(left.length)];
+        el.classList.remove('is-hint'); void el.offsetWidth; el.classList.add('is-hint');
+        setTimeout(function () { el.classList.remove('is-hint'); }, 3300);
+        sfx('hint');
+        if (ghost && !reduce && !ghost.classList.contains('is-peek')) {
+          var r = el.getBoundingClientRect(), c = scene.getBoundingClientRect();
+          gSide = (r.left + r.width / 2 - c.left) > c.width / 2 ? 'l' : 'r'; // ghostPeek сменит сторону на противоположную — получится сторона предмета
+          clearTimeout(gTimer); ghostPeek();
+        }
+        hintSchedule();
+      }, 12000);
+    }
+    wrap.addEventListener('click', function () { hintSchedule(); }, true);
+
+    /* --- высота блока = экран минус фиксированная шапка сайта (#navbar на priem.menu) --- */
+    var section = doc.getElementById('halloween-game');
+    function fitHeader() {
+      var off = 0, nb = doc.getElementById('navbar') || doc.querySelector('.t228,.t-menu__fixed');
+      if (nb) {
+        var cs = window.getComputedStyle(nb);
+        if (cs.position === 'fixed' || cs.position === 'sticky') off = Math.round(nb.getBoundingClientRect().height);
+      }
+      wrap.style.setProperty('--hlw-off', off + 'px');
+      if (section) section.style.scrollMarginTop = off + 'px';
+      if (fx && fx.setOpts) { try { fx.setOpts({ reduce: reduce, light: lampPoint(), floorY: 0.85 }); } catch (e) {} }
+    }
+    fitHeader();
+    window.addEventListener('resize', function () { raf(fitHeader); });
+    window.addEventListener('load', fitHeader);
+
     /* --- эффекты и звук работают, только пока блок на экране и вкладка видима --- */
     var inView = false, preloaded = false;
     function sync() {
@@ -457,10 +514,10 @@
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {
         inView = es[0].isIntersecting;
-        if (inView) { preload(); if (!gTimer) ghostSchedule(); }
+        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); }
         sync();
       }, { rootMargin: '200px 0px' }).observe(scene);
-    } else { inView = true; preload(); sync(); ghostSchedule(); }
+    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); }
     doc.addEventListener('visibilitychange', sync);
     inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }
