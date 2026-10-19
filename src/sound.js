@@ -177,6 +177,10 @@ var HlwSound = (function () {
       noiseBurst(t + 0.55, 1.6, 'highpass', 2500, 5200, 0.7, 0.22);
       noiseBurst(t + 0.6, 1.2, 'bandpass', 1200, 3000, 0.8, 0.1);
     },
+    bat: function (t) {
+      // летучая мышь: три коротких писка, очень тихо
+      for (var i = 0; i < 3; i++) tone('sine', 7200 - i * 400, 6100 - i * 300, t + i * 0.07, 0.035, 0.05);
+    },
     hint: function (t) {
       // тихое «тиньк» подсказки
       tone('sine', 1568, 1568, t, 0.6, 0.12);

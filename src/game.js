@@ -553,6 +553,28 @@
       }, 6000 + rnd(6000));
     }
 
+    /* --- летучая мышь: раз в 20–32 с пролетает поперёк, через верх окна кухни --- */
+    var batEl = wrap.querySelector('.hlw-bat'), bTimer = null, bFirst = true;
+    function batSchedule() {
+      clearTimeout(bTimer);
+      if (!batEl || reduce) return;
+      bTimer = setTimeout(function () {
+        if (inView && !doc.hidden && !st.ov) {
+          var W = scene.clientWidth, H = scene.clientHeight, bw = batEl.offsetWidth || 48;
+          var ltr = rnd(2) === 0, y0 = H * (0.16 + rnd(16) / 100), y1 = H * (0.12 + rnd(20) / 100);
+          batEl.style.setProperty('--x0', (ltr ? -bw * 1.5 : W + bw * 0.5) + 'px');
+          batEl.style.setProperty('--x1', (ltr ? W + bw * 0.5 : -bw * 1.5) + 'px');
+          batEl.style.setProperty('--y0', y0 + 'px'); batEl.style.setProperty('--y1', y1 + 'px');
+          batEl.style.setProperty('--r', ((y1 - y0) / W * 40).toFixed(1) + 'deg');
+          batEl.style.setProperty('--t', (Math.max(2.6, W / 420) + rnd(10) / 10).toFixed(1) + 's');
+          batEl.classList.remove('is-fly'); void batEl.offsetWidth; batEl.classList.add('is-fly');
+          setTimeout(function () { sfx('bat'); }, 500);
+        }
+        batSchedule();
+      }, bFirst ? 9000 : 20000 + rnd(12000));
+      bFirst = false;
+    }
+
     /* --- пар над котлом при наведении (деск); лицо — не чаще раза в 6 с --- */
     var steam = wrap.querySelector('.hlw-steam'), caul = wrap.querySelector('.hlw-item[data-id="cauldron"]'), sBusy = false, faceAt = 0;
     if (steam && caul) caul.addEventListener('mouseenter', function () {
@@ -622,10 +644,10 @@
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {
         inView = es[0].isIntersecting;
-        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); if (!dTimer) dropSchedule(); }
+        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); if (!dTimer) dropSchedule(); if (!bTimer) batSchedule(); }
         sync();
       }, { rootMargin: '200px 0px' }).observe(scene);
-    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); dropSchedule(); }
+    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); dropSchedule(); batSchedule(); }
     doc.addEventListener('visibilitychange', sync);
     inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }

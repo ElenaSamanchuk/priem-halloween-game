@@ -216,6 +216,9 @@ function buildBlock(base) {
   const bd = LY.badge, d = bd.r * 2
   const eggStyle = `--fx:${pct((bd.x - bd.r) / 28.8)};--fy:${pct((bd.y - bd.r) / 12.03)};--fw:${pct(d / 28.8)};--fh:${pct(d / 12.03)};--kx:${pct((bd.x - bd.r - kb.x) / kb.w * 100)};--ky:${pct((bd.y - bd.r - kb.y) / kb.h * 100)};--kw:${pct(d / kb.w * 100)};--kh:${pct(d / kb.h * 100)}`
   const egg = `<button type="button" class="hlw-egg" aria-label="${esc(copy.eggLabel)}" style="${eggStyle}"></button><div class="hlw-boo" aria-hidden="true" style="${eggStyle}"><div class="hlw-boo__g">${G2 ? `<picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture>` : ''}</div><div class="hlw-boo__say">${esc(copy.eggSay)}</div></div>`
+  // летучая мышь: векторный силуэт без лица, крылья машут (scaleY от плеча)
+  const BATW = 'M4-4C9-11 17-17 24-18C34-17 46-13 55-6Q47-3 45 6Q39 1 32 9Q26 3 19 8Q13 3 5 4Z'
+  const bat = `<div class="hlw-bat" aria-hidden="true"><div class="hlw-bat__bob"><svg viewBox="-60 -30 120 50" focusable="false"><g fill="#160d10"><g class="hlw-bat__w"><path d="${BATW}"/><path transform="scale(-1,1)" d="${BATW}"/></g><ellipse cx="0" cy="2" rx="5.5" ry="8"/><circle cx="0" cy="-6" r="4.6"/><path d="M-3.6-8.5L-5.2-15.5L-0.8-10ZM3.6-8.5L5.2-15.5L0.8-10ZM-2.5 9L-3.5 13L-1 10ZM2.5 9L3.5 13L1 10Z"/></g></svg></div></div>`
   // пар над котлом (деск, при наведении): 4 клуба + призрачное лицо из иллюстрации
   const steamStyle = '--fx:48.85%;--fy:44.9%;--fw:7.47%;--fh:21.1%;--kx:49.43%;--ky:40.85%;--kw:16.1%;--kh:24.33%'
   const steam = `<div class="hlw-steam" aria-hidden="true" style="${steamStyle}"><i></i><i></i><i></i><i></i>${G2 ? `<div class="hlw-steam__face"><picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture></div>` : ''}</div>`
@@ -272,7 +275,7 @@ function buildBlock(base) {
 <div class="hlw-front">${klayer}<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
 <div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}${steam}
 </div></div>
-${eyes}<div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
+${eyes}${bat}<div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
 </div>
