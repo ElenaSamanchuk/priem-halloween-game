@@ -87,6 +87,8 @@ const HLW_CONFIG = {
   },
 
   promo: 'СТРАШНОВКУСНО',
+  /** Предмет с промокодом: null — случайный при каждой загрузке (по умолчанию); или id предмета, например 'cauldron' */
+  fixedWinner: null,
 
   links: {
     order: '#menu-plans-v2', // якорь блока заказа на странице (плавный скролл) или полный URL
@@ -218,6 +220,7 @@ function buildBlock(base) {
   const rt = {
     ymId: C.ymId,
     promo: C.promo,
+    fixedWinner: C.fixedWinner ? C.items.findIndex((it) => it.id === C.fixedWinner) : -1,
     shareUrl: C.links.shareUrl,
     shareText: T(w.shareText),
     shareTitle: T(w.shareTitle),

@@ -107,7 +107,7 @@
     var shareRow = wrap.querySelector('#hlw-sharerow');
     var shareUrlFn = function () { return RT.shareUrl || (location.origin + location.pathname); };
 
-    var winner = rnd(items.length);
+    var winner = RT.fixedWinner >= 0 && RT.fixedWinner < items.length ? RT.fixedWinner : rnd(items.length);
     // Тексты промаха: группируем по иллюстрации, из каждой группы — случайный текст,
     // чтобы за игру картинки не повторялись; если предметов больше, чем групп — добираем остальными
     var groups = {}, gk = [], n0;
