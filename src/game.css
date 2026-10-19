@@ -59,6 +59,31 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 #hlw-wrap .hlw-fog::after{animation-duration:38s;animation-direction:reverse;opacity:.7;top:12%}
 @keyframes hlw-fog{from{transform:translateX(0)}to{transform:translateX(25%)}}
 
+/* Глубина (деск): слой кухни поверх пещеры с тёмным проёмом, двигаются чуть по-разному за мышью */
+#hlw-wrap .hlw-front{position:absolute;inset:0}
+#hlw-wrap .hlw-klayer{display:none}
+@media (min-width:1024px){
+  #hlw-wrap .hlw-klayer{display:block;position:absolute;pointer-events:none}
+  #hlw-wrap .hlw-klayer img{display:block;width:100%;height:100%}
+  #hlw-wrap .hlw-scene__bg{transform:scale(1.02)}
+}
+
+/* Пасхалка: значок «!!» на краю проёма — призрак говорит «Бу!» и уплывает */
+#hlw-wrap .hlw-egg{position:absolute;z-index:2;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer;transition:box-shadow .3s ease,transform .3s ease}
+#hlw-wrap .hlw-egg::before{content:"";position:absolute;left:50%;top:50%;width:max(100%,44px);height:max(100%,44px);transform:translate(-50%,-50%);border-radius:50%}
+@media (hover:hover){#hlw-wrap .hlw-egg:hover{box-shadow:0 0 0 2px rgba(254,218,0,.5),0 0 18px rgba(254,218,0,.55);transform:scale(1.08)}}
+#hlw-wrap .hlw-egg:focus-visible{outline:3px solid #fff;outline-offset:3px}
+#hlw-wrap .hlw-boo{position:absolute;z-index:3;left:var(--fx);top:var(--fy);width:var(--fw);height:var(--fh);pointer-events:none;visibility:hidden}
+#hlw-wrap .hlw-boo__g{position:absolute;left:50%;bottom:50%;width:520%;aspect-ratio:var(--gr,.85);transform-origin:50% 100%;opacity:0}
+#hlw-wrap .hlw-boo__g img{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 18px rgba(200,220,255,.3))}
+#hlw-wrap .hlw-boo__say{position:absolute;left:50%;bottom:calc(50% + 560%);padding:8px 16px;border-radius:16px;background:#fff;color:#1a0f14;font-size:clamp(20px,1.8vw,30px);font-weight:900;line-height:1;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4);opacity:0;transform:translate(-50%,0) scale(.4)}
+#hlw-wrap .hlw-boo__say::after{content:"";position:absolute;left:30%;bottom:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fff}
+#hlw-wrap .hlw-boo.is-on{visibility:visible}
+#hlw-wrap .hlw-boo.is-on .hlw-boo__g{animation:hlw-boo-g 2.8s cubic-bezier(.33,0,.2,1) both}
+#hlw-wrap .hlw-boo.is-on .hlw-boo__say{animation:hlw-boo-say 2.8s cubic-bezier(.33,0,.2,1) both}
+@keyframes hlw-boo-g{0%{opacity:0;transform:translate(-50%,10%) scale(.15)}18%{opacity:.95;transform:translate(-50%,0) scale(1.05)}26%{transform:translate(-50%,0) scale(1)}60%{opacity:.95;transform:translate(-50%,-6%) scale(1)}100%{opacity:0;transform:translate(10%,-90%) scale(.7) rotate(14deg)}}
+@keyframes hlw-boo-say{0%,14%{opacity:0;transform:translate(-50%,0) scale(.4)}22%{opacity:1;transform:translate(-50%,0) scale(1.12)}28%,58%{opacity:1;transform:translate(-50%,0) scale(1)}72%,100%{opacity:0;transform:translate(-50%,-30%) scale(.9)}}
+
 /* Паутина в верхних углах окна кухни: медленно колышется (только transform) */
 #hlw-wrap .hlw-web{position:absolute;z-index:2;pointer-events:none;width:var(--ww,9%);aspect-ratio:1;opacity:.75;transform-origin:0 0;animation:hlw-sway 7s cubic-bezier(.45,0,.55,1) infinite}
 #hlw-wrap .hlw-web--l{left:27.6%;top:7.4%}
@@ -180,15 +205,15 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 #hlw-wrap .hlw-ambient{display:none}
 /* ---------- <1024: окно кухни ---------- */
 @media (max-width:1023px){
-  #hlw-wrap{height:auto;min-height:calc(100vh - var(--hlw-off,0px));min-height:calc(100svh - var(--hlw-off,0px));display:flex;flex-direction:column;padding:0 0 12px;
+  #hlw-wrap{height:auto;min-height:0;display:flex;flex-direction:column;padding:0 0 14px;
     background:#130c0e}
   #hlw-wrap .hlw-ambient{display:block;position:absolute;inset:0;overflow:hidden;pointer-events:none}
-  #hlw-wrap .hlw-ambient img{position:absolute;left:50%;top:50%;width:auto;height:110%;min-width:110%;transform:translate(-50%,-50%);object-fit:cover;filter:blur(22px) brightness(.42) saturate(1.15)}
+  #hlw-wrap .hlw-ambient img{position:absolute;left:50%;top:50%;width:auto;height:110%;min-width:110%;transform:translate(-50%,-50%);object-fit:cover}
   #hlw-wrap .hlw-ambient::after{content:"";position:absolute;inset:0;background:radial-gradient(90% 60% at 50% 50%,rgba(19,12,14,0),rgba(19,12,14,.7))}
   #hlw-wrap .hlw-top,#hlw-wrap .hlw-scene,#hlw-wrap .hlw-bar{position:relative;z-index:1}
-  #hlw-wrap .hlw-scene{position:relative;inset:auto;flex:1 1 auto;display:flex;align-items:center;justify-content:center;overflow:visible;container-type:normal}
+  #hlw-wrap .hlw-scene{position:relative;inset:auto;flex:0 0 auto;display:flex;align-items:center;justify-content:center;overflow:visible;container-type:normal}
   #hlw-wrap .hlw-stage{position:relative;left:auto;top:auto;transform:none;width:min(100%,760px);aspect-ratio:var(--hlw-kar,1337/1044);box-shadow:0 18px 50px rgba(0,0,0,.6)}
-  #hlw-wrap .hlw-item{left:var(--kx);top:var(--ky);width:var(--kw);height:var(--kh)}
+  #hlw-wrap .hlw-item,#hlw-wrap .hlw-egg,#hlw-wrap .hlw-boo{left:var(--kx);top:var(--ky);width:var(--kw);height:var(--kh)}
   #hlw-wrap .hlw-web{width:18%}
   #hlw-wrap .hlw-web--l{left:3.2%;top:3.2%}
   #hlw-wrap .hlw-web--r{left:96.8%;top:3.2%}
@@ -269,6 +294,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-item:not(.is-open) .hlw-item__img{opacity:.85}
   #hlw-wrap .hlw-web,#hlw-wrap .hlw-ghost__bob,#hlw-wrap .hlw-eyes,#hlw-wrap .hlw-eyes i{animation:none}
   #hlw-wrap .hlw-flash{display:none}
+  #hlw-wrap .hlw-boo.is-on .hlw-boo__g,#hlw-wrap .hlw-boo.is-on .hlw-boo__say{animation-duration:.01s;opacity:1}
   #hlw-wrap .hlw-ghost.is-peek{animation:none}
   #hlw-wrap .hlw-lamp,#hlw-wrap .hlw-fog::before,#hlw-wrap .hlw-fog::after,#hlw-wrap .hlw-pill__dot{animation:none}
   #hlw-wrap .hlw-overlay,#hlw-wrap .hlw-dialog,#hlw-wrap .hlw-tip{transition:none}

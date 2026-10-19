@@ -17,7 +17,8 @@
   "frame": {
    "w": 2880,
    "h": 1203
-  }
+  },
+  "ambient": "ambient-240.38047a69.webp"
  },
  "items": {
   "pumpkin-lamp": {
@@ -153,6 +154,27 @@
    "a1200": "modal-win-1200.0791eab0.avif",
    "a720": "modal-win-720.0377768a.avif",
    "ratio": 1.298
+  }
+ },
+ "layers": {
+  "cave1x": "cave-1440.dd4f649b.webp",
+  "cave1xA": "cave-1440.8a6d241c.avif",
+  "cave2x": "cave-2880.da4c06ed.webp",
+  "cave2xA": "cave-2880.a9fa099d.avif",
+  "kit": "kitchen-layer-1312.da4fa8c8.webp",
+  "kitA": "kitchen-layer-1312.e9cc0eab.avif",
+  "kitHi": "kitchen-layer-1968.528b8242.webp",
+  "kitHiA": "kitchen-layer-1968.eb00f8fc.avif",
+  "box": {
+   "x": 26.458,
+   "y": 11.97,
+   "w": 45.556,
+   "h": 82.544
+  },
+  "badge": {
+   "x": 1961,
+   "y": 1048,
+   "r": 40
   }
  },
  "ghost": {

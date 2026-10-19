@@ -117,6 +117,27 @@ for f in sorted(os.listdir(os.path.join(SRC, 'modals'))):
     man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 78)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 78)),
                           'a1200': hashed(avif(big, f'modal-{key}-1200.avif')), 'a720': hashed(avif(small, f'modal-{key}-720.avif', 60)), 'ratio': round(im.width / im.height, 4)}
 
+# Мобильный фон: заранее размытая и затемнённая кухня, крошечная (CSS-фильтр blur дорог на каждом кадре)
+from PIL import ImageFilter, ImageEnhance
+amb = kit.resize((240, round(240 * kit.height / kit.width)), Image.LANCZOS).filter(ImageFilter.GaussianBlur(9))
+amb = ImageEnhance.Brightness(ImageEnhance.Color(amb).enhance(1.15)).enhance(0.42)
+man['scene']['ambient'] = hashed(webp(amb, 'ambient-240.webp', 70))
+
+# Слои для глубины на деске (scripts/split-layers.py): пещера с тёмным проёмом и кухня по форме проёма
+lc, lk, lj = (os.path.join(SRC, n) for n in ('layer-cave.png', 'layer-kitchen.png', 'layer-kitchen.json'))
+if os.path.exists(lc) and os.path.exists(lk):
+    cave = Image.open(lc).convert('RGB'); kit2 = Image.open(lk).convert('RGBA'); box = json.load(open(lj))
+    c2 = cave.resize((2880, 1203), Image.LANCZOS); c1 = cave.resize((1440, 602), Image.LANCZOS)
+    k2 = kit2.resize((box['w'], box['h']), Image.LANCZOS); k3 = kit2.resize((round(box['w'] * 1.5), round(box['h'] * 1.5)), Image.LANCZOS)
+    man['layers'] = {
+        'cave1x': hashed(webp(c1, 'cave-1440.webp', 80)), 'cave1xA': hashed(avif(c1, 'cave-1440.avif', 60)),
+        'cave2x': hashed(webp(c2, 'cave-2880.webp', 78)), 'cave2xA': hashed(avif(c2, 'cave-2880.avif')),
+        'kit': hashed(webp(k2, 'kitchen-layer-1312.webp', 82)), 'kitA': hashed(avif(k2, 'kitchen-layer-1312.avif', 58)),
+        'kitHi': hashed(webp(k3, 'kitchen-layer-1968.webp', 80)), 'kitHiA': hashed(avif(k3, 'kitchen-layer-1968.avif', 56)),
+        'box': {k: round(v / d * 100, 3) for k, v, d in (('x', box['x'], 2880), ('y', box['y'], 1203), ('w', box['w'], 2880), ('h', box['h'], 1203))},
+        'badge': box['badge'],
+    }
+
 # Призрак (вырезан из иллюстрации победы скриптом scripts/cut-ghost.py), с альфой
 gp = os.path.join(SRC, 'ghost.png')
 if os.path.exists(gp):

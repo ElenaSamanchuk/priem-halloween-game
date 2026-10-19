@@ -472,6 +472,44 @@
     }
     wrap.addEventListener('click', function () { hintSchedule(); }, true);
 
+    /* --- глубина (деск, мышь): кухня и пещера сдвигаются чуть по-разному --- */
+    var front = wrap.querySelector('.hlw-front'), back = wrap.querySelector('.hlw-scene__bg');
+    if (front && back && scene && !reduce && window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+      var px = 0, py = 0, tx2 = 0, ty2 = 0, pRun = false;
+      var deskMq = window.matchMedia('(min-width:1024px)');
+      var stepP = function () {
+        px += (tx2 - px) * 0.08; py += (ty2 - py) * 0.08;
+        var on = deskMq.matches;
+        front.style.transform = on ? 'translate3d(' + (px * 12).toFixed(2) + 'px,' + (py * 7).toFixed(2) + 'px,0)' : '';
+        back.style.transform = on ? 'translate3d(' + (px * -7).toFixed(2) + 'px,' + (py * -4).toFixed(2) + 'px,0) scale(1.02)' : '';
+        if (Math.abs(tx2 - px) > 0.002 || Math.abs(ty2 - py) > 0.002) raf(stepP);
+        else {
+          pRun = false;
+          // мышь ушла и всё вернулось в ноль — снимаем трансформации, чтобы браузер не держал огромные слои
+          if (!tx2 && !ty2) { front.style.transform = ''; back.style.transform = ''; }
+        }
+      };
+      var kick = function () { if (!pRun) { pRun = true; raf(stepP); } };
+      scene.addEventListener('pointermove', function (e) {
+        if (e.pointerType && e.pointerType !== 'mouse') return;
+        var r = scene.getBoundingClientRect();
+        tx2 = ((e.clientX - r.left) / r.width - 0.5) * 2; ty2 = ((e.clientY - r.top) / r.height - 0.5) * 2;
+        kick();
+      });
+      scene.addEventListener('pointerleave', function () { tx2 = 0; ty2 = 0; kick(); });
+    }
+
+    /* --- пасхалка: значок «!!» — призрак говорит «Бу!» и уплывает --- */
+    var egg = wrap.querySelector('.hlw-egg'), boo = wrap.querySelector('.hlw-boo'), booT = null;
+    if (egg && boo) egg.addEventListener('click', function () {
+      var im = boo.querySelector('img'), so = boo.querySelector('source');
+      if (im && !im.getAttribute('src')) { if (so) so.srcset = so.getAttribute('data-srcset'); im.src = im.getAttribute('data-src'); }
+      boo.classList.remove('is-on'); void boo.offsetWidth; boo.classList.add('is-on');
+      sfx('miss'); buzz([20, 40, 20]);
+      clearTimeout(booT); booT = setTimeout(function () { boo.classList.remove('is-on'); }, 2900);
+      track('easter_egg');
+    });
+
     /* --- высота блока = экран минус фиксированная шапка сайта (#navbar на priem.menu) --- */
     var section = doc.getElementById('halloween-game');
     function fitHeader() {

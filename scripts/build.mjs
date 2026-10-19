@@ -51,6 +51,8 @@ const HLW_CONFIG = {
     soundOn: 'Включить звук',
     soundOff: 'Выключить звук',
     continueCta: 'Продолжить поиск',
+    eggLabel: 'Странный значок',
+    eggSay: 'Бу!',
     closeLabel: 'Закрыть',
     win: {
       img: 'win',
@@ -200,7 +202,8 @@ function buildBlock(base) {
   ].join(';')
 
   // Фон сцены: деск — весь кадр, <1024 — окно кухни
-  const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" sizes="100vw"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, S.frame1x))} 1440w, ${esc(url(base, S.frame2x))} 2880w" sizes="100vw"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
+  const LY = MAN.layers
+  const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, LY.cave1xA))} 1440w, ${esc(url(base, LY.cave2xA))} 2880w" sizes="(min-aspect-ratio:2880/1203) 100vw, 240vh"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, LY.cave1x))} 1440w, ${esc(url(base, LY.cave2x))} 2880w" sizes="(min-aspect-ratio:2880/1203) 100vw, 240vh"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
 
   const webs = ['l', 'r'].map((side) => `<div class="hlw-web hlw-web--${side}" aria-hidden="true">${cobwebSvg('hlw-web__svg')}</div>`).join('')
   // глаза в темноте пещеры: позиции в % кадра (только деск), период и задержка — разные, чтобы не синхронились
@@ -208,6 +211,11 @@ function buildBlock(base) {
   const eyes = EYES.map(([x, y, dur, del]) => `<div class="hlw-eyes" aria-hidden="true" style="left:${x}%;top:${y}%;animation-duration:${dur}s;animation-delay:${del}s"><i></i><i></i></div>`).join('')
   const G2 = MAN.ghost
   const ghost = G2 ? `<div class="hlw-ghost" aria-hidden="true" style="--gr:${G2.ratio}"><div class="hlw-ghost__bob"><picture><source type="image/avif" srcset="${esc(url(base, G2.avif))}"><img src="${esc(url(base, G2.webp))}" alt="" draggable="false" decoding="async" loading="lazy"></picture></div></div>` : ''
+  const B = LY.box
+  const klayer = `<picture class="hlw-klayer" style="left:${B.x}%;top:${B.y}%;width:${B.w}%;height:${B.h}%"><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, LY.kitA))} 1312w, ${esc(url(base, LY.kitHiA))} 1968w" sizes="(min-aspect-ratio:2880/1203) 46vw, 110vh"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, LY.kit))} 1312w, ${esc(url(base, LY.kitHi))} 1968w" sizes="(min-aspect-ratio:2880/1203) 46vw, 110vh"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="" draggable="false" decoding="async"></picture>`
+  const bd = LY.badge, d = bd.r * 2
+  const eggStyle = `--fx:${pct((bd.x - bd.r) / 28.8)};--fy:${pct((bd.y - bd.r) / 12.03)};--fw:${pct(d / 28.8)};--fh:${pct(d / 12.03)};--kx:${pct((bd.x - bd.r - kb.x) / kb.w * 100)};--ky:${pct((bd.y - bd.r - kb.y) / kb.h * 100)};--kw:${pct(d / kb.w * 100)};--kh:${pct(d / kb.h * 100)}`
+  const egg = `<button type="button" class="hlw-egg" aria-label="${esc(copy.eggLabel)}" style="${eggStyle}"></button><div class="hlw-boo" aria-hidden="true" style="${eggStyle}"><div class="hlw-boo__g">${G2 ? `<picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture>` : ''}</div><div class="hlw-boo__say">${esc(copy.eggSay)}</div></div>`
   const promoText = esc(T(w.text)).replace('{promo}', `<b class="hlw-hl">${esc(C.promo)}</b>`)
   const promoBox = `<div class="hlw-promo"><button type="button" class="hlw-code" aria-label="Скопировать промокод ${esc(C.promo)}">${esc(C.promo)}</button><button type="button" class="hlw-copy">${esc(w.copyCta)}</button><span class="hlw-tip" role="status" aria-live="polite"></span></div>`
   const orderBtn = `<a class="hlw-btn" href="${esc(C.links.order)}" data-hlw-order${/^https?:/.test(C.links.order) ? ' target="_blank" rel="noopener"' : ''}>${esc(T(w.orderCta))}</a>`
@@ -255,12 +263,12 @@ function buildBlock(base) {
 <div id="hlw-wrap" class="hlw-wrap" style="${wrapStyle}">
 <div class="hlw-top"><div class="hlw-pill" role="status" aria-live="polite"><span class="hlw-pill__dot" aria-hidden="true"></span><span class="hlw-pill__txt">${T(copy.pillStart)}</span></div>
 <button type="button" class="hlw-sound" aria-pressed="true" aria-label="${esc(copy.soundOff)}" title="${esc(copy.soundOff)}">${ICON_SOUND_OFF}${ICON_SOUND_ON}</button></div>
-<div class="hlw-ambient" aria-hidden="true"><img src="${esc(url(base, S.kitchenSmall))}" alt="" decoding="async" loading="lazy"></div>
+<div class="hlw-ambient" aria-hidden="true"><img src="${esc(url(base, S.ambient))}" alt="" decoding="async" loading="lazy"></div>
 <div class="hlw-scene">
 <div class="hlw-stage">${bg}
-<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
-<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>
-</div>
+<div class="hlw-front">${klayer}<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
+<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}
+</div></div>
 ${eyes}<div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
@@ -279,7 +287,7 @@ ${closeBtn}<div class="hlw-pic"><picture><source type="image/avif" srcset="${esc
 </div>
 </section>`.replace(/\n/g, '')
 
-  const preload = `<link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.frame1xA))} 1440w, ${esc(url(base, S.frame2xA))} 2880w" imagesizes="100vw" media="(min-width:1024px)"><link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" imagesizes="(max-width:760px) 100vw, 760px" media="(max-width:1023px)">`
+  const preload = `<link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, LY.kitA))} 1312w, ${esc(url(base, LY.kitHiA))} 1968w" imagesizes="(min-aspect-ratio:2880/1203) 46vw, 110vh" media="(min-width:1024px)"><link rel="preload" as="image" type="image/avif" imagesrcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" imagesizes="(max-width:760px) 100vw, 760px" media="(max-width:1023px)">`
   return `${preload}\n<style>\n${css}\n</style>\n${markup}\n${beacon}\n<script id="hlw-js">\n${jsOut}\n</script>\n`
 }
 
