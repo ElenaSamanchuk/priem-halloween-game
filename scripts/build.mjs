@@ -341,6 +341,20 @@ fs.writeFileSync(path.join(DIST, 'halloween-game-tilda.html'), tilda)
 fs.writeFileSync(path.join(DIST, 'halloween-game-local.html'), local)
 fs.writeFileSync(path.join(DIST, 'preview.html'), buildPreview(local))
 fs.writeFileSync(path.join(DIST, 'priem-sim.html'), buildSim())
+// отладка для реальных телефонов: счётчик загрузок, тип навигации, ошибки, события жизненного цикла — на экране
+const DEBUG = `<div id="dbg" style="position:fixed;left:0;right:0;bottom:0;z-index:2147483647;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;pointer-events:none;white-space:pre-wrap"></div>
+<script>(function(){var K='hlwdbg',st={};try{st=JSON.parse(sessionStorage.getItem(K)||'{}')}catch(e){}
+st.loads=(st.loads||0)+1;var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type||'?';
+st.log=(st.log||[]).slice(-6);st.log.push(new Date().toTimeString().slice(0,8)+' load#'+st.loads+' nav='+nav);
+function save(){try{sessionStorage.setItem(K,JSON.stringify(st))}catch(e){}}function add(m){st.log=st.log.slice(-7);st.log.push(new Date().toTimeString().slice(0,8)+' '+m);save();show()}
+function show(){var d=document.getElementById('dbg');if(d)d.textContent=st.log.join('\n')}
+window.addEventListener('error',function(e){add('ERR '+(e.message||e.type)+' '+(e.filename||'').split('/').pop()+':'+(e.lineno||''))},true);
+window.addEventListener('unhandledrejection',function(e){add('REJ '+(e.reason&&e.reason.message||e.reason))});
+['pagehide','pageshow','visibilitychange','beforeunload','freeze','resume'].forEach(function(n){window.addEventListener(n,function(e){add(n+(e.persisted?' persisted':'')+' vis='+document.visibilityState)})});
+document.addEventListener('copy',function(){add('copy event')});
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button,a');if(t)add('click '+(t.className||t.tagName).toString().split(' ')[0])},true);
+save();document.addEventListener('DOMContentLoaded',show)})();</script>`
+fs.writeFileSync(path.join(DIST, 'debug.html'), buildPreview(tilda).replace('</body>', DEBUG + '</body>'))
 const assetsSrc = path.join(ROOT, 'assets')
 if (fs.existsSync(assetsSrc)) fs.cpSync(assetsSrc, path.join(DIST, 'assets'), { recursive: true })
 
