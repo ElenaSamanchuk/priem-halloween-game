@@ -398,10 +398,10 @@
     inst.prefetchOg = function () {};
     if (shareBtn) shareBtn.addEventListener('click', function () {
       var url = shareUrlNow(), text = RT.shareText, full = text + '\n\n' + url;
-      var ua = navigator.userAgent || '', isSafari = /^((?!chrome|android).)*safari/i.test(ua);
       function fallback() { copyText(full).then(function (ok) { if (ok) showToast(RT.shareCopied); }); }
       if (typeof navigator.share === 'function') {
-        var payload = isSafari ? { title: RT.shareTitle, text: full } : { text: text, url: url }; // Safari теряет text при url
+        // только text: с отдельным url Telegram на Android ставит ссылку первой, Safari теряет текст
+        var payload = { title: RT.shareTitle, text: full };
         track('share_click', { channel: 'native' });
         navigator.share(payload).catch(function (err) { if (!err || err.name !== 'AbortError') fallback(); });
         return;
