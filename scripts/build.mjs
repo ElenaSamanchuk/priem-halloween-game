@@ -342,7 +342,7 @@ fs.writeFileSync(path.join(DIST, 'halloween-game-local.html'), local)
 fs.writeFileSync(path.join(DIST, 'preview.html'), buildPreview(local))
 fs.writeFileSync(path.join(DIST, 'priem-sim.html'), buildSim())
 // отладка для реальных телефонов: счётчик загрузок, тип навигации, ошибки, события жизненного цикла — на экране
-const DEBUG = `<div id="dbg" style="position:fixed;left:0;right:0;bottom:0;z-index:2147483647;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;pointer-events:none;white-space:pre-wrap"></div>
+const DEBUG = `<div id="dbg" style="position:fixed;left:0;right:0;top:0;z-index:2147483647;background:rgba(0,0,0,.82);color:#7f7;font:11px/1.35 monospace;padding:6px 8px;pointer-events:none;white-space:pre-wrap"></div>
 <script>(function(){var K='hlwdbg',st={};try{st=JSON.parse(sessionStorage.getItem(K)||'{}')}catch(e){}
 st.loads=(st.loads||0)+1;var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type||'?';
 st.log=(st.log||[]).slice(-6);st.log.push(new Date().toTimeString().slice(0,8)+' load#'+st.loads+' nav='+nav);
@@ -352,7 +352,7 @@ window.addEventListener('error',function(e){add('ERR '+(e.message||e.type)+' '+(
 window.addEventListener('unhandledrejection',function(e){add('REJ '+(e.reason&&e.reason.message||e.reason))});
 ['pagehide','pageshow','visibilitychange','beforeunload','freeze','resume'].forEach(function(n){window.addEventListener(n,function(e){add(n+(e.persisted?' persisted':'')+' vis='+document.visibilityState)})});
 document.addEventListener('copy',function(){add('copy event')});
-document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button,a');if(t)add('click '+(t.className||t.tagName).toString().split(' ')[0])},true);
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button,a');if(!t)return;add('click '+(t.getAttribute('data-id')||t.className||t.tagName).toString().split(' ')[0]);setTimeout(function(){var w=document.querySelector('#hlw-win.is-visible'),m=document.querySelector('#hlw-miss.is-visible');add('  -> '+(w?'WIN':m?'MISS':'нет попапа')+' copy='+((document.querySelector('#hlw-win .hlw-copy')||{}).textContent||''))},1500)},true);
 save();document.addEventListener('DOMContentLoaded',show)})();</script>`
 fs.writeFileSync(path.join(DIST, 'debug.html'), buildPreview(tilda).replace('</body>', DEBUG + '</body>'))
 const assetsSrc = path.join(ROOT, 'assets')
