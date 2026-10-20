@@ -385,24 +385,18 @@
        Телефон — системное «Поделиться» (с OG-картинкой файлом, если браузер умеет);
        компьютер — окно репоста ВК с нашей картинкой + текст со ссылкой в буфер. --- */
     var shareBtn = wrap.querySelector('#hlw-share');
-    var ogFile = null, ogAbs = RT.ogImage ? new URL(RT.ogImage, location.href).href : '';
+    // Файл картинки в системное «Поделиться» не передаём: Telegram и др. тогда отправляют только картинку без текста.
+    // Картинку для превью мессенджер берёт по ссылке из OG-тегов страницы.
+    var ogAbs = RT.ogImage ? new URL(RT.ogImage, location.href).href : '';
     function shareUrlNow() { return RT.shareUrl || (location.origin + location.pathname); }
-    function prefetchOg() {
-      if (ogFile || !ogAbs || !window.fetch || typeof File !== 'function') return;
-      fetch(ogAbs, { mode: 'cors' }).then(function (r) { return r.ok ? r.blob() : null; }).then(function (b) {
-        if (b) ogFile = new File([b], 'priem-halloween.jpg', { type: b.type || 'image/jpeg' });
-      }).catch(function () {});
-    }
-    inst.prefetchOg = prefetchOg;
+    inst.prefetchOg = function () {};
     if (shareBtn) shareBtn.addEventListener('click', function () {
       var url = shareUrlNow(), text = RT.shareText, full = text + '\n\n' + url;
       var ua = navigator.userAgent || '', isSafari = /^((?!chrome|android).)*safari/i.test(ua);
       function fallback() { copyText(full).then(function (ok) { if (ok) showToast(RT.shareCopied); }); }
       if (typeof navigator.share === 'function') {
-        var payload;
-        if (ogFile && navigator.canShare && navigator.canShare({ files: [ogFile] })) payload = { files: [ogFile], text: full };
-        else payload = isSafari ? { title: RT.shareTitle, text: full } : { text: text, url: url }; // Safari теряет text при url
-        track('share_click', { channel: payload.files ? 'native_image' : 'native' });
+        var payload = isSafari ? { title: RT.shareTitle, text: full } : { text: text, url: url }; // Safari теряет text при url
+        track('share_click', { channel: 'native' });
         navigator.share(payload).catch(function (err) { if (!err || err.name !== 'AbortError') fallback(); });
         return;
       }
