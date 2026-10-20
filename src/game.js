@@ -359,6 +359,10 @@
     function showToast(html) {
       if (!toast) return;
       toast.innerHTML = html;
+      // не перекрывать пилюлю «ПриЕм найден!»: если она на экране — тост сразу под ней
+      var pill = wrap.querySelector('.hlw-pill'), top = '';
+      if (pill) { var pr = pill.getBoundingClientRect(); if (pr.bottom > 0 && pr.top < innerHeight) top = Math.round(pr.bottom + 8) + 'px'; }
+      toast.style.top = top;
       toast.classList.add('is-on');
       clearTimeout(toast._t);
       toast._t = setTimeout(function () { toast.classList.remove('is-on'); }, 4200);
@@ -665,18 +669,27 @@
     function preload() {
       if (preloaded) return;
       preloaded = true;
+      // всё, что появляется позже (попапы, призрак, мышь, паук), качаем и распаковываем заранее,
+      // чтобы при открытии ничего не догружалось на глазах; сцена к этому моменту уже показана
       var go = function () {
-        // через <picture> в памяти: браузер сам выберет AVIF или WebP и нужный размер
         (RT.preload || []).forEach(function (p) {
           var pic = doc.createElement('picture'), so = doc.createElement('source'), im = doc.createElement('img');
-          so.type = 'image/avif'; so.srcset = p.avif || ''; so.sizes = '(max-width:560px) 100vw, 560px';
-          im.decoding = 'async'; im.sizes = '(max-width:560px) 100vw, 560px'; im.srcset = p.srcset;
+          so.type = 'image/avif'; so.srcset = p.avif || ''; so.sizes = '(max-width:640px) 100vw, 640px';
+          im.decoding = 'async'; im.sizes = '(max-width:640px) 100vw, 640px'; im.srcset = p.srcset;
           if (p.avif) pic.appendChild(so);
           pic.appendChild(im);
           im.src = p.src;
+          if (im.decode) im.decode().catch(function () {});
+        });
+        [].slice.call(wrap.querySelectorAll('img[loading="lazy"], img[data-src]')).forEach(function (im) {
+          var ds = im.getAttribute('data-src'), so = im.parentNode && im.parentNode.querySelector('source[data-srcset]');
+          if (so && !so.srcset) so.srcset = so.getAttribute('data-srcset');
+          if (ds && !im.getAttribute('src')) im.src = ds;
+          im.loading = 'eager';
+          if (im.decode) im.decode().catch(function () {});
         });
       };
-      if (window.requestIdleCallback) window.requestIdleCallback(go, { timeout: 2000 }); else setTimeout(go, 600);
+      setTimeout(go, 400);
     }
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {

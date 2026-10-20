@@ -122,8 +122,8 @@ for f in sorted(os.listdir(os.path.join(SRC, 'modals'))):
     im = Image.open(orig).convert('RGB') if os.path.exists(orig) else Image.open(os.path.join(SRC, 'modals', f)).convert('RGB').crop((0, 0, 1298, 1000))
     big = im.resize((1200, round(1200 * im.height / im.width)), Image.LANCZOS)
     small = im.resize((720, round(720 * im.height / im.width)), Image.LANCZOS)
-    man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 78)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 78)),
-                          'a1200': hashed(avif(big, f'modal-{key}-1200.avif')), 'a720': hashed(avif(small, f'modal-{key}-720.avif', 60)), 'ratio': round(im.width / im.height, 4)}
+    man['modals'][key] = {'w1200': hashed(webp(big, f'modal-{key}-1200.webp', 85)), 'w720': hashed(webp(small, f'modal-{key}-720.webp', 85)),
+                          'a1200': hashed(avif(big, f'modal-{key}-1200.avif', 68)), 'a720': hashed(avif(small, f'modal-{key}-720.avif', 70)), 'ratio': round(im.width / im.height, 4)}
 
 # Мобильный фон: заранее размытая и затемнённая кухня, крошечная (CSS-фильтр blur дорог на каждом кадре)
 from PIL import ImageFilter, ImageEnhance

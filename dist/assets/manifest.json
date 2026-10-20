@@ -114,45 +114,45 @@
  },
  "modals": {
   "miss-01": {
-   "w1200": "modal-miss-01-1200.0d58ae99.webp",
-   "w720": "modal-miss-01-720.2815aff0.webp",
-   "a1200": "modal-miss-01-1200.a5fa5ba1.avif",
-   "a720": "modal-miss-01-720.a343a672.avif",
+   "w1200": "modal-miss-01-1200.9c982dd4.webp",
+   "w720": "modal-miss-01-720.a6433d4c.webp",
+   "a1200": "modal-miss-01-1200.a4d49853.avif",
+   "a720": "modal-miss-01-720.8ced91c8.avif",
    "ratio": 1.298
   },
   "miss-02": {
-   "w1200": "modal-miss-02-1200.9a1a90c3.webp",
-   "w720": "modal-miss-02-720.4f4f5f99.webp",
-   "a1200": "modal-miss-02-1200.5f9f1b78.avif",
-   "a720": "modal-miss-02-720.6bf6cfaa.avif",
+   "w1200": "modal-miss-02-1200.2a1bdee7.webp",
+   "w720": "modal-miss-02-720.c874ae45.webp",
+   "a1200": "modal-miss-02-1200.53afe940.avif",
+   "a720": "modal-miss-02-720.b9edc5ca.avif",
    "ratio": 1.298
   },
   "miss-03": {
-   "w1200": "modal-miss-03-1200.e7dad671.webp",
-   "w720": "modal-miss-03-720.ebd6066f.webp",
-   "a1200": "modal-miss-03-1200.fa02e3f0.avif",
-   "a720": "modal-miss-03-720.0773c943.avif",
+   "w1200": "modal-miss-03-1200.186d0740.webp",
+   "w720": "modal-miss-03-720.88f54d6a.webp",
+   "a1200": "modal-miss-03-1200.47637585.avif",
+   "a720": "modal-miss-03-720.23ba74b9.avif",
    "ratio": 1.298
   },
   "miss-04": {
-   "w1200": "modal-miss-04-1200.29a5b5fe.webp",
-   "w720": "modal-miss-04-720.7d4692a5.webp",
-   "a1200": "modal-miss-04-1200.427d0c00.avif",
-   "a720": "modal-miss-04-720.ced531c4.avif",
+   "w1200": "modal-miss-04-1200.242967e2.webp",
+   "w720": "modal-miss-04-720.16da2330.webp",
+   "a1200": "modal-miss-04-1200.d71ca7d5.avif",
+   "a720": "modal-miss-04-720.74038be0.avif",
    "ratio": 1.298
   },
   "miss-05": {
-   "w1200": "modal-miss-05-1200.ce193812.webp",
-   "w720": "modal-miss-05-720.390a328d.webp",
-   "a1200": "modal-miss-05-1200.1b0c341f.avif",
-   "a720": "modal-miss-05-720.f2ff07cd.avif",
+   "w1200": "modal-miss-05-1200.540a687f.webp",
+   "w720": "modal-miss-05-720.d2c06e8b.webp",
+   "a1200": "modal-miss-05-1200.c1d979fb.avif",
+   "a720": "modal-miss-05-720.9982ad08.avif",
    "ratio": 1.298
   },
   "win": {
-   "w1200": "modal-win-1200.777a0dca.webp",
-   "w720": "modal-win-720.e848ea72.webp",
-   "a1200": "modal-win-1200.0791eab0.avif",
-   "a720": "modal-win-720.0377768a.avif",
+   "w1200": "modal-win-1200.23083219.webp",
+   "w720": "modal-win-720.42b5122f.webp",
+   "a1200": "modal-win-1200.2fdc456a.avif",
+   "a720": "modal-win-720.a2bca5e5.avif",
    "ratio": 1.298
   }
  },

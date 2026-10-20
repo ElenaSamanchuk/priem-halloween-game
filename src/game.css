@@ -331,6 +331,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 #hlw-wrap .hlw-dtitle{font-size:26px;font-weight:800;line-height:1.15;color:#fff;text-align:left;text-wrap:balance}
 #hlw-wrap .hlw-dtext{margin-top:12px;font-size:18px;font-weight:500;line-height:1.4;color:#fff;text-align:left;text-wrap:pretty}
 #hlw-wrap .hlw-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+@media (min-width:561px){#hlw-wrap .hlw-actions{flex-wrap:nowrap}#hlw-wrap .hlw-actions .hlw-btn{flex:1 1 auto;padding:12px 16px;font-size:15px;white-space:nowrap}}
 
 /* Кнопки и промокод */
 #hlw-wrap .hlw-btn{display:inline-flex;align-items:center;justify-content:center;min-height:50px;margin:0;padding:12px 22px;border:0;border-radius:10px;
