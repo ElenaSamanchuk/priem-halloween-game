@@ -347,7 +347,7 @@ const DEBUG = `<div id="dbg" style="position:fixed;left:0;right:0;top:0;z-index:
 st.loads=(st.loads||0)+1;var nav=(performance.getEntriesByType&&performance.getEntriesByType('navigation')[0]||{}).type||'?';
 st.log=(st.log||[]).slice(-6);st.log.push(new Date().toTimeString().slice(0,8)+' load#'+st.loads+' nav='+nav);
 function save(){try{sessionStorage.setItem(K,JSON.stringify(st))}catch(e){}}function add(m){st.log=st.log.slice(-7);st.log.push(new Date().toTimeString().slice(0,8)+' '+m);save();show()}
-function show(){var d=document.getElementById('dbg');if(d)d.textContent=st.log.join('\n')}
+function show(){var d=document.getElementById('dbg');if(d)d.textContent=st.log.join(String.fromCharCode(10))}
 window.addEventListener('error',function(e){add('ERR '+(e.message||e.type)+' '+(e.filename||'').split('/').pop()+':'+(e.lineno||''))},true);
 window.addEventListener('unhandledrejection',function(e){add('REJ '+(e.reason&&e.reason.message||e.reason))});
 ['pagehide','pageshow','visibilitychange','beforeunload','freeze','resume'].forEach(function(n){window.addEventListener(n,function(e){add(n+(e.persisted?' persisted':'')+' vis='+document.visibilityState)})});
