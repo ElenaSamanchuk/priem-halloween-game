@@ -353,7 +353,7 @@ window.addEventListener('unhandledrejection',function(e){add('REJ '+(e.reason&&e
 ['pagehide','pageshow','visibilitychange','beforeunload','freeze','resume'].forEach(function(n){window.addEventListener(n,function(e){add(n+(e.persisted?' persisted':'')+' vis='+document.visibilityState)})});
 document.addEventListener('copy',function(){add('copy event')});
 document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('button,a');if(!t)return;add('click '+(t.getAttribute('data-id')||t.className||t.tagName).toString().split(' ')[0]);setTimeout(function(){var w=document.querySelector('#hlw-win.is-visible'),m=document.querySelector('#hlw-miss.is-visible');add('  -> '+(w?'WIN':m?'MISS':'нет попапа')+' copy='+((document.querySelector('#hlw-win .hlw-copy')||{}).textContent||''))},1500)},true);
-save();document.addEventListener('DOMContentLoaded',show)})();</script>`
+save();show();document.addEventListener('DOMContentLoaded',show)})();</script>`
 fs.writeFileSync(path.join(DIST, 'debug.html'), buildPreview(tilda).replace('</body>', DEBUG + '</body>'))
 const assetsSrc = path.join(ROOT, 'assets')
 if (fs.existsSync(assetsSrc)) fs.cpSync(assetsSrc, path.join(DIST, 'assets'), { recursive: true })
