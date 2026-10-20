@@ -164,6 +164,13 @@ if os.path.exists(bsp):
     bs = Image.open(bsp).convert('RGBA')
     man['bat'] = {'webp': hashed(webp(bs, 'bat-strip.webp', 86)), 'avif': hashed(avif(bs, 'bat-strip.avif', 62)), 'frames': 8, 'fw': bs.width // 8, 'fh': bs.height}
 
+# Паутина и паук из набора Елены (scripts/kit-cut.py)
+for key, fn in (('web', 'web-corner.png'), ('spider', 'spider.png')):
+    fp = os.path.join(SRC, fn)
+    if os.path.exists(fp):
+        im = Image.open(fp).convert('RGBA'); im = im.resize((im.width * 2, im.height * 2), Image.LANCZOS)
+        man[key] = {'webp': hashed(webp(im, f'{key}.webp', 88)), 'avif': hashed(avif(im, f'{key}.avif', 66)), 'ratio': round(im.width / im.height, 4)}
+
 json.dump(man, open(os.path.join(OUT, 'manifest.json'), 'w'), ensure_ascii=False, indent=1)
 tot = 0
 for f in sorted(os.listdir(OUT)):

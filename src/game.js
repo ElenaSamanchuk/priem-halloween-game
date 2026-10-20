@@ -220,6 +220,25 @@
     });
 
     /* --- предметы --- */
+    // стая из 5 мышей разлетается веером из найденного предмета (клоны готовой мыши со спрайтом)
+    function flockFrom(el) {
+      var tpl = wrap.querySelector('.hlw-bat'), fl = wrap.querySelector('.hlw-flock');
+      if (!tpl || !fl || reduce || fl.offsetParent === null) return;
+      var r = el.getBoundingClientRect(), c = fl.getBoundingClientRect();
+      var cx = r.left + r.width / 2 - c.left, cy = r.top + r.height / 2 - c.top;
+      for (var i = 0; i < 5; i++) {
+        var b = tpl.cloneNode(true), ang = (-160 + i * 35 + rnd(14) - 7) * Math.PI / 180, dist = Math.max(c.width, c.height) * 0.8;
+        var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist;
+        b.className = 'hlw-bat' + (dx < 0 ? ' is-rtl' : '');
+        b.style.setProperty('--x0', (cx - 30) + 'px'); b.style.setProperty('--y0', (cy - 20) + 'px');
+        b.style.setProperty('--x1', (cx - 30 + dx) + 'px'); b.style.setProperty('--y1', (cy - 20 + dy) + 'px');
+        b.style.setProperty('--t', (2 + rnd(6) / 10) + 's'); b.style.setProperty('--dl', (i * 0.09) + 's');
+        var img = b.querySelector('img'); if (img) img.loading = 'eager';
+        fl.appendChild(b);
+      }
+      setTimeout(function () { fl.innerHTML = ''; }, 3400);
+      setTimeout(function () { sfx('bat'); }, 150);
+    }
     function markWin(el) {
       st.won = true;
       items.forEach(function (it) { it.disabled = true; });
@@ -275,6 +294,7 @@
           if (wi && wi.decode) { try { wi.decode().catch(function () {}); } catch (e) {} }
           markWin(el);
           burstAt(el, 'gold');
+          flockFrom(el);
           sfx('win');
           buzz([30, 60, 30, 60, 140]);
           setTimeout(function () { busy = false; openOv(winOv, el, '.hlw-btn'); }, reduce ? 0 : 750);
@@ -568,6 +588,30 @@
       bFirst = false;
     }
 
+    /* --- паук: раз в 15–25 с спускается на нити, по клику убегает вверх --- */
+    var spider = wrap.querySelector('.hlw-spider'), spT = null, spFirst = true;
+    function spiderSchedule() {
+      clearTimeout(spT);
+      if (!spider || reduce) return;
+      spT = setTimeout(function () {
+        if (inView && !doc.hidden && !st.ov && !st.won) {
+          spider.style.setProperty('--sd', (240 + rnd(140)) + '%');
+          spider.classList.remove('is-down', 'is-flee'); void spider.offsetWidth; spider.classList.add('is-down');
+          setTimeout(function () { spider.classList.remove('is-down'); }, 7100);
+        }
+        spiderSchedule();
+      }, spFirst ? 6000 : 15000 + rnd(10000));
+      spFirst = false;
+    }
+    var spBody = spider && spider.querySelector('.hlw-spider__body');
+    if (spBody) spBody.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (!spider.classList.contains('is-down')) return;
+      spider.classList.remove('is-down'); void spider.offsetWidth; spider.classList.add('is-flee');
+      sfx('bat'); buzz(15); track('easter_spider');
+      setTimeout(function () { spider.classList.remove('is-flee'); }, 600);
+    });
+
     /* --- пар над котлом при наведении (деск); лицо — не чаще раза в 6 с --- */
     var steam = wrap.querySelector('.hlw-steam'), caul = wrap.querySelector('.hlw-item[data-id="cauldron"]'), sBusy = false, faceAt = 0;
     if (steam && caul) caul.addEventListener('mouseenter', function () {
@@ -637,10 +681,10 @@
     if (window.IntersectionObserver && scene) {
       new IntersectionObserver(function (es) {
         inView = es[0].isIntersecting;
-        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); if (!dTimer) dropSchedule(); if (!bTimer) batSchedule(); }
+        if (inView) { preload(); if (!gTimer) ghostSchedule(); if (!fTimer) flashSchedule(); if (!hTimer) hintSchedule(); if (!dTimer) dropSchedule(); if (!bTimer) batSchedule(); if (!spT) spiderSchedule(); }
         sync();
       }, { rootMargin: '200px 0px' }).observe(scene);
-    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); dropSchedule(); batSchedule(); }
+    } else { inView = true; preload(); sync(); ghostSchedule(); flashSchedule(); hintSchedule(); dropSchedule(); batSchedule(); spiderSchedule(); }
     doc.addEventListener('visibilitychange', sync);
     inst.destroy = function () { inView = false; sync(); if (fx && fx.destroy) { try { fx.destroy(); } catch (e) {} } };
   }

@@ -207,7 +207,10 @@ function buildBlock(base) {
   const LY = MAN.layers
   const bg = `<picture><source media="(min-width:1024px)" type="image/avif" srcset="${esc(url(base, LY.cave1xA))} 1440w, ${esc(url(base, LY.cave2xA))} 2880w" sizes="(min-aspect-ratio:2880/1203) 100vw, 240vh"><source media="(min-width:1024px)" type="image/webp" srcset="${esc(url(base, LY.cave1x))} 1440w, ${esc(url(base, LY.cave2x))} 2880w" sizes="(min-aspect-ratio:2880/1203) 100vw, 240vh"><source type="image/avif" srcset="${esc(url(base, S.kitchenSmallA))} 800w, ${esc(url(base, S.kitchenA))} 1400w" sizes="(max-width:760px) 100vw, 760px"><img class="hlw-scene__bg" src="${esc(url(base, S.kitchenSmall))}" srcset="${esc(url(base, S.kitchenSmall))} 800w, ${esc(url(base, S.kitchen))} 1400w" sizes="(max-width:760px) 100vw, 760px" alt="" draggable="false" decoding="async" fetchpriority="high"></picture>`
 
-  const webs = ['l', 'r'].map((side) => `<div class="hlw-web hlw-web--${side}" aria-hidden="true">${cobwebSvg('hlw-web__svg')}</div>`).join('')
+  const WB = MAN.web, SP = MAN.spider
+  const pic2 = (o, cls) => `<picture><source type="image/avif" srcset="${esc(url(base, o.avif))}"><img class="${cls}" src="${esc(url(base, o.webp))}" alt="" draggable="false" decoding="async"></picture>`
+  const webs = ['l', 'r'].map((side) => `<div class="hlw-web hlw-web--${side}" aria-hidden="true" style="--wr:${WB ? WB.ratio : 1}">${WB ? pic2(WB, 'hlw-web__img') : cobwebSvg('hlw-web__svg')}</div>`).join('')
+    + (SP ? `<div class="hlw-spider" aria-hidden="true"><div class="hlw-spider__drop"><i class="hlw-spider__line"></i><button type="button" class="hlw-spider__body" tabindex="-1" aria-hidden="true" style="--sr:${SP.ratio}">${pic2(SP, 'hlw-spider__img')}</button></div></div>` : '')
   // глаза в темноте пещеры: позиции в % кадра (только деск), период и задержка — разные, чтобы не синхронились
   const EYES = [[4, 30, 13, 0], [9, 62, 17, 5], [93, 26, 15, 9], [95.5, 56, 19, 2.5], [88, 76, 23, 13]]
   const eyes = EYES.map(([x, y, dur, del]) => `<div class="hlw-eyes" aria-hidden="true" style="left:${x}%;top:${y}%;animation-duration:${dur}s;animation-delay:${del}s"><i></i><i></i></div>`).join('')
@@ -280,7 +283,7 @@ function buildBlock(base) {
 <div class="hlw-front">${klayer}<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
 <div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}${steam}
 </div></div>
-${eyes}${bat}<div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
+${eyes}${bat}<div class="hlw-flock" aria-hidden="true"></div><div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
 
 </div>

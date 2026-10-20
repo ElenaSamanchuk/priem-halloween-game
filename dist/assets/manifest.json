@@ -189,5 +189,15 @@
   "frames": 8,
   "fw": 259,
   "fh": 212
+ },
+ "web": {
+  "webp": "web.f97c3d83.webp",
+  "avif": "web.8256544d.avif",
+  "ratio": 0.7644
+ },
+ "spider": {
+  "webp": "spider.58d3def1.webp",
+  "avif": "spider.69a15627.avif",
+  "ratio": 1.3
  }
 }
