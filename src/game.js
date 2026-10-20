@@ -341,8 +341,14 @@
       var tip = box.querySelector('.hlw-tip');
       function doCopy() {
         copyText(RT.promo).then(function (ok) {
-          if (ok) { tip.textContent = RT.copiedText; flashTip(tip); sfx('copy'); track('copy_code'); }
-          else { tip.textContent = RT.copyFailText; flashTip(tip); }
+          // результат пишем прямо на кнопке — всплывашка над плашкой закрывала текст попапа
+          var btn = box.querySelector('.hlw-copy');
+          if (!btn.getAttribute('data-label')) btn.setAttribute('data-label', btn.textContent);
+          btn.textContent = ok ? RT.copiedText + ' ✓' : RT.copyFailText;
+          btn.classList.toggle('is-done', !!ok);
+          tip.textContent = ok ? RT.copiedText : RT.copyFailText; // для экранного диктора (aria-live)
+          clearTimeout(btn._t); btn._t = setTimeout(function () { btn.textContent = btn.getAttribute('data-label'); btn.classList.remove('is-done'); }, 2000);
+          if (ok) { sfx('copy'); track('copy_code'); }
         });
       }
       box.querySelector('.hlw-code').addEventListener('click', doCopy);

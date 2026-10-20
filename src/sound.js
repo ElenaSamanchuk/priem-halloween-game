@@ -37,24 +37,29 @@ var HlwSound = (function () {
         reverbSend = ctx.createGain(); reverbSend.gain.value = 0.28;
         ambRev = ctx.createGain(); ambRev.gain.value = 0.9; ambLP.connect(ambRev); ambRev.connect(reverbSend);
         var rctx = ctx;
-        setTimeout(function () {
-          try {
-            var len = Math.floor(rctx.sampleRate * 1.6);
-            var ir = rctx.createBuffer(2, len, rctx.sampleRate);
-            for (var c = 0; c < 2; c++) {
-              var d = ir.getChannelData(c);
-              for (var i = 0; i < len; i++) { d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
-            }
-            reverb = rctx.createConvolver(); reverb.buffer = ir;
-            reverbSend.connect(reverb); reverb.connect(master);
-          } catch (e2) { reverb = null; }
-        }, 700);
+        setTimeout(function () { makeReverb(rctx); }, 700);
       } catch (e1) { reverb = null; reverbSend = null; }
       // разблокировка iOS тихим буфером
       var ub = ctx.createBuffer(1, 1, 22050), us = ctx.createBufferSource();
       us.buffer = ub; us.connect(ctx.destination); us.start(0);
     } catch (e) { ctx = null; }
     return ctx;
+  }
+
+  // импульс пещерного эха (1,6 с затухающего шума)
+  function makeReverb(rctx) {
+    try {
+      if (reverb || !reverbSend) { return; }
+      var len = Math.floor(rctx.sampleRate * 1.6);
+      var ir = rctx.createBuffer(2, len, rctx.sampleRate);
+      for (var c = 0; c < 2; c++) {
+        var d = ir.getChannelData(c);
+        for (var i = 0; i < len; i++) { d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3); }
+      }
+      var cv = rctx.createConvolver(); cv.buffer = ir;
+      reverbSend.connect(cv); cv.connect(master);
+      reverb = cv;
+    } catch (e2) { reverb = null; }
   }
 
   function wake() {
@@ -118,6 +123,21 @@ var HlwSound = (function () {
     s.start(t0); s.stop(t0 + dur + 0.05);
   }
 
+  // один «плюп»: синус 600→1800 Гц за ~20 мс, спад ~80 мс; echo — в реверб громче
+  function plop(t, k, vol, splash) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(600 * k, t);
+    o.frequency.exponentialRampToValueAtTime(1800 * k, t + 0.02);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.09);
+    o.connect(g); g.connect(bus);
+    if (reverbSend) { var rv = ctx.createGain(); rv.gain.value = 3.5; g.connect(rv); rv.connect(reverbSend); }
+    o.start(t); o.stop(t + 0.12);
+    if (splash) { noiseBurst(t, 0.03, 'bandpass', 3000, 5000, 1.5, 0.03); }
+  }
+
   var fx = {
     miss: function (t) {
       // вой призрака: синус с вибрато, вниз ~0.8 с
@@ -158,9 +178,11 @@ var HlwSound = (function () {
       noiseBurst(t + 0.5, 1.8, 'lowpass', 180, 40, 0.5, 0.35);
     },
     drip: function (t) {
-      // «кап»: короткий синус вниз + эхо пещеры (через общий реверб)
-      tone('sine', 1500, 620, t, 0.14, 0.22);
-      tone('sine', 2300, 1400, t + 0.01, 0.06, 0.06);
+      // капля в пещере: «плюп» + всплеск + два тихих эха, реверб громче обычного
+      var k = rnd(0.9, 1.1);
+      plop(t, k, 0.2, true);
+      plop(t + 0.18, k * 1.02, 0.06, false);
+      plop(t + 0.36, k * 0.98, 0.025, false);
     },
     wink: function (t) {
       // тыква подмигнула: два мягких «дзинь» и смешок вверх
@@ -198,21 +220,23 @@ var HlwSound = (function () {
     [79, 74, 70, 74, 79, 82], [81, 77, 74, 77, 81, 77], [79, 76, 73, 76, 79, 76], [73, 76, 81, 76, 73, 0]
   ];
   var BASS = [50, 50, 43, 45, 50, 41, 46, 45, 43, 50, 45, 45];
-  var barIdx = 0, loopIdx = 0, nextBar = 0, voices = 0, maxVoices = 12, sched = null;
+  var AMBIENT_DEFAULT = 'musicbox';
+  var ambName = AMBIENT_DEFAULT, amb = null;
+  var barIdx = 0, loopIdx = 0, b2 = 0, b3 = 0, nextBar = 0, voices = 0, maxVoices = 12, sched = null;
 
   function mtof(m) { return 440 * Math.pow(2, (m - 69) / 12); }
   function rnd(a, b) { return a + Math.random() * (b - a); }
 
   // один «язычок» шкатулки: синус + 3-я и 5-я гармоники
-  function boxNote(m, t, vol) {
+  function boxNote(m, t, vol, cents) {
     if (voices >= maxVoices) { return; }
-    var f = mtof(m), dur = rnd(1.2, 2.0), det = rnd(-3, 3);
+    var f = mtof(m), dur = rnd(1.2, 2.0), det = rnd(-3, 3) + (cents || 0);
     var parts = [[1, 1, 1], [3, 0.12, 0.45], [5, 0.05, 0.25]];
     var g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, t);
     g.gain.linearRampToValueAtTime(vol, t + 0.004);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    g.connect(ambGain);
+    g.connect(amb);
     var last = null;
     voices++;
     for (var i = 0; i < parts.length; i++) {
@@ -228,14 +252,14 @@ var HlwSound = (function () {
   }
 
   // тихое пиццикато баса
-  function bassNote(m, t, vol) {
+  function bassNote(m, t, vol, cents) {
     if (voices >= maxVoices) { return; }
     var o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = 'triangle'; o.frequency.value = mtof(m);
+    o.type = 'triangle'; o.frequency.value = mtof(m); o.detune.value = cents || 0;
     g.gain.setValueAtTime(0.0001, t);
     g.gain.linearRampToValueAtTime(vol, t + 0.01);
     g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
-    o.connect(g); g.connect(ambGain);
+    o.connect(g); g.connect(amb);
     voices++;
     o.onended = function () { voices--; try { g.disconnect(); } catch (e) {} };
     o.start(t); o.stop(t + 0.6);
@@ -253,19 +277,31 @@ var HlwSound = (function () {
     if (barIdx === 0 && loopIdx % 2 === 1) { boxNote(86, t + BEAT * 1.5, 0.22); }
     barIdx++;
     if (barIdx >= MEL.length) { barIdx = 0; loopIdx++; }
+    return BAR;
+  }
+
+
+  var AMB = {
+    musicbox: scheduleBar
+  };
+
+  function resetState() { barIdx = 0; loopIdx = 0; b2 = 0; b3 = 0; }
+
+  function newRun() {
+    amb = ctx.createGain(); amb.gain.value = 1; amb.connect(ambGain);
   }
 
   // lookahead: планируем всё, что попадает до until
   function schedule(until) {
     while (nextBar < until) {
-      scheduleBar(nextBar);
-      nextBar += BAR;
+      var d = AMB[ambName](nextBar);
+      nextBar += d || 1;
     }
   }
 
   function tick() {
     try {
-      if (on && !paused && ctx) {
+      if (on && !paused && ctx && amb) {
         schedule(ctx.currentTime + 0.3);
       }
     } catch (e) {}
@@ -274,12 +310,29 @@ var HlwSound = (function () {
 
   function startAmbient() {
     stopAmbient();
-    barIdx = 0; loopIdx = 0;
+    resetState();
+    newRun();
     nextBar = ctx.currentTime + 0.15;
     tick();
   }
 
+  // остановить планировщик и плавно убрать текущий фон
   function stopAmbient() {
+    haltScheduler();
+    if (amb && ctx) {
+      var a = amb;
+      amb = null;
+      try {
+        var t = ctx.currentTime;
+        a.gain.cancelScheduledValues(t);
+        a.gain.setValueAtTime(a.gain.value, t);
+        a.gain.linearRampToValueAtTime(0, t + 0.3);
+        setTimeout(function () { try { a.disconnect(); } catch (e) {} }, 2000);
+      } catch (e2) {}
+    }
+  }
+
+  function haltScheduler() {
     if (sched) { clearTimeout(sched); sched = null; }
   }
 
@@ -320,11 +373,30 @@ var HlwSound = (function () {
     },
     isOn: function () { return on; },
     // служебное: сыграть фон в OfflineAudioContext (для превью/тестов)
-    _offline: function (octx, sec) {
+    // выбрать фон (сейчас один: musicbox)
+    setAmbient: function (name) {
+      try {
+        if (!AMB[name]) { return; }
+        ambName = name;
+        if (on && ctx) {
+          stopAmbient();
+          if (!paused) { startAmbient(); }
+        }
+      } catch (e) {}
+    },
+    // служебное: фон (имя) или список эффектов [[имя, время], ...] в OfflineAudioContext
+    _offline: function (octx, sec, what) {
       try {
         if (!ensureCtx(octx)) { return; }
-        master.gain.value = MASTER; maxVoices = 99999; barIdx = 0; loopIdx = 0; nextBar = 0.1;
-        schedule(sec);
+        makeReverb(octx);
+        master.gain.value = MASTER; maxVoices = 99999;
+        if (what && typeof what === 'object') {
+          for (var i = 0; i < what.length; i++) { fx[what[i][0]](what[i][1]); }
+        } else {
+          if (what) { ambName = what; }
+          newRun(); resetState(); nextBar = 0.1;
+          schedule(sec);
+        }
       } catch (e) {}
     },
     play: function (name) {
@@ -337,7 +409,7 @@ var HlwSound = (function () {
     pause: function () {
       try {
         paused = true;
-        stopAmbient();
+        haltScheduler();
         if (on && ctx) { ramp(0, 0.3); }
       } catch (e) {}
     },
@@ -346,6 +418,7 @@ var HlwSound = (function () {
         paused = false;
         if (on && ctx) {
           wake(); ramp(MASTER, 0.6);
+          if (!amb) { newRun(); resetState(); }
           nextBar = ctx.currentTime + 0.15; // с начала такта
           if (!sched) { tick(); }
         }

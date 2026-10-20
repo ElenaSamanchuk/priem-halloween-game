@@ -61,7 +61,7 @@ async function run(page, label, vp, mobile) {
   await page.context().grantPermissions(['clipboard-read', 'clipboard-write'])
   await page.locator('#hlw-win .hlw-copy').click(); await page.waitForTimeout(200)
   ok((await page.evaluate(() => navigator.clipboard.readText())) === 'СТРАШНОВКУСНО', `${label}: копирование промокода`)
-  ok((await page.locator('#hlw-win .hlw-tip.is-on').count()) === 1, `${label}: подсказка «Скопировано»`)
+  ok(/Скопировано/.test(await page.locator('#hlw-win .hlw-copy').textContent()), `${label}: «Скопировано ✓» на кнопке`)
   await page.evaluate(() => navigator.clipboard.writeText('x'))
   await page.locator('#hlw-win .hlw-code').click(); await page.waitForTimeout(100)
   ok((await page.evaluate(() => navigator.clipboard.readText())) === 'СТРАШНОВКУСНО', `${label}: клик по коду копирует`)

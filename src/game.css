@@ -343,7 +343,8 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
 #hlw-wrap .hlw-code{flex:1 1 auto;min-width:0;white-space:nowrap;padding:6px 0;border:0;background:transparent;color:#fff;font-size:22px;font-weight:800;letter-spacing:.03em;text-align:left;cursor:pointer;line-height:1.15}
 #hlw-wrap .hlw-copy{flex:0 0 auto;min-height:44px;padding:8px 16px;border:2px solid var(--hlw-pink);border-radius:8px;background:transparent;color:#fff;font-size:14px;font-weight:800;cursor:pointer;transition:filter .15s}
 #hlw-wrap .hlw-copy:hover{background:rgba(255,26,108,.18)}
-#hlw-wrap .hlw-tip{position:absolute;right:6px;top:-34px;padding:5px 10px;border-radius:8px;background:#1a0f10;color:#fff;font-size:12px;font-weight:700;opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap}
+#hlw-wrap .hlw-tip{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+#hlw-wrap .hlw-copy.is-done{background:var(--hlw-pink);border-color:var(--hlw-pink)}
 #hlw-wrap .hlw-tip.is-on{opacity:1;transform:none}
 #hlw-wrap .hlw-sharelink{flex:1 1 auto;display:flex;align-items:center;justify-content:center;min-height:44px;padding:8px 12px;border:1.5px solid rgba(255,255,255,.7);border-radius:10px;background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:background .2s}
 #hlw-wrap .hlw-sharelink:hover{background:rgba(255,255,255,.1)}
