@@ -190,7 +190,7 @@ function buildBlock(base) {
       const m = MAN.items[it.id]
       if (!m) throw new Error('Нет предмета в manifest: ' + it.id)
       const f = m.frame, k = m.kitchen
-      const style = `--fx:${pct(f.x)};--fy:${pct(f.y)};--fw:${pct(f.w)};--fh:${pct(f.h)};--kx:${pct(k.x)};--ky:${pct(k.y)};--kw:${pct(k.w)};--kh:${pct(k.h)};--o:${it.origin};--hlw-d:${(i * 0.43).toFixed(2)}s`
+      const style = `--fx:${pct(f.x)};--fy:${pct(f.y)};--fw:${pct(f.w)};--fh:${pct(f.h)};--kx:${pct(k.x)};--ky:${pct(k.y)};--kw:${pct(k.w)};--kh:${pct(k.h)};--o:${it.origin};--hlw-d:-${(i * 0.6 + 0.3).toFixed(2)}s`
       return `<button type="button" class="hlw-item" data-id="${esc(it.id)}" aria-label="${esc(it.label)}" style="${style}"><img class="hlw-item__img" src="${esc(url(base, m.src))}" alt="" draggable="false" decoding="async"></button>`
     })
     .join('')
