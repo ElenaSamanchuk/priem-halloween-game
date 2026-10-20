@@ -104,7 +104,6 @@
     var missOv = wrap.querySelector('#hlw-miss');
     var winOv = wrap.querySelector('#hlw-win');
     var bar = wrap.querySelector('#hlw-bar');
-    var shareRow = wrap.querySelector('#hlw-sharerow');
     var shareUrlFn = function () { return RT.shareUrl || (location.origin + location.pathname); };
 
     var winner = RT.fixedWinner >= 0 && RT.fixedWinner < items.length ? RT.fixedWinner : rnd(items.length);
@@ -231,6 +230,7 @@
       var tc = wrap.querySelector('.hlw-torch'); if (tc) tc.classList.remove('is-on');
       if (inst.ghostCheer) inst.ghostCheer();
       wrap.classList.add('is-won');
+      if (inst.prefetchOg) inst.prefetchOg();
       track('win', { clicks: opened + 1 });
     }
 
@@ -361,44 +361,36 @@
       });
     });
 
-    /* --- шеринг --- */
+    /* --- шеринг: одна кнопка, как в мемо-игре.
+       Телефон — системное «Поделиться» (с OG-картинкой файлом, если браузер умеет);
+       компьютер — окно репоста ВК с нашей картинкой + текст со ссылкой в буфер. --- */
     var shareBtn = wrap.querySelector('#hlw-share');
-    var vk = wrap.querySelector('#hlw-share-vk');
-    var tg = wrap.querySelector('#hlw-share-tg');
-    var cl = wrap.querySelector('#hlw-share-copy');
-    function fillShare() {
-      var u = encodeURIComponent(shareUrlFn());
-      vk.href = 'https://vk.com/share.php?url=' + u;
-      tg.href = 'https://t.me/share/url?url=' + u + '&text=' + encodeURIComponent(RT.shareText);
+    var ogFile = null, ogAbs = RT.ogImage ? new URL(RT.ogImage, location.href).href : '';
+    function shareUrlNow() { return RT.shareUrl || (location.origin + location.pathname); }
+    function prefetchOg() {
+      if (ogFile || !ogAbs || !window.fetch || typeof File !== 'function') return;
+      fetch(ogAbs, { mode: 'cors' }).then(function (r) { return r.ok ? r.blob() : null; }).then(function (b) {
+        if (b) ogFile = new File([b], 'priem-halloween.jpg', { type: b.type || 'image/jpeg' });
+      }).catch(function () {});
     }
-    function toggleRow(force) {
-      var show = typeof force === 'boolean' ? force : shareRow.hidden;
-      fillShare();
-      shareRow.hidden = !show;
-      shareBtn.setAttribute('aria-expanded', show ? 'true' : 'false');
-    }
-    shareBtn.addEventListener('click', function () {
-      var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-      if (coarse && navigator.share) {
-        track('share_click', { channel: 'native' });
-        navigator.share({ title: RT.shareTitle, text: RT.shareText, url: shareUrlFn() }).catch(function (err) {
-          if (!err || err.name !== 'AbortError') toggleRow(true);
-        });
+    inst.prefetchOg = prefetchOg;
+    if (shareBtn) shareBtn.addEventListener('click', function () {
+      var url = shareUrlNow(), text = RT.shareText, full = text + '\n\n' + url;
+      var ua = navigator.userAgent || '', isSafari = /^((?!chrome|android).)*safari/i.test(ua);
+      function fallback() { copyText(full).then(function (ok) { if (ok) showToast(RT.shareCopied); }); }
+      if (typeof navigator.share === 'function') {
+        var payload;
+        if (ogFile && navigator.canShare && navigator.canShare({ files: [ogFile] })) payload = { files: [ogFile], text: full };
+        else payload = isSafari ? { title: RT.shareTitle, text: full } : { text: text, url: url }; // Safari теряет text при url
+        track('share_click', { channel: payload.files ? 'native_image' : 'native' });
+        navigator.share(payload).catch(function (err) { if (!err || err.name !== 'AbortError') fallback(); });
         return;
       }
-      toggleRow();
-    });
-    vk.addEventListener('click', function () { fillShare(); track('share_click', { channel: 'vk' }); });
-    tg.addEventListener('click', function () { fillShare(); track('share_click', { channel: 'telegram' }); });
-    cl.addEventListener('click', function () {
-      track('share_click', { channel: 'copy_link' });
-      copyText(shareUrlFn()).then(function (ok) {
-        var old = cl.getAttribute('data-label') || cl.textContent;
-        cl.setAttribute('data-label', old);
-        cl.textContent = ok ? RT.copiedText : RT.copyFailText;
-        clearTimeout(cl._t);
-        cl._t = setTimeout(function () { cl.textContent = old; }, 2000);
-      });
+      var vk = 'https://vk.com/share.php?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(text) +
+        '&description=' + encodeURIComponent(text) + (ogAbs ? '&image=' + encodeURIComponent(ogAbs) : '') + '&noparse=1';
+      track('share_click', { channel: 'vk' });
+      copyText(full).then(function () { showToast(RT.shareCopiedVk); });
+      window.open(vk, '_blank', 'noopener,noreferrer,width=626,height=436');
     });
 
     /* --- звук: по умолчанию включён, но браузер разрешает его только после нажатия — стартуем на первом клике в игре --- */
@@ -567,6 +559,7 @@
           batEl.style.setProperty('--y0', y0 + 'px'); batEl.style.setProperty('--y1', y1 + 'px');
           batEl.style.setProperty('--r', ((y1 - y0) / W * 40).toFixed(1) + 'deg');
           batEl.style.setProperty('--t', (Math.max(2.6, W / 420) + rnd(10) / 10).toFixed(1) + 's');
+          batEl.classList.toggle('is-rtl', !ltr);
           batEl.classList.remove('is-fly'); void batEl.offsetWidth; batEl.classList.add('is-fly');
           setTimeout(function () { sfx('bat'); }, 500);
         }

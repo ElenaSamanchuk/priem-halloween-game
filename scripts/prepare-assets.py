@@ -153,6 +153,17 @@ if os.path.exists(gp):
     g = g.resize((round(640 * g.width / g.height), 640), Image.LANCZOS)
     man['ghost'] = {'webp': hashed(webp(g, 'ghost-640.webp', 86)), 'avif': hashed(avif(g, 'ghost-640.avif', 62)), 'ratio': round(g.width / g.height, 4)}
 
+# OG-картинка для шеринга (ВК image=, файл в системное «Поделиться»)
+ogp = os.path.join(ROOT, 'og', 'og-text.jpg')
+if os.path.exists(ogp):
+    import shutil
+    shutil.copy(ogp, os.path.join(OUT, 'og-1200x630.jpg')); man['og'] = hashed('og-1200x630.jpg')
+# Летучая мышь: лента 8 кадров полёта из спрайта Елены (scripts/bat-strip.py)
+bsp = os.path.join(SRC, 'bat-strip.png')
+if os.path.exists(bsp):
+    bs = Image.open(bsp).convert('RGBA')
+    man['bat'] = {'webp': hashed(webp(bs, 'bat-strip.webp', 86)), 'avif': hashed(avif(bs, 'bat-strip.avif', 62)), 'frames': 8, 'fw': bs.width // 8, 'fh': bs.height}
+
 json.dump(man, open(os.path.join(OUT, 'manifest.json'), 'w'), ensure_ascii=False, indent=1)
 tot = 0
 for f in sorted(os.listdir(OUT)):

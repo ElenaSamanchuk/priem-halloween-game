@@ -65,7 +65,7 @@ async function run(page, label, vp, mobile) {
   await page.evaluate(() => navigator.clipboard.writeText('x'))
   await page.locator('#hlw-win .hlw-code').click(); await page.waitForTimeout(100)
   ok((await page.evaluate(() => navigator.clipboard.readText())) === 'СТРАШНОВКУСНО', `${label}: клик по коду копирует`)
-  await page.locator('#hlw-share').click(); await page.waitForTimeout(150)
+  await page.context().grantPermissions(['clipboard-read','clipboard-write']); await page.evaluate(() => { window.__open = []; window.open = (u) => { window.__open.push(u); return null } }); await page.locator('#hlw-share').click(); await page.waitForTimeout(300); if (!mobile) { const u = await page.evaluate(() => window.__open[0] || ''); ok(u.startsWith('https://vk.com/share.php?url=https%3A%2F%2Fpriem.menu%2F%3Fcmz%3DYznM') && /image=/.test(u), label + ': ВК-шеринг с cmz и картинкой'); ok((await page.evaluate(() => navigator.clipboard.readText())).includes('cmz=YznM'), label + ': текст со ссылкой в буфере') }
   if (!mobile) await page.screenshot({ path: `${SHOTS}${label}-4-share.png` })
   const dis = await page.evaluate(() => [...document.querySelectorAll('.hlw-item')].every((b) => b.disabled))
   ok(dis, `${label}: после победы предметы disabled`)

@@ -181,5 +181,13 @@
   "webp": "ghost-640.ccb87ec0.webp",
   "avif": "ghost-640.2c72e0b8.avif",
   "ratio": 0.8531
+ },
+ "og": "og-1200x630.13ba592a.jpg",
+ "bat": {
+  "webp": "bat-strip.ad9d59c3.webp",
+  "avif": "bat-strip.d70648aa.avif",
+  "frames": 8,
+  "fw": 259,
+  "fh": 212
  }
 }

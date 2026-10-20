@@ -68,6 +68,8 @@ const HLW_CONFIG = {
       shareVk: 'ВКонтакте',
       shareTg: 'Telegram',
       shareCopy: 'Скопировать ссылку',
+      shareCopied: 'Текст со ссылкой скопирован',
+      shareCopiedVk: 'Текст скопирован — вставьте в пост, если ВК не подставил',
       shareText: 'Я нашёл ПриЕм на страшной кухне и забрал скидку 1000 ₽. Рискнёшь?',
       shareTitle: 'Найди ПриЕм на страшной кухне',
     },
@@ -94,7 +96,7 @@ const HLW_CONFIG = {
 
   links: {
     order: '#menu-plans-v2', // якорь блока заказа на странице (плавный скролл) или полный URL
-    shareUrl: null, // ссылка с ?cmz=… для шеринга; null = адрес текущей страницы без параметров
+    shareUrl: 'https://priem.menu/?cmz=YznM', // кастом ПриЕма для шеринга; null = адрес текущей страницы
   },
 
   /**
@@ -216,9 +218,9 @@ function buildBlock(base) {
   const bd = LY.badge, d = bd.r * 2
   const eggStyle = `--fx:${pct((bd.x - bd.r) / 28.8)};--fy:${pct((bd.y - bd.r) / 12.03)};--fw:${pct(d / 28.8)};--fh:${pct(d / 12.03)};--kx:${pct((bd.x - bd.r - kb.x) / kb.w * 100)};--ky:${pct((bd.y - bd.r - kb.y) / kb.h * 100)};--kw:${pct(d / kb.w * 100)};--kh:${pct(d / kb.h * 100)}`
   const egg = `<button type="button" class="hlw-egg" aria-label="${esc(copy.eggLabel)}" style="${eggStyle}"></button><div class="hlw-boo" aria-hidden="true" style="${eggStyle}"><div class="hlw-boo__g">${G2 ? `<picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture>` : ''}</div><div class="hlw-boo__say">${esc(copy.eggSay)}</div></div>`
-  // летучая мышь: векторный силуэт без лица, крылья машут (scaleY от плеча)
-  const BATW = 'M4-4C9-11 17-17 24-18C34-17 46-13 55-6Q47-3 45 6Q39 1 32 9Q26 3 19 8Q13 3 5 4Z'
-  const bat = `<div class="hlw-bat" aria-hidden="true"><div class="hlw-bat__bob"><svg viewBox="-60 -30 120 50" focusable="false"><g fill="#160d10"><g class="hlw-bat__w"><path d="${BATW}"/><path transform="scale(-1,1)" d="${BATW}"/></g><ellipse cx="0" cy="2" rx="5.5" ry="8"/><circle cx="0" cy="-6" r="4.6"/><path d="M-3.6-8.5L-5.2-15.5L-0.8-10ZM3.6-8.5L5.2-15.5L0.8-10ZM-2.5 9L-3.5 13L-1 10ZM2.5 9L3.5 13L1 10Z"/></g></svg></div></div>`
+  // летучая мышь: лента 8 кадров из спрайта Елены, взмахи — steps()
+  const BT = MAN.bat
+  const bat = BT ? `<div class="hlw-bat" aria-hidden="true" style="--ba:${BT.fw}/${BT.fh}"><div class="hlw-bat__bob"><div class="hlw-bat__win"><picture><source type="image/avif" srcset="${esc(url(base, BT.avif))}"><img class="hlw-bat__strip" src="${esc(url(base, BT.webp))}" alt="" draggable="false" decoding="async" loading="lazy"></picture></div></div></div>` : ''
   // пар над котлом (деск, при наведении): 4 клуба + призрачное лицо из иллюстрации
   const steamStyle = '--fx:48.85%;--fy:44.9%;--fw:7.47%;--fh:21.1%;--kx:49.43%;--ky:40.85%;--kw:16.1%;--kh:24.33%'
   const steam = `<div class="hlw-steam" aria-hidden="true" style="${steamStyle}"><i></i><i></i><i></i><i></i>${G2 ? `<div class="hlw-steam__face"><picture><source type="image/avif" data-srcset="${esc(url(base, G2.avif))}"><img data-src="${esc(url(base, G2.webp))}" alt=""></picture></div>` : ''}</div>`
@@ -238,6 +240,9 @@ function buildBlock(base) {
     shareUrl: C.links.shareUrl,
     shareText: T(w.shareText),
     shareTitle: T(w.shareTitle),
+    shareCopied: w.shareCopied,
+    shareCopiedVk: w.shareCopiedVk,
+    ogImage: MAN.og ? url(base, MAN.og) : '',
     copiedText: w.copiedTip,
     copyFailText: w.copyFailTip,
     pillProgress: copy.pillProgress,
@@ -286,8 +291,7 @@ ${closeBtn}<div class="hlw-pic"><picture><source id="hlw-miss-avif" type="image/
 </div></div>
 <div class="hlw-overlay" id="hlw-win" hidden>
 <div class="hlw-dialog" role="dialog" aria-modal="true" aria-labelledby="hlw-win-title" aria-describedby="hlw-win-text" tabindex="-1">
-${closeBtn}<div class="hlw-pic"><picture><source type="image/avif" srcset="${esc(winPic.avif)}" sizes="(max-width:640px) 100vw, 640px"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:640px) 100vw, 640px" decoding="async"></picture></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share" aria-expanded="false" aria-controls="hlw-sharerow">${esc(T(w.shareCta))}</button></div>
-<div class="hlw-sharerow" id="hlw-sharerow" hidden><a class="hlw-sharelink" id="hlw-share-vk" href="https://vk.com/share.php" target="_blank" rel="noopener">${esc(w.shareVk)}</a><a class="hlw-sharelink" id="hlw-share-tg" href="https://t.me/share/url" target="_blank" rel="noopener">${esc(w.shareTg)}</a><button type="button" class="hlw-sharelink" id="hlw-share-copy">${esc(w.shareCopy)}</button></div></div>
+${closeBtn}<div class="hlw-pic"><picture><source type="image/avif" srcset="${esc(winPic.avif)}" sizes="(max-width:640px) 100vw, 640px"><img alt="Тыквоголовый скелет с клевером и довольный призрак" src="${esc(winPic.src)}" srcset="${esc(winPic.srcset)}" sizes="(max-width:640px) 100vw, 640px" decoding="async"></picture></div><div class="hlw-body"><h2 class="hlw-dtitle" id="hlw-win-title">${esc(T(w.title))}</h2><p class="hlw-dtext" id="hlw-win-text">${promoText}</p>${promoBox}<div class="hlw-actions">${orderBtn}<button type="button" class="hlw-btn hlw-btn--sec" id="hlw-share">${esc(T(w.shareCta))}</button></div></div>
 </div></div>
 <div class="hlw-toast" role="status" aria-live="polite"></div>
 </div>
