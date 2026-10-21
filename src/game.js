@@ -405,13 +405,13 @@
       function fallback() { copyText(full).then(function (ok) { if (ok) showToast(RT.shareCopied); }); }
       if (typeof navigator.share === 'function') {
         // только text: с отдельным url Telegram на Android ставит ссылку первой, Safari теряет текст
-        var payload = { title: RT.shareTitle, text: full };
+        var payload = { text: full }; // без title: часть приложений (Telegram, Заметки) вставляет его первой строкой — дубль текста
         track('share_click', { channel: 'native' });
         navigator.share(payload).catch(function (err) { if (!err || err.name !== 'AbortError') fallback(); });
         return;
       }
       var vk = 'https://vk.com/share.php?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(text) +
-        '&description=' + encodeURIComponent(text) + (ogAbs ? '&image=' + encodeURIComponent(ogAbs) : '') + '&noparse=1';
+        (ogAbs ? '&image=' + encodeURIComponent(ogAbs) : '') + '&noparse=1';
       track('share_click', { channel: 'vk' });
       copyText(full).then(function () { showToast(RT.shareCopiedVk); });
       window.open(vk, '_blank', 'noopener,noreferrer,width=626,height=436');

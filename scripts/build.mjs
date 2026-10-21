@@ -71,7 +71,6 @@ const HLW_CONFIG = {
       shareCopied: 'Текст со ссылкой скопирован',
       shareCopiedVk: 'Текст скопирован — вставь его в пост, если ВК не подставил',
       shareText: 'На страшной кухне спрятан промокод ПриЕма на 1000 ₽. Рискнёшь найти?',
-      shareTitle: 'Найди промокод ПриЕма на страшной кухне',
     },
     /**
      * 8 текстов промаха [заголовок, текст, иллюстрация]. Нарисовано 5 иллюстраций (miss-01…05),
@@ -242,7 +241,6 @@ function buildBlock(base) {
     fixedWinner: C.fixedWinner ? C.items.findIndex((it) => it.id === C.fixedWinner) : -1,
     shareUrl: C.links.shareUrl,
     shareText: T(w.shareText),
-    shareTitle: T(w.shareTitle),
     shareCopied: w.shareCopied,
     shareCopiedVk: w.shareCopiedVk,
     ogImage: MAN.og ? url(base, MAN.og) : '',
@@ -281,7 +279,7 @@ function buildBlock(base) {
 <div class="hlw-scene">
 <div class="hlw-stage">${bg}
 <div class="hlw-front">${klayer}<div class="hlw-lamp" aria-hidden="true"></div><div class="hlw-fog" aria-hidden="true"></div>${webs}<div class="hlw-warm" aria-hidden="true"></div>
-<div class="hlw-items" role="group" aria-label="${esc(T(copy.sceneLabel))}">${itemsHtml}</div>${egg}${steam}
+<div class="hlw-items" role="group" aria-label="Предметы на кухне">${itemsHtml}</div>${egg}${steam}
 </div></div>
 ${eyes}${bat}<div class="hlw-flock" aria-hidden="true"></div><div class="hlw-drops" aria-hidden="true"></div><div class="hlw-flash" aria-hidden="true"></div>${ghost}
 <div class="hlw-torch" aria-hidden="true"><div class="hlw-torch__beam"></div></div><canvas class="hlw-fx" aria-hidden="true"></canvas>
