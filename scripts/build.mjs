@@ -44,8 +44,8 @@ const HLW_CONFIG = {
   theme: { panel: '#4c2f72', pink: '#ff1a6c', yellow: '#feda00', secondary: '#8c41e3', glow: '255,200,40' },
 
   copy: {
-    sceneLabel: 'Страшная кухня: найди, где спрятан ПриЕм',
-    pillStart: 'Найди, где спрятался <b>ПриЕм</b>',
+    sceneLabel: 'Страшная кухня: найди, где спрятан промокод ПриЕма',
+    pillStart: 'Найди, где спрятался <b>промокод ПриЕма</b>',
     pillProgress: 'Проверено <b>{n}</b> из {total}', // {n}, {total}
     pillWin: '<b>ПриЕм найден!</b> Промокод ниже',
     soundOn: 'Включить звук',

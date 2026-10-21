@@ -305,7 +305,7 @@ html body .t-rec:has(#hlw-wrap) .t-col__overlay{pointer-events:none !important}
   #hlw-wrap .hlw-top{position:relative;height:auto;padding:14px 64px 10px}
   #hlw-wrap .hlw-sound{right:12px}
 }
-@media (max-width:420px){
+@media (max-width:480px){
   #hlw-wrap .hlw-top{padding:12px 60px 8px 12px;justify-content:flex-start}
   #hlw-wrap .hlw-pill{font-size:13px;padding:7px 12px;white-space:normal}
 }
